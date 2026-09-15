@@ -3,74 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adrian · AI Engineer</title>
-<meta name="description" content="AI engineer. Faccio girare l'AI sul tuo computer. Tutto open source.">
+<title>Adrian Iancu · AI Engineer</title>
+<meta name="description" content="AI engineer: ottimizzazione dell'inferenza su GPU consumer (CUDA, Pascal sm_61), reti spiking vincolate dal connettoma, pipeline ML locali e privacy-first. Tutto open source.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: radial-gradient(ellipse at 50% 0%, #141a22 0%, #0b0e12 60%);
-    color:#ece6e2; min-height:100vh; display:flex; justify-content:center; padding:52px 20px 60px;
+  :root{
+    --ground:#0b0e12; --surface:#11161d; --surface-2:#161d26; --line:#1f2833; --line-soft:#182029;
+    --ink:#ece6e2; --dim:#8b9199; --faint:#565e66;
+    --green:#23c962; --pink:#ff2e6d; --amber:#ffbe5c; --cyan:#4fd0ff; --violet:#c08cff;
+    --f-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+    --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   }
-  .card { width:100%; max-width:480px; text-align:center; }
-  .avatar {
-    width:96px; height:96px; border-radius:50%; margin:0 auto 18px;
-    border:3px solid #23c962; object-fit:cover; display:block;
-  }
-  .soon {
-    font-family:ui-monospace,Menlo,monospace; font-size:10.5px; font-weight:700; letter-spacing:.08em;
-    background:#ff2e6d; color:#fff; border-radius:6px; padding:3px 8px; margin-left:auto; flex:none;
-  }
-  h1 { font-size:26px; margin-bottom:6px; }
-  .sub { color:#8b9199; font-size:15.5px; line-height:1.5; margin-bottom:34px; }
-  .sub b { color:#23c962; font-weight:600; }
-  a.btn {
-    display:flex; align-items:center; gap:14px; text-decoration:none; color:#ece6e2;
-    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); border-radius:14px;
-    padding:16px 20px; margin-bottom:14px; font-size:16.5px; font-weight:600;
-    transition: transform .12s, border-color .12s;
-  }
-  a.btn:hover { transform: translateY(-2px); border-color:#23c962; }
-  a.btn .ico { width:26px; height:26px; flex:none; }
-  a.btn small { display:block; font-weight:400; color:#8b9199; font-size:13px; margin-top:2px; }
-  a.btn .txt { text-align:left; }
-  a.btn.hot { border-color:#23c962; background:rgba(35,201,98,.08); }
-  .foot { margin-top:36px; color:#565e66; font-size:12.5px; font-family:ui-monospace,Menlo,monospace; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{color-scheme:dark;scroll-behavior:smooth;}
+  body{font-family:var(--f-body);background:var(--ground);color:var(--ink);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.9;}
+  .page{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:56px 20px 64px;}
+
+  .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;margin-bottom:46px;}
+  .avatar{width:104px;height:104px;border-radius:50%;border:3px solid var(--green);object-fit:cover;box-shadow:0 0 0 6px rgba(35,201,98,.12),0 0 40px rgba(35,201,98,.18);}
+  .hero h1{font-family:var(--f-display);font-size:clamp(2rem,6vw,3.2rem);font-weight:700;letter-spacing:-.01em;line-height:1.05;}
+  .hero h1 span{color:transparent;-webkit-text-stroke:1.2px var(--green);}
+  .role{font-family:var(--f-mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);}
+  .tag{color:var(--dim);font-size:1.05rem;max-width:58ch;}
+  .tag b{color:var(--ink);font-weight:600;}
+  .quick{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px;}
+  .quick a{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);transition:border-color .15s,transform .15s;}
+  .quick a:hover{border-color:var(--green);transform:translateY(-1px);}
+  .quick svg{width:15px;height:15px;}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:54px;}
+  .stats div{background:var(--surface);padding:14px 16px;}
+  .stats dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+  .stats dd{font-family:var(--f-display);font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums;}
+
+  section{margin-bottom:46px;}
+  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+  .sec-head .num{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.16em;color:var(--faint);}
+  .sec-head h2{font-family:var(--f-display);font-size:1.3rem;font-weight:600;}
+  .sec-head p{color:var(--dim);font-size:.92rem;flex-basis:100%;}
+  .sec-head h2 em{font-style:normal;}
+  .c-green h2 em{color:var(--green);} .c-amber h2 em{color:var(--amber);} .c-cyan h2 em{color:var(--cyan);} .c-violet h2 em{color:var(--violet);} .c-pink h2 em{color:var(--pink);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;}
+  .card{position:relative;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;transition:transform .15s,border-color .15s,box-shadow .15s;}
+  .card:hover{transform:translateY(-3px);border-color:var(--accent,var(--green));box-shadow:0 12px 40px rgba(0,0,0,.35);}
+  .card.featured{grid-column:1 / -1;background:linear-gradient(135deg,var(--surface) 0%,var(--surface-2) 100%);border-color:var(--accent,var(--green));}
+  .card .name{font-family:var(--f-display);font-size:1.1rem;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card.featured .name{font-size:1.35rem;}
+  .card .desc{color:var(--dim);font-size:.93rem;}
+  .card.featured .desc{font-size:1rem;max-width:74ch;}
+  .card .meta{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--faint);}
+  .chip{padding:2px 8px;border:1px solid var(--line);border-radius:999px;}
+  .chip.acc{border-color:var(--accent,var(--green));color:var(--accent,var(--green));}
+  .soon{font-family:var(--f-mono);font-size:.65rem;font-weight:700;letter-spacing:.08em;background:var(--pink);color:#fff;border-radius:6px;padding:3px 8px;}
+  .links{display:flex;flex-wrap:wrap;gap:8px;}
+  .links a{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.78rem;padding:6px 11px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);transition:border-color .15s,color .15s;}
+  .links a:hover{border-color:var(--accent,var(--green));color:var(--accent,var(--green));}
+  .links a.primary{border-color:var(--accent,var(--green));color:var(--accent,var(--green));}
+
+  .g{--accent:var(--green);} .a{--accent:var(--amber);} .cy{--accent:var(--cyan);} .v{--accent:var(--violet);} .p{--accent:var(--pink);}
+
+  .skills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:-26px 0 46px;}
+  .skills span{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--dim);background:rgba(255,255,255,.02);}
+
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--faint);font-size:.78rem;font-family:var(--f-mono);display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;text-align:center;}
+  @media (prefers-reduced-motion:reduce){ #bg{display:none;} .card,.quick a{transition:none;} }
 </style>
 </head>
 <body>
-<div class="card">
-  <img class="avatar" src="https://github.com/ArtyomITA.png" alt="Adrian">
-  <h1>Adrian</h1>
-  <p class="sub">AI engineer. Faccio girare l'AI <b>sul tuo computer</b>.<br>Esperimenti veri, zero hype, tutto <b>open source</b>.</p>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="page">
 
-  <a class="btn hot" href="https://github.com/ArtyomITA/fantaoracle">
-    <svg class="ico" viewBox="0 0 16 16" fill="#ece6e2"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-    <span class="txt">FantaOracle 🔮<small>l'AI che vince il fantacalcio · codice completo</small></span>
-  </a>
+  <header class="hero">
+    <img class="avatar" src="https://github.com/ArtyomITA.png" alt="Adrian Iancu">
+    <div class="role">AI Engineer · inference optimization · neuromorphic ML · local-first systems</div>
+    <h1>Adrian <span>Iancu</span></h1>
+    <p class="tag">Porto modelli moderni su hardware che non dovrebbe reggerli e misuro ogni claim. <b>Ottimizzazione CUDA su GPU consumer</b>, <b>reti spiking vincolate da connettomi reali</b>, <b>pipeline ML locali</b> senza cloud. Tutto open source, con i numeri accanto.</p>
+    <div class="quick">
+      <a href="https://github.com/ArtyomITA"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>GitHub</a>
+      <a href="https://www.linkedin.com/in/adrian-ciprian-iancu-a2a477391/"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>LinkedIn</a>
+      <a href="https://github.com/ggml-org/llama.cpp/pull/27721">llama.cpp · PR #27721</a>
+    </div>
+  </header>
 
-  <a class="btn" href="https://github.com/ArtyomITA">
-    <svg class="ico" viewBox="0 0 16 16" fill="#ece6e2"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-    <span class="txt">Tutti i miei progetti<small>GitHub · ArtyomITA</small></span>
-  </a>
+  <dl class="stats">
+    <div><dt>Hardware di riferimento</dt><dd>GTX 1080 · 8 GB · sm_61</dd></div>
+    <div><dt>Speedup MoE in llama.cpp</dt><dd>+40% (PR upstream)</dd></div>
+    <div><dt>Neuroni simulati con gradiente</dt><dd>166.700</dd></div>
+    <div><dt>Modelli portati su 8 GB</dt><dd>Llama-3-8B · Bonsai 4B · Kimodo</dd></div>
+  </dl>
 
-  <a class="btn" href="https://claude.ai/code/artifact/2186dae3-4976-4862-b8cc-b0894512b87f">
-    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#ff2e6d" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-    <span class="txt">Vergilius 🏛️<small>l'assistente che non parla con nessuno · schema del progetto</small></span>
-    <span class="soon">COMING SOON</span>
-  </a>
+  <div class="skills">
+    <span>CUDA · CUDA Graphs</span><span>PyTorch</span><span>llama.cpp · GGML</span><span>WebGPU · WGSL</span><span>Spiking NN · surrogate gradient</span><span>LLM inference · quantizzazione · offload</span><span>Diffusion LM</span><span>Embedding · LLM2Vec</span><span>Time series · probabilistic forecasting</span><span>Python · C++ · TypeScript</span><span>Unity · Phaser</span><span>faster-whisper · Piper</span>
+  </div>
 
-  <a class="btn" href="https://www.linkedin.com/in/adrian-ciprian-iancu-a2a477391/">
-    <svg class="ico" viewBox="0 0 24 24" fill="#ece6e2"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
-    <span class="txt">LinkedIn<small>il mio profilo professionale</small></span>
-  </a>
+  <section class="c-green">
+    <div class="sec-head"><span class="num">01</span><h2>Modelli linguistici neuromorfici · <em>reti spiking vincolate dal connettoma</em></h2><p>Il connettoma completo del sistema nervoso di Drosophila (male-cns:v1.0, 166.700 neuroni, 2,75 M sinapsi a soglia 10) come nucleo ricorrente LIF di un language model: segni sinaptici fissati dal neurotrasmettitore, magnitudini inizializzate dal conteggio di sinapsi, gradiente surrogato, CUDA Graph FP32. Protocollo con null model a gradi conservati, baseline a pari token e lesioni in silico.</p></div>
+    <div class="grid">
+      <article class="card featured g">
+        <div class="name">FlyToLLM <span class="chip acc">ricerca · 2026</span></div>
+        <p class="desc">Ingresso del testo tramite i 17.937 neuroni sensoriali reali, lettura dai 2.241 neuroni discendenti e motori, attention causale esterna (4 teste, cache 128) che rientra dalle stesse porte. Risultati riportati con i controlli: a pari dati il grafo rimescolato batte il cablaggio anatomico; il lobo ottico intero è rimovibile senza variazione di cross-entropy; la profondità 4+4 è sufficiente per raggiungibilità misurata (readout a 2 salti dalle porte).</p>
+        <div class="links">
+          <a class="primary" href="https://artyomita.github.io/flytollm/">pipeline animata e numeri</a>
+          <a href="https://github.com/ArtyomITA/flytollm">repository</a>
+        </div>
+        <div class="meta"><span class="chip">PyTorch · CUDA Graphs</span><span class="chip">LIF · surrogate gradient</span><span class="chip">TBPTT · Adam</span><span class="chip">TinyStories · BPE 4096</span></div>
+      </article>
+    </div>
+  </section>
 
-  <!-- pronti da attivare quando servono:
-  <a class="btn" href="https://t.me/CANALE">Telegram · AI in locale ITA</a>
-  <a class="btn" href="https://ko-fi.com/PROFILO">Fondo DGX Spark ⚡</a>
-  -->
+  <section class="c-amber">
+    <div class="sec-head"><span class="num">02</span><h2>Ottimizzazione dell'inferenza CUDA · <em>architettura Pascal (sm_61)</em></h2><p>Nessun tensor core, FP16 a 1/64 del throughput FP32, 8 GB di VRAM. Profilazione, root cause analysis, patch minime con benchmark riproducibili e contributi upstream.</p></div>
+    <div class="grid">
+      <article class="card a">
+        <div class="name">CUDA graphs on Pascal <span class="chip acc">llama.cpp · PR upstream</span></div>
+        <p class="desc">Abilitazione dei CUDA Graphs su sm_61 in llama.cpp: +40% di throughput sui modelli Mixture-of-Experts, +7% sui densi, nessuna regressione misurata. Diff di una riga, motivata da benchmark.</p>
+        <div class="links"><a class="primary" href="https://github.com/ggml-org/llama.cpp/pull/27721">PR #27721</a><a href="https://github.com/ArtyomITA/llama.cpp">fork</a></div>
+        <div class="meta"><span class="chip">C++ · CUDA</span><span class="chip">GGML</span></div>
+      </article>
+      <article class="card a">
+        <div class="name">hildanext</div>
+        <p class="desc">Conversione di un LLM autoregressivo (Qwen3-0.6B) in modello a diffusione discreta secondo la ricetta LLaDA 2.1, con backend di training e inferenza eseguibile su Pascal.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/hildanext">repository</a></div>
+        <div class="meta"><span class="chip">Python · PyTorch</span><span class="chip">diffusion LM</span></div>
+      </article>
+      <article class="card a">
+        <div class="name">bonsai-webgpu-tiled-vae-fix</div>
+        <p class="desc">Root cause analysis del decoder VAE tiled di Bonsai-Image 4B in WebGPU su GPU prive di shader-f16: patch da 1,4 KB che abilita 512px e oltre su Pascal e precedenti, senza perdita di qualità sui dispositivi f16.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/bonsai-webgpu-tiled-vae-fix">repository</a></div>
+        <div class="meta"><span class="chip">JavaScript · WebGPU · WGSL</span><span class="chip">★ 2</span></div>
+      </article>
+    </div>
+  </section>
 
-  <p class="foot">niente tracker, niente pubblicità · pagina fatta in casa, com'è giusto che sia</p>
+  <section class="c-violet">
+    <div class="sec-head"><span class="num">03</span><h2>Pipeline text-to-motion ed embedding · <em>modelli da 8 B su 8 GB di VRAM</em></h2><p>Generazione di movimento 3D con Kimodo-SOMA (NVIDIA) guidata da un encoder LLM2Vec da 8 miliardi di parametri, interamente in locale: offload CPU/GPU, batching senza degradazione numerica, integrazione in Unity con sintesi vocale.</p></div>
+    <div class="grid">
+      <article class="card v">
+        <div class="name">llm2vec-8gb-offload-lossless-batching</div>
+        <p class="desc">LLM2Vec (Llama-3-8B) su una GPU da 8 GB via offload in RAM; batching senza alterare gli embedding: il padding li sposta (similarità coseno 0,76 contro il riferimento), il fix li riporta a 0,999956.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/llm2vec-8gb-offload-lossless-batching">repository</a></div>
+        <div class="meta"><span class="chip">Python · PyTorch</span><span class="chip">encoder testuale per Kimodo</span></div>
+      </article>
+      <article class="card v">
+        <div class="name">NPC conversazionale in Unity <span class="soon">IN ARRIVO</span></div>
+        <p class="desc">Personaggio 3D locale: LLM per il dialogo, Piper per la voce, Kimodo-SOMA per le animazioni del corpo, su GTX 1080 e CPU a 4 core. Pubblicazione in preparazione.</p>
+        <div class="meta"><span class="chip">Unity · Python</span><span class="chip">text-to-motion · TTS</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="c-cyan">
+    <div class="sec-head"><span class="num">04</span><h2>Speech-to-text locale e <em>strumenti privacy-first</em></h2><p>Applicazioni desktop che elaborano audio e testo sulla macchina dell'utente, senza servizi esterni.</p></div>
+    <div class="grid">
+      <article class="card cy">
+        <div class="name">stt-whisper-pad</div>
+        <p class="desc">Applicazione Windows per trascrizione vocale locale basata su faster-whisper (CTranslate2, int8 su CUDA): registrazione, trascrizione e incolla nel campo attivo.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/stt-whisper-pad">repository</a></div>
+        <div class="meta"><span class="chip">Python</span><span class="chip">★ 1</span></div>
+      </article>
+      <article class="card cy">
+        <div class="name">Vergilius <span class="soon">COMING SOON</span></div>
+        <p class="desc">Assistente personale che non comunica con servizi esterni: schema architetturale pubblicato, codice in arrivo.</p>
+        <div class="links"><a class="primary" href="https://claude.ai/code/artifact/2186dae3-4976-4862-b8cc-b0894512b87f">schema del progetto</a></div>
+        <div class="meta"><span class="chip">local-first</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="c-pink">
+    <div class="sec-head"><span class="num">05</span><h2>Progetti di machine learning applicato · <em>predizione, ottimizzazione, serie storiche</em></h2><p>Modelli con l'incertezza scritta accanto al numero, ottimizzazione sotto vincoli in tempo reale, valutazione fuori campione o su simulazione come criterio unico.</p></div>
+    <div class="grid">
+      <article class="card featured p">
+        <div class="name">FantaOracle <span class="chip acc">codice completo</span></div>
+        <p class="desc">Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (75-91% vinti contro strategie di riferimento). Con arena interattiva per sfidarlo.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/fantaoracle">repository</a></div>
+        <div class="meta"><span class="chip">Python</span><span class="chip">★ 2</span><span class="chip">predizione · ottimizzazione · Monte Carlo</span></div>
+      </article>
+      <article class="card p">
+        <div class="name">fantacalcio-advisor</div>
+        <p class="desc">Motore di analisi e raccomandazione multi-algoritmo con front-end React; il predecessore di FantaOracle.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/fantacalcio-advisor">repository</a></div>
+        <div class="meta"><span class="chip">React · TypeScript · Python</span></div>
+      </article>
+      <article class="card p">
+        <div class="name">K-Forecast</div>
+        <p class="desc">Dashboard di previsione probabilistica: DeepAR, ARIMA/SARIMA e AutoGluon confrontati sulla stessa serie con intervalli di confidenza.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/K-Forecast">repository</a></div>
+        <div class="meta"><span class="chip">Python</span><span class="chip">time series</span></div>
+      </article>
+      <article class="card p">
+        <div class="name">sp500-predictability-lab</div>
+        <p class="desc">Laboratorio full-stack (React + Flask) per l'analisi e la predizione di serie storiche dell'S&amp;P 500, con test di prevedibilità fuori campione.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/sp500-predictability-lab">repository</a></div>
+        <div class="meta"><span class="chip">TypeScript · Python</span><span class="chip">time series</span></div>
+      </article>
+      <article class="card p">
+        <div class="name">storico</div>
+        <p class="desc">Pipeline supervisionata e non supervisionata su fatture aperte: apprendimento dei pattern di pagamento e ranking del rischio per la gestione del credito.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/storico">repository</a></div>
+        <div class="meta"><span class="chip">Python</span><span class="chip">credit risk</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="c-amber">
+    <div class="sec-head"><span class="num">06</span><h2>Game engine e <em>ambienti per reinforcement learning</em></h2><p>Ambienti simulati costruiti da zero come banco di prova per agenti.</p></div>
+    <div class="grid">
+      <article class="card a">
+        <div class="name">supermario-1-1-rl</div>
+        <p class="desc">Clone del livello 1-1 in Phaser 3 e TypeScript progettato come ambiente di training per reinforcement learning, con osservazioni e ricompense esposte.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/supermario-1-1-rl">repository</a></div>
+        <div class="meta"><span class="chip">TypeScript · Phaser 3</span><span class="chip">RL</span></div>
+      </article>
+      <article class="card a">
+        <div class="name">idle-isekai-trials</div>
+        <p class="desc">Idle RPG nel browser con Phaser 3 e Three.js: loop di progressione, prestigio e rendering 3D.</p>
+        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/idle-isekai-trials">repository</a></div>
+        <div class="meta"><span class="chip">JavaScript · Three.js</span></div>
+      </article>
+    </div>
+  </section>
+
+  <p class="foot"><span>niente tracker, niente pubblicità</span><span>pagina fatta in casa</span><span>aggiornata settembre 2026</span></p>
 </div>
+
+<script>
+(function(){
+  "use strict";
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cv=document.getElementById('bg'), ctx=cv.getContext('2d'), W=0,H=0,DPR=1, nodes=[], T=0;
+  var N=110;
+  function size(){ W=window.innerWidth; H=window.innerHeight; DPR=Math.min(2,window.devicePixelRatio||1); cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
+  function seed(){ nodes=[]; for(var i=0;i<N;i++) nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,k:Math.random()<.63?0:1,ph:Math.random()*6.28}); }
+  var col=['#23c962','#4fd0ff'];
+  function frame(){
+    T+=1; ctx.clearRect(0,0,W,H);
+    for(var i=0;i<N;i++){ var n=nodes[i]; n.x+=n.vx; n.y+=n.vy; if(n.x<-20)n.x=W+20; if(n.x>W+20)n.x=-20; if(n.y<-20)n.y=H+20; if(n.y>H+20)n.y=-20; }
+    ctx.lineWidth=.7;
+    for(i=0;i<N;i++){ for(var j=i+1;j<N;j++){ var a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy; if(d<150*150){ var al=(1-Math.sqrt(d)/150)*.13; ctx.strokeStyle='rgba(79,208,255,'+al+')'; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } } }
+    for(i=0;i<N;i++){ var p=nodes[i], pulse=(Math.sin(T*.02+p.ph)+1)/2, r=1.2+pulse*1.6; ctx.fillStyle=col[p.k]; ctx.globalAlpha=.25+pulse*.45; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,6.283); ctx.fill(); }
+    ctx.globalAlpha=1;
+    if(T%37===0){ var a2=nodes[(Math.random()*N)|0]; a2.ph=0; }
+    requestAnimationFrame(frame);
+  }
+  window.addEventListener('resize',function(){ size(); seed(); });
+  size(); seed(); requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
