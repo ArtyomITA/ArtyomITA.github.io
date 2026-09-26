@@ -72,6 +72,7 @@ OG_TXT = {"it": ("aggiornata settembre 2026", "Fig. 1 · raster di neuroni leaky
 
 def role():
     import importlib.util
+    sys.dont_write_bytecode = True  # niente __pycache__ nel repository del sito
     spec = importlib.util.spec_from_file_location("bp", os.path.join(ROOT, "tools", "build-pages.py"))
     bp = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bp)
