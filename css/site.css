@@ -25,8 +25,8 @@
 :root{
   --paper:#EEF0EC;--ink:#15181C;--ink-2:#4B535C;--ink-3:#5F6770;--fig:#1B3E9A;--inh:#B3261E;--hl:#F2DD55;
   --rule:#BFC5C6;--rule-2:#D6DAD7;--wash:#E3E6E1;--grid:rgba(27,62,154,.08);
-  /* rampa sequenziale dei salti in Fig. 2: dal blu pieno al grigio chiaro, luminanza crescente */
-  --h1:#3856A0;--h2:#566DA7;--h3:#7385AD;--h4:#8E99B2;--h5:#A7AEB6;
+  /* rampa sequenziale dei salti in Fig. 2: da --fig (salto 0) verso la carta, passi di luminanza L* di 9-10 (in scuro verso il fondo) */
+  --h1:#595D9E;--h2:#7677AF;--h3:#9292C0;--h4:#ACABCE;--h5:#C6C4DD;
   --serif:"Newsreader","Newsreader Fallback",Georgia,serif;
   --display:"Besley","Besley Fallback",Georgia,serif;
   --mono:"Tavola Mono",ui-monospace,Consolas,monospace;
@@ -35,15 +35,17 @@
   --ease-out:cubic-bezier(.2,.7,.2,1);--ease-inout:cubic-bezier(.6,0,.1,1);
   --open:7.5rem;--f-top:2.5rem;--f-proj:3rem;--p-brief:4rem;--brief:1.8rem;
   color-scheme:light;
+  /* niente grassetti o corsivi finti: Besley e Tavola Mono hanno solo il peso 400 */
+  font-synthesis:none;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme=light]){--paper:#0C2136;--ink:#EDF2F5;--ink-2:#A7BBCC;--ink-3:#86A0B6;--fig:#8FC6F4;--inh:#FF9B8A;--hl:rgba(143,198,244,.22);
     --rule:#2B4A66;--rule-2:#1B3550;--wash:#16304A;--grid:rgba(143,198,244,.09);
-    --h1:#7FB0DA;--h2:#6F99BF;--h3:#5E83A5;--h4:#4E6C8A;--h5:#3E5670;color-scheme:dark}
+    --h1:#86A7C5;--h2:#748EA7;--h3:#637789;--h4:#546270;--h5:#464F57;color-scheme:dark}
 }
 :root[data-theme=dark]{--paper:#0C2136;--ink:#EDF2F5;--ink-2:#A7BBCC;--ink-3:#86A0B6;--fig:#8FC6F4;--inh:#FF9B8A;--hl:rgba(143,198,244,.22);
   --rule:#2B4A66;--rule-2:#1B3550;--wash:#16304A;--grid:rgba(143,198,244,.09);
-  --h1:#7FB0DA;--h2:#6F99BF;--h3:#5E83A5;--h4:#4E6C8A;--h5:#3E5670;color-scheme:dark}
+  --h1:#86A7C5;--h2:#748EA7;--h3:#637789;--h4:#546270;--h5:#464F57;color-scheme:dark}
 
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:56px}
@@ -67,10 +69,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
 button:hover,button:focus-visible{color:var(--ink)}
 summary{cursor:pointer;transition:color .18s linear}
 summary:hover,summary:focus-visible{color:var(--ink)}
-.m{color:var(--fig);font-variant-numeric:lining-nums tabular-nums}
+.m{color:var(--fig);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
 /* unico run-in della pagina (Sommario.): nel carattere dei titoli, cosi' il corsivo non si scarica affatto */
 .runin{font-family:var(--display);font-weight:400;letter-spacing:-.01em}
-sup.n{font:600 .66em/1 var(--mono);color:var(--fig);vertical-align:.55em;padding:.08em .14em;border-radius:.18em;
+sup.n{font:400 .66em/1 var(--mono);color:var(--fig);vertical-align:.55em;padding:.08em .14em;border-radius:.18em;
   background:linear-gradient(var(--hl),var(--hl)) 0 100%/100% 0 no-repeat;transition:background-size .5s var(--ease-out),color .5s var(--ease-out)}
 .on sup.n,sup.n.on{background-size:100% 100%}
 :root[data-theme=dark] .on sup.n{color:var(--ink)}
@@ -158,7 +160,7 @@ caption b{color:var(--ink)}
 .rule i{border-left:1px solid var(--ink)}
 .rule.plain{height:0;border-right:0}
 .runhead{grid-column:1/4;align-self:start}
-.kicker{font-size:var(--s0);line-height:1.35;font-weight:600;color:var(--ink-2);margin:0}
+.kicker{font-family:var(--serif);font-size:var(--s0);line-height:1.35;font-weight:600;color:var(--ink-2);margin:0}
 .epi{font:400 var(--s3)/1 var(--display);margin:1.1rem 0 0;font-variant-numeric:lining-nums;letter-spacing:-.01em}
 .count{font:var(--s-2)/1.4 var(--mono);color:var(--ink-3);margin:.6rem 0 0}
 .sec-main{grid-column:4/10}
@@ -215,11 +217,12 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .fig svg .fm{font:11.5px var(--mono);fill:var(--ink-2)}
 .fig svg .ex{font-size:9px}
 .fig svg .ax{stroke:var(--ink);stroke-width:1}
-.cns .fx{fill:none;stroke:var(--rule);stroke-width:.7}
+.cns .olc{fill:none;stroke:var(--ink-3);stroke-width:.8;stroke-linejoin:round}
 .cns .c{fill:var(--h1)}
 .cns .h2 .c{fill:var(--h2)}.cns .h3 .c{fill:var(--h3)}.cns .h4 .c{fill:var(--h4)}.cns .h5 .c{fill:var(--h5)}
 .cns .s{fill:var(--fig)}
-.cns .d{fill:var(--paper);stroke:var(--fig);stroke-width:1.1}
+.cns .d{fill:var(--paper);stroke:var(--fig);stroke-width:1.4}
+.cns .h1 .d,.cns .lgd2{stroke:var(--h1)}.cns .h2 .d{stroke:var(--h2)}.cns .h3 .d{stroke:var(--h3)}
 .cns .les{fill:none;stroke:var(--inh);stroke-width:.9;stroke-dasharray:3 4}
 .cns .ld{fill:none;stroke:var(--ink);stroke-width:.75}
 .cns .ldo{fill:var(--paper);stroke:var(--ink);stroke-width:1}
@@ -239,14 +242,18 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .err .p0{fill:var(--paper);stroke:var(--ink-3);stroke-width:1.2}
 .err .p1{fill:var(--fig)}
 .err .tgt{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2}
+.err .arc{fill:none;stroke:var(--fig);stroke-width:1.2}
+.err .arh{fill:var(--fig)}
+.lots .spl{fill:none;stroke:var(--ink);stroke-width:1.4}
+.lots .tt,.lots .tt0{fill:var(--fig)}
 .f5 .fen{fill:none;stroke:var(--ink);stroke-width:1;transition:stroke-width .42s var(--ease-out)}
 .f5.chiuso .fen{stroke-width:1.6}
 .f5 .lbx{fill:var(--paper)}
 .f5 .brk{fill:none;stroke:var(--fig);stroke-width:1.2}
 .f5 .p1{fill:var(--fig)}
-.f5 .cell rect{fill:none;stroke:var(--ink-3);stroke-width:1}
-.f5 .cell.r rect{fill:var(--inh);stroke:var(--inh)}
-.f5 .x{fill:none;stroke:var(--paper);stroke-width:1.6}
+:is(.f5,.lots) .cell rect{fill:none;stroke:var(--ink-3);stroke-width:1}
+:is(.f5,.lots) .cell.r rect{fill:var(--inh);stroke:var(--inh)}
+:is(.f5,.lots) .x{fill:none;stroke:var(--paper);stroke-width:1.6}
 .js .f5 .cell{opacity:0;transform:scale(.6);transform-box:fill-box;transform-origin:center;transition:opacity .24s var(--ease-out),transform .24s var(--ease-out)}
 .js .f5 .cell.in{opacity:1;transform:none}
 
@@ -268,13 +275,16 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .idx .sk{color:var(--ink-2);font-size:.94rem;width:40%}
 .idx .nt{font-size:var(--s-1);color:var(--ink-3);text-align:right;white-space:nowrap}
 .idx .fk{color:var(--ink-3)}
+/* quota del linguaggio principale nel codice del repository (dati GitHub) */
+.idx .lsh{display:flex;align-items:center;gap:.45rem;margin-top:.25rem;font:var(--s-2)/1.3 var(--mono);color:var(--ink-3);font-variant-numeric:lining-nums tabular-nums}
+.idx .lsh svg{flex:none}
+.idx .lsh .b0{fill:var(--rule-2)}.idx .lsh .b1{fill:var(--fig)}
 
 /* ---------- nota, autore, piede ---------- */
 .notetext{max-width:64ch;hyphens:auto}
 .author{display:flex;gap:1.2rem;align-items:flex-start}
 .author img{width:96px;height:96px;flex:none;filter:none}
 .aname{font:400 var(--s1)/1.2 var(--display);margin:0}
-.arole{font-size:var(--s-1);color:var(--ink-2);margin:.2rem 0 0}
 .author .go{margin:.6rem 0 0}
 .foot{margin-top:5rem;padding-bottom:3rem}
 .foot p{display:flex;flex-wrap:wrap;gap:.4rem 2rem;margin:0;padding-top:1rem;border-top:1px solid var(--ink);font-size:var(--s-1);color:var(--ink-3)}
@@ -394,7 +404,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 }
 @media (forced-colors:active){
   .rule,.rule i,.mast-in::after,.mast-in::before,h1{border-color:CanvasText}
-  .fig svg .ax,.cns .ld,.f5 .fen{stroke:CanvasText}
+  .fig svg .ax,.cns .ld,.cns .olc,.f5 .fen,.lots .spl{stroke:CanvasText}
   .fig1 .rbox{display:none}
 }
 @media print{

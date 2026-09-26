@@ -1,5 +1,7 @@
 """Controlli di accettazione del sito (Playwright + server locale, mai file://).
 
+Ordine: python tools/build-pages.py --bake, python tools/make-images.py og, poi questo.
+
   python tools/check.py [CARTELLA_REPORT]
 
 Budget di peso, rete, font, id IT/EN, cliché (03-cliche.md), contrasto, accessibilità (axe-core
@@ -62,6 +64,12 @@ PAGE_JS = r"""() => {
   R.fig3 = [...document.querySelectorAll('#kt text.fv')].map(t => t.textContent);
   R.fig4 = document.getElementById('err-v') ? document.getElementById('err-v').textContent : null;
   R.fig5 = document.getElementById('fence').classList.contains('chiuso');
+  R.fig6 = [...document.querySelectorAll('#lots .tt')].filter(r => +r.getAttribute('height') > 1).length;
+  // grassetti e corsivi sintetici: Besley e Tavola Mono esistono solo a 400 dritto, Newsreader 400-600
+  R.synth = [...new Set(all.filter(e => vis(e) && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())).map(e => {
+    const s = getComputedStyle(e), f = s.fontFamily.split(',')[0].replace(/"/g, '').trim(), w = parseInt(s.fontWeight);
+    const bad = (f === 'Besley' || f === 'Tavola Mono') ? (w > 400 || s.fontStyle !== 'normal') : (f === 'Newsreader' && w > 600);
+    return bad ? e.tagName.toLowerCase() + '.' + e.className + ' ' + f + ' ' + w + ' ' + s.fontStyle : null; }).filter(Boolean))];
   return R;
 }"""
 
@@ -104,6 +112,13 @@ def main():
         if re.search(r"adriandj|@gmail|vergilius-privato", html):
             fail.append("dato privato in " + rel)
 
+    # immagini OG: rifatte dopo l'ultima build (tools/make-images.py og), mai piu' vecchie della pagina
+    src = max(os.path.getmtime(os.path.join(ROOT, r)) for r in ("index.html", "en/index.html", "css/site.css", "js/site.js"))
+    for lg in ("it", "en"):
+        og = os.path.join(ROOT, "img", "og-%s.png" % lg)
+        if not os.path.exists(og) or os.path.getmtime(og) < src:
+            fail.append("img/og-%s.png piu' vecchia della build: python tools/make-images.py og" % lg)
+
     with sync_playwright() as p:
         br = p.chromium.launch(channel="chrome")
         for lang, path in (("it", ""), ("en", "en/")):
@@ -139,7 +154,7 @@ def main():
                     fail.append("%s latin-ext scaricato" % lang)
                 # scorre tutta la pagina a passi per portare le figure a p = 1 dove previsto
                 pg.evaluate("window.scrollTo(0,0)")
-                for id_ in ("fig3", "fig4", "fig5"):
+                for id_ in ("fig3", "fig4", "fig5", "fig6"):
                     pg.evaluate("(id)=>{const e=document.getElementById(id);window.scrollTo(0,e.getBoundingClientRect().top+scrollY-innerHeight*0.25)}", id_)
                     pg.wait_for_timeout(500)
                     v = pg.evaluate(PAGE_JS)
@@ -147,10 +162,12 @@ def main():
                         exp = ["0,71×", "0,93×"] if lang == "it" else ["0.71×", "0.93×"]
                         if v["fig3"] != exp:
                             fail.append("%s %s Fig.3 %s" % (lang, theme, v["fig3"]))
-                    if id_ == "fig4" and v["fig4"] != ("0,999956" if lang == "it" else "0.999956"):
+                    if id_ == "fig4" and ("0,999956" if lang == "it" else "0.999956") not in (v["fig4"] or ""):
                         fail.append("%s %s Fig.4 %s" % (lang, theme, v["fig4"]))
                     if id_ == "fig5" and not v["fig5"]:
                         fail.append("%s %s Fig.5 recinto aperto" % (lang, theme))
+                    if id_ == "fig6" and v["fig6"] != 28:
+                        fail.append("%s %s Fig.6 tetti visibili %s su 28" % (lang, theme, v["fig6"]))
                 v = pg.evaluate(PAGE_JS)
                 # pagina ferma: dopo 10 s nessun rAF
                 pg.evaluate("window.scrollTo(0,0)")
@@ -173,7 +190,7 @@ def main():
                 for key, bad in (("uppercase", v["uppercase"]), ("boxShadow", v["boxShadow"]), ("backdrop", v["backdrop"]), ("cursor", v["cursor"]),
                                  ("infiniteAnim", v["infiniteAnim"]), ("emdash", v["emdash"]), ("emoji", v["emoji"]), ("banned", v["banned"]),
                                  ("italicInHeading", v["italicInHeading"]), ("repeatedLinks", v["repeatedLinks"]), ("lowContrast", v["lowContrast"]),
-                                 ("smallTargets", v["smallTargets"])):
+                                 ("smallTargets", v["smallTargets"]), ("synth", v["synth"])):
                     if bad:
                         fail.append("%s %s %s: %s" % (lang, theme, key, str(bad)[:300]))
                 if [r for r in v["radius"] if not r.startswith("sup.n")]:
@@ -200,7 +217,7 @@ def main():
             v = pg.evaluate(PAGE_JS)
             if n:
                 fail.append("%s reduced motion: %d rAF" % (lang, n))
-            if v["fig4"] != ("0,999956" if lang == "it" else "0.999956") or not v["fig5"]:
+            if ("0,999956" if lang == "it" else "0.999956") not in (v["fig4"] or "") or not v["fig5"] or v["fig6"] != 28:
                 fail.append("%s reduced motion: figure non al fotogramma finale" % lang)
             # tastiera: primo Tab sul salto al contenuto
             pg.keyboard.press("Tab")
