@@ -1,260 +1,225 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="no-js">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Adrian Iancu · AI Engineer</title>
 <meta name="description" content="AI engineer: ottimizzazione dell'inferenza su GPU consumer (CUDA, Pascal sm_61), ricerca su attention e memoria nei language model, pipeline ML locali e privacy-first. Tutto open source.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<style>
-  :root{
-    --ground:#0b0e12; --surface:#11161d; --surface-2:#161d26; --line:#1f2833; --line-soft:#182029;
-    --ink:#ece6e2; --dim:#8b9199; --faint:#565e66;
-    --green:#23c962; --pink:#ff2e6d; --amber:#ffbe5c; --cyan:#4fd0ff; --violet:#c08cff;
-    --f-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
-    --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-    --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{color-scheme:dark;scroll-behavior:smooth;}
-  body{font-family:var(--f-body);background:var(--ground);color:var(--ink);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;}
-  a{color:inherit;text-decoration:none;}
-  #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.9;}
-  .page{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:56px 20px 64px;}
-
-  .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;margin-bottom:46px;}
-  .avatar{width:104px;height:104px;border-radius:50%;border:3px solid var(--green);object-fit:cover;box-shadow:0 0 0 6px rgba(35,201,98,.12),0 0 40px rgba(35,201,98,.18);}
-  .hero h1{font-family:var(--f-display);font-size:clamp(2rem,6vw,3.2rem);font-weight:700;letter-spacing:-.01em;line-height:1.05;}
-  .hero h1 span{color:transparent;-webkit-text-stroke:1.2px var(--green);}
-  .role{font-family:var(--f-mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);}
-  .tag{color:var(--dim);font-size:1.05rem;max-width:58ch;}
-  .tag b{color:var(--ink);font-weight:600;}
-  .quick{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px;}
-  .quick a{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);transition:border-color .15s,transform .15s;}
-  .quick a:hover{border-color:var(--green);transform:translateY(-1px);}
-  .quick svg{width:15px;height:15px;}
-
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:54px;}
-  .stats div{background:var(--surface);padding:14px 16px;}
-  .stats dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
-  .stats dd{font-family:var(--f-display);font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums;}
-
-  section{margin-bottom:46px;}
-  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line);}
-  .sec-head .num{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.16em;color:var(--faint);}
-  .sec-head h2{font-family:var(--f-display);font-size:1.3rem;font-weight:600;}
-  .sec-head p{color:var(--dim);font-size:.92rem;flex-basis:100%;}
-  .sec-head h2 em{font-style:normal;}
-  .c-green h2 em{color:var(--green);} .c-amber h2 em{color:var(--amber);} .c-cyan h2 em{color:var(--cyan);} .c-violet h2 em{color:var(--violet);} .c-pink h2 em{color:var(--pink);}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;}
-  .card{position:relative;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;transition:transform .15s,border-color .15s,box-shadow .15s;}
-  .card:hover{transform:translateY(-3px);border-color:var(--accent,var(--green));box-shadow:0 12px 40px rgba(0,0,0,.35);}
-  .card.featured{grid-column:1 / -1;background:linear-gradient(135deg,var(--surface) 0%,var(--surface-2) 100%);border-color:var(--accent,var(--green));}
-  .card .name{font-family:var(--f-display);font-size:1.1rem;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .card.featured .name{font-size:1.35rem;}
-  .card .desc{color:var(--dim);font-size:.93rem;}
-  .card.featured .desc{font-size:1rem;max-width:74ch;}
-  .card .meta{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--faint);}
-  .chip{padding:2px 8px;border:1px solid var(--line);border-radius:999px;}
-  .chip.acc{border-color:var(--accent,var(--green));color:var(--accent,var(--green));}
-  .soon{font-family:var(--f-mono);font-size:.65rem;font-weight:700;letter-spacing:.08em;background:var(--pink);color:#fff;border-radius:6px;padding:3px 8px;}
-  .links{display:flex;flex-wrap:wrap;gap:8px;}
-  .links a{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.78rem;padding:6px 11px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);transition:border-color .15s,color .15s;}
-  .links a:hover{border-color:var(--accent,var(--green));color:var(--accent,var(--green));}
-  .links a.primary{border-color:var(--accent,var(--green));color:var(--accent,var(--green));}
-
-  .g{--accent:var(--green);} .a{--accent:var(--amber);} .cy{--accent:var(--cyan);} .v{--accent:var(--violet);} .p{--accent:var(--pink);}
-
-  .skills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:-26px 0 46px;}
-  .skills span{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--dim);background:rgba(255,255,255,.02);}
-
-  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--faint);font-size:.78rem;font-family:var(--f-mono);display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;text-align:center;}
-  @media (prefers-reduced-motion:reduce){ #bg{display:none;} .card,.quick a{transition:none;} }
-</style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Rqiq/WBNrTtIOU2+rqX9RZSVG5MByk3Fmrs/IP0iEG4='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EC">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0C2136">
+<link rel="canonical" href="https://artyomita.github.io/">
+<link rel="alternate" hreflang="it" href="https://artyomita.github.io/">
+<link rel="alternate" hreflang="en" href="https://artyomita.github.io/en/">
+<link rel="alternate" hreflang="x-default" href="https://artyomita.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Adrian Iancu · AI Engineer">
+<meta property="og:description" content="AI engineer: ottimizzazione dell'inferenza su GPU consumer (CUDA, Pascal sm_61), ricerca su attention e memoria nei language model, pipeline ML locali e privacy-first. Tutto open source.">
+<meta property="og:url" content="https://artyomita.github.io/">
+<meta property="og:image" content="https://artyomita.github.io/img/og-it.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Testata della pagina: il nome Adrian Iancu in grande, sopra un raster di neuroni simulati.">
+<meta property="og:locale" content="it_IT">
+<meta property="og:locale:alternate" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preload" href="fonts/newsreader-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/tavola-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/site.css">
+<script>(function(d){d.className='js';try{var t=localStorage.getItem('ai-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t)}catch(e){}})(document.documentElement);</script>
+<script src="js/site.js" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Adrian Iancu","jobTitle":"AI Engineer","url":"https://artyomita.github.io/","sameAs":["https://github.com/ArtyomITA","https://www.linkedin.com/in/adrian-ciprian-iancu-a2a477391/"]}</script>
 </head>
 <body>
-<canvas id="bg" aria-hidden="true"></canvas>
-<div class="page">
-
-  <header class="hero">
-    <img class="avatar" src="https://github.com/ArtyomITA.png" alt="Adrian Iancu">
-    <div class="role">AI Engineer · inference optimization · attention mechanisms research (transformer) · local-first systems</div>
-    <h1>Adrian <span>Iancu</span></h1>
-    <p class="tag"><b>Ottimizzazione CUDA su GPU consumer</b>, <b>ricerca su attention e memoria nei language model</b> (fino a un nucleo ricorrente preso da un connettoma reale), <b>pipeline ML locali</b> senza cloud. Tutto open source.</p>
-    <div class="quick">
-      <a href="https://github.com/ArtyomITA"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>GitHub</a>
-      <a href="https://www.linkedin.com/in/adrian-ciprian-iancu-a2a477391/"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>LinkedIn</a>
-      <a href="https://github.com/ggml-org/llama.cpp/pull/27721">llama.cpp · PR #27721</a>
-    </div>
-  </header>
-
-  <dl class="stats">
-    <div><dt>Hardware di riferimento</dt><dd>GTX 1080 · 8 GB · sm_61</dd></div>
-    <div><dt>Speedup MoE in llama.cpp</dt><dd>+40% (PR upstream)</dd></div>
-    <div><dt>Neuroni simulati con gradiente</dt><dd>166.700</dd></div>
-    <div><dt>Modelli portati su 8 GB</dt><dd>Llama-3-8B · Bonsai 4B · Kimodo</dd></div>
-  </dl>
-
-  <div class="skills">
-    <span>CUDA · CUDA Graphs</span><span>PyTorch</span><span>llama.cpp · GGML</span><span>WebGPU · WGSL</span><span>Spiking NN · surrogate gradient</span><span>LLM inference · quantizzazione · offload</span><span>Diffusion LM</span><span>Embedding · LLM2Vec</span><span>Time series · probabilistic forecasting</span><span>Python · C++ · TypeScript</span><span>Unity · Phaser</span><span>faster-whisper · Piper</span>
-  </div>
-
-  <section class="c-green">
-    <div class="sec-head"><span class="num">01</span><h2>Ricerca su attention e memoria · <em>language model su un connettoma reale</em></h2><p>Quanto del contesto lo tiene l'attention e quanto un nucleo ricorrente? Banco di prova: il connettoma completo del sistema nervoso di Drosophila (male-cns:v1.0, 166.700 neuroni, 2,75 M sinapsi a soglia 10) come nucleo ricorrente LIF di un language model: segni sinaptici fissati dal neurotrasmettitore, magnitudini inizializzate dal conteggio di sinapsi, gradiente surrogato, CUDA Graph FP32. Protocollo con null model a gradi conservati, baseline a pari token e lesioni in silico.</p></div>
-    <div class="grid">
-      <article class="card featured g">
-        <div class="name">FlyToLLM <span class="chip acc">ricerca · 2026</span></div>
-        <p class="desc">Ingresso del testo tramite i 17.937 neuroni sensoriali reali, lettura dai 2.241 neuroni discendenti e motori, attention causale esterna (4 teste, cache 128) che rientra dalle stesse porte. Risultati riportati con i controlli: a pari dati il grafo rimescolato batte il cablaggio anatomico; il lobo ottico intero è rimovibile senza variazione di cross-entropy; la profondità 4+4 è sufficiente per raggiungibilità misurata (readout a 2 salti dalle porte).</p>
-        <div class="links">
-          <a class="primary" href="https://artyomita.github.io/flytollm/">pipeline animata e numeri</a>
-          <a href="https://github.com/ArtyomITA/flytollm">repository</a>
-        </div>
-        <div class="meta"><span class="chip">PyTorch · CUDA Graphs</span><span class="chip">LIF · surrogate gradient</span><span class="chip">TBPTT · Adam</span><span class="chip">TinyStories · BPE 4096</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="c-amber">
-    <div class="sec-head"><span class="num">02</span><h2>Ottimizzazione dell'inferenza CUDA · <em>architettura Pascal (sm_61)</em></h2><p>Nessun tensor core, FP16 a 1/64 del throughput FP32, 8 GB di VRAM. Profilazione, root cause analysis, patch minime con benchmark riproducibili, contributi upstream.</p></div>
-    <div class="grid">
-      <article class="card a">
-        <div class="name">CUDA graphs on Pascal <span class="chip acc">llama.cpp · PR upstream</span></div>
-        <p class="desc">Abilitazione dei CUDA Graphs su sm_61 in llama.cpp: +40% di throughput sui modelli Mixture-of-Experts, +7% sui densi, nessuna regressione misurata. Diff di una riga con benchmark allegati.</p>
-        <div class="links"><a class="primary" href="https://github.com/ggml-org/llama.cpp/pull/27721">PR #27721</a><a href="https://github.com/ArtyomITA/llama.cpp">fork</a></div>
-        <div class="meta"><span class="chip">C++ · CUDA</span><span class="chip">GGML</span></div>
-      </article>
-      <article class="card a">
-        <div class="name">hildanext</div>
-        <p class="desc">Conversione di un LLM autoregressivo (Qwen3-0.6B) in modello a diffusione discreta secondo la ricetta LLaDA 2.1, con backend di training e inferenza eseguibile su Pascal.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/hildanext">repository</a></div>
-        <div class="meta"><span class="chip">Python · PyTorch</span><span class="chip">diffusion LM</span></div>
-      </article>
-      <article class="card a">
-        <div class="name">bonsai-webgpu-tiled-vae-fix</div>
-        <p class="desc">Root cause analysis del decoder VAE tiled di Bonsai-Image 4B in WebGPU su GPU prive di shader-f16: patch da 1,4 KB che abilita 512px e oltre su Pascal e precedenti, senza perdita di qualità sui dispositivi f16.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/bonsai-webgpu-tiled-vae-fix">repository</a></div>
-        <div class="meta"><span class="chip">JavaScript · WebGPU · WGSL</span><span class="chip">★ 2</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="c-violet">
-    <div class="sec-head"><span class="num">03</span><h2>Pipeline text-to-motion ed embedding · <em>modelli da 8 B su 8 GB di VRAM</em></h2><p>Generazione di movimento 3D con Kimodo-SOMA (NVIDIA) guidata da un encoder LLM2Vec da 8 miliardi di parametri, interamente in locale: offload CPU/GPU, batching senza degradazione numerica, integrazione in Unity con sintesi vocale.</p></div>
-    <div class="grid">
-      <article class="card v">
-        <div class="name">llm2vec-8gb-offload-lossless-batching</div>
-        <p class="desc">LLM2Vec (Llama-3-8B) su una GPU da 8 GB via offload in RAM; batching senza alterare gli embedding: il padding li sposta (similarità coseno 0,76 contro il riferimento), il fix li riporta a 0,999956.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/llm2vec-8gb-offload-lossless-batching">repository</a></div>
-        <div class="meta"><span class="chip">Python · PyTorch</span><span class="chip">encoder testuale per Kimodo</span></div>
-      </article>
-      <article class="card v">
-        <div class="name">NPC conversazionale in Unity <span class="soon">IN ARRIVO</span></div>
-        <p class="desc">Personaggio 3D locale: LLM per il dialogo, Piper per la voce, Kimodo-SOMA per le animazioni del corpo, su GTX 1080 e CPU a 4 core. Pubblicazione in preparazione.</p>
-        <div class="meta"><span class="chip">Unity · Python</span><span class="chip">text-to-motion · TTS</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="c-cyan">
-    <div class="sec-head"><span class="num">04</span><h2>Speech-to-text locale e <em>strumenti privacy-first</em></h2><p>Applicazioni desktop che elaborano audio e testo sulla macchina dell'utente, senza servizi esterni.</p></div>
-    <div class="grid">
-      <article class="card cy">
-        <div class="name">stt-whisper-pad</div>
-        <p class="desc">Applicazione Windows per trascrizione vocale locale basata su faster-whisper (CTranslate2, int8 su CUDA): registrazione, trascrizione e incolla nel campo attivo.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/stt-whisper-pad">repository</a></div>
-        <div class="meta"><span class="chip">Python</span><span class="chip">★ 1</span></div>
-      </article>
-      <article class="card cy">
-        <div class="name">Vergilius <span class="soon">COMING SOON</span></div>
-        <p class="desc">Assistente personale che non comunica con servizi esterni: schema architetturale pubblicato, codice in arrivo.</p>
-        <div class="links"><a class="primary" href="https://claude.ai/code/artifact/2186dae3-4976-4862-b8cc-b0894512b87f">schema del progetto</a></div>
-        <div class="meta"><span class="chip">local-first</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="c-pink">
-    <div class="sec-head"><span class="num">05</span><h2>Progetti di machine learning applicato · <em>predizione, ottimizzazione, serie storiche</em></h2><p>Modelli con intervalli di incertezza, ottimizzazione sotto vincoli in tempo reale, valutazione fuori campione o su simulazione.</p></div>
-    <div class="grid">
-      <article class="card featured p">
-        <div class="name">FantaOracle <span class="chip acc">codice completo</span></div>
-        <p class="desc">Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (75-91% vinti contro strategie di riferimento). Con arena interattiva per sfidarlo.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/fantaoracle">repository</a></div>
-        <div class="meta"><span class="chip">Python</span><span class="chip">★ 2</span><span class="chip">predizione · ottimizzazione · Monte Carlo</span></div>
-      </article>
-      <article class="card p">
-        <div class="name">fantacalcio-advisor</div>
-        <p class="desc">Motore di analisi e raccomandazione multi-algoritmo con front-end React; il predecessore di FantaOracle.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/fantacalcio-advisor">repository</a></div>
-        <div class="meta"><span class="chip">React · TypeScript · Python</span></div>
-      </article>
-      <article class="card p">
-        <div class="name">K-Forecast</div>
-        <p class="desc">Dashboard di previsione probabilistica: DeepAR, ARIMA/SARIMA e AutoGluon confrontati sulla stessa serie con intervalli di confidenza.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/K-Forecast">repository</a></div>
-        <div class="meta"><span class="chip">Python</span><span class="chip">time series</span></div>
-      </article>
-      <article class="card p">
-        <div class="name">sp500-predictability-lab</div>
-        <p class="desc">Laboratorio full-stack (React + Flask) per l'analisi e la predizione di serie storiche dell'S&amp;P 500, con test di prevedibilità fuori campione.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/sp500-predictability-lab">repository</a></div>
-        <div class="meta"><span class="chip">TypeScript · Python</span><span class="chip">time series</span></div>
-      </article>
-      <article class="card p">
-        <div class="name">storico</div>
-        <p class="desc">Pipeline supervisionata e non supervisionata su fatture aperte: apprendimento dei pattern di pagamento e ranking del rischio per la gestione del credito.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/storico">repository</a></div>
-        <div class="meta"><span class="chip">Python</span><span class="chip">credit risk</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="c-amber">
-    <div class="sec-head"><span class="num">06</span><h2>Game engine e <em>ambienti per reinforcement learning</em></h2><p>Ambienti simulati costruiti da zero come banco di prova per agenti.</p></div>
-    <div class="grid">
-      <article class="card a">
-        <div class="name">supermario-1-1-rl</div>
-        <p class="desc">Clone del livello 1-1 in Phaser 3 e TypeScript progettato come ambiente di training per reinforcement learning, con osservazioni e ricompense esposte.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/supermario-1-1-rl">repository</a></div>
-        <div class="meta"><span class="chip">TypeScript · Phaser 3</span><span class="chip">RL</span></div>
-      </article>
-      <article class="card a">
-        <div class="name">idle-isekai-trials</div>
-        <p class="desc">Idle RPG nel browser con Phaser 3 e Three.js: loop di progressione, prestigio e rendering 3D.</p>
-        <div class="links"><a class="primary" href="https://github.com/ArtyomITA/idle-isekai-trials">repository</a></div>
-        <div class="meta"><span class="chip">JavaScript · Three.js</span></div>
-      </article>
-    </div>
-  </section>
-
-  <p class="foot"><span>niente tracker, niente pubblicità</span><span>pagina fatta in casa</span><span>aggiornata settembre 2026</span></p>
+<!-- Generato da tools/build-pages.py: modificare i testi li' e rigenerare. -->
+<a class="skip" href="#main">Vai al contenuto</a>
+<div class="mast-slot" id="mast-slot">
+<header class="mast" id="mast">
+<div class="mast-in wrap">
+<a class="mast-name" href="#top">Adrian Iancu</a>
+<span class="cur" id="cur" aria-hidden="true"></span>
+<nav class="nav" aria-label="Sezioni"><a href="#ricerca">ricerca</a><a href="#inferenza">inferenza</a><a href="#motion">motion ed embedding</a><a href="#locale">strumenti locali</a><a href="#ml">ML applicato</a><a href="#rl">ambienti RL</a><a href="#indice">indice</a></nav>
+<details class="toc"><summary>Indice</summary><ol><li><a href="#ricerca">ricerca</a></li><li><a href="#inferenza">inferenza</a></li><li><a href="#motion">motion ed embedding</a></li><li><a href="#locale">strumenti locali</a></li><li><a href="#ml">ML applicato</a></li><li><a href="#rl">ambienti RL</a></li><li><a href="#indice">indice</a></li><li><a href="#note">nota sulle figure</a></li></ol></details>
+<!-- Versione inglese: per toglierla cancellare la cartella en/, questo blocco .lang e i tre <link rel="alternate"> nel head. -->
+<nav class="lang" aria-label="Lingua"><a href="./" hreflang="it" lang="it" aria-current="page">IT</a><span aria-hidden="true">/</span><a href="en/" hreflang="en" lang="en">EN</a></nav>
+<div class="theme" role="group" aria-label="Tema"><button type="button" data-set="light" aria-pressed="false" title="Tema chiaro">carta</button><span aria-hidden="true">/</span><button type="button" data-set="dark" aria-pressed="false" title="Tema scuro">cianotipia</button></div>
+</div>
+</header>
 </div>
 
-<script>
-(function(){
-  "use strict";
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cv=document.getElementById('bg'), ctx=cv.getContext('2d'), W=0,H=0,DPR=1, nodes=[], T=0;
-  var N=110;
-  function size(){ W=window.innerWidth; H=window.innerHeight; DPR=Math.min(2,window.devicePixelRatio||1); cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
-  function seed(){ nodes=[]; for(var i=0;i<N;i++) nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,k:Math.random()<.63?0:1,ph:Math.random()*6.28}); }
-  var col=['#23c962','#4fd0ff'];
-  function frame(){
-    T+=1; ctx.clearRect(0,0,W,H);
-    for(var i=0;i<N;i++){ var n=nodes[i]; n.x+=n.vx; n.y+=n.vy; if(n.x<-20)n.x=W+20; if(n.x>W+20)n.x=-20; if(n.y<-20)n.y=H+20; if(n.y>H+20)n.y=-20; }
-    ctx.lineWidth=.7;
-    for(i=0;i<N;i++){ for(var j=i+1;j<N;j++){ var a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy; if(d<150*150){ var al=(1-Math.sqrt(d)/150)*.13; ctx.strokeStyle='rgba(79,208,255,'+al+')'; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } } }
-    for(i=0;i<N;i++){ var p=nodes[i], pulse=(Math.sin(T*.02+p.ph)+1)/2, r=1.2+pulse*1.6; ctx.fillStyle=col[p.k]; ctx.globalAlpha=.25+pulse*.45; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,6.283); ctx.fill(); }
-    ctx.globalAlpha=1;
-    if(T%37===0){ var a2=nodes[(Math.random()*N)|0]; a2.ph=0; }
-    requestAnimationFrame(frame);
-  }
-  window.addEventListener('resize',function(){ size(); seed(); });
-  size(); seed(); requestAnimationFrame(frame);
-})();
-</script>
+<main id="main">
+<section class="hero wrap grid" id="top" data-k="">
+<p class="role" lang="en">AI Engineer · inference optimization · attention mechanisms research (transformer) · local-first systems</p>
+<p class="folio">aggiornata settembre 2026</p>
+<h1><span>Adrian</span> <span>Iancu</span></h1>
+<div class="abstract"><p class="abs"><span class="runin">Sommario.</span> <b>Ottimizzazione CUDA su GPU consumer</b>, <b>ricerca su attention e memoria nei language model</b> (fino a un nucleo ricorrente preso da un connettoma reale), <b>pipeline ML locali</b> senza cloud. Tutto open source.</p></div>
+<figure class="fig1" id="fig1">
+<div class="rbox"><canvas id="raster" role="img" aria-label="Raster di neuroni leaky integrate-and-fire simulati: tratti di spike nel tempo per neuroni sensoriali, centrali e discendenti, con il tasso di popolazione sotto."></canvas></div>
+<p class="readout" id="readout" aria-hidden="true"></p>
+<figcaption><b>Fig. 1.</b> Raster di <span class="nn">128</span> neuroni leaky integrate-and-fire simulati in questa pagina (dt = 1 ms), ordinati per distanza dalle porte d'ingresso. Ogni tratto è uno spike. Circa ogni 120 ms un token entra dai neuroni sensoriali; scorrere la pagina aumenta l'ingresso. È un'illustrazione: il modello vero ha 166.700 neuroni (<a href="#fig2">fig. 2</a>).</figcaption>
+<ul class="legend"><li><svg aria-hidden="true" width="8" height="14"><rect class="lg-f" x="3" y="2" width="1.6" height="10"/></svg>porta d'ingresso</li><li><svg aria-hidden="true" width="8" height="14"><rect class="lg-i" x="3" y="2" width="1.6" height="10"/></svg>eccitatorio</li><li><svg aria-hidden="true" width="8" height="14"><rect class="lg-r" x="3" y="2" width="1.6" height="10"/></svg>inibitorio</li><li><svg aria-hidden="true" width="8" height="14"><rect class="lg-f" x="3" y="6" width="1.6" height="6"/><line class="lg-b" x1="0" y1="13" x2="8" y2="13"/></svg>discendente</li><li><svg aria-hidden="true" width="20" height="14"><path class="lg-c" d="M0 11 C4 11 5 3 8 3 S12 11 15 9 S18 6 20 7"/></svg>tasso di popolazione</li></ul>
+</figure>
+<div class="more">
+<p class="kw"><span class="runin">Parole chiave.</span> CUDA, CUDA Graphs; PyTorch; llama.cpp, GGML; WebGPU, WGSL; Spiking NN, surrogate gradient; LLM inference, quantizzazione, offload; Diffusion LM; Embedding, LLM2Vec; Time series, probabilistic forecasting; Python, C++, TypeScript; Unity, Phaser; faster-whisper, Piper.</p>
+<p class="go contacts"><a href="https://github.com/ArtyomITA">GitHub</a><a href="https://www.linkedin.com/in/adrian-ciprian-iancu-a2a477391/">LinkedIn</a><a href="https://github.com/ggml-org/llama.cpp/pull/27721">llama.cpp · PR #27721</a></p>
+</div>
+<table class="tab1">
+<caption><b>Tab. 1.</b> Numeri di riferimento, ciascuno con la sua fonte.</caption>
+<thead><tr><th scope="col">grandezza</th><th scope="col">valore</th><th scope="col">fonte</th></tr></thead>
+<tbody><tr><td>Hardware di riferimento</td><td class="v">GTX 1080 · 8 GB · sm_61</td><td class="src">ogni benchmark della pagina</td></tr><tr><td>Speedup MoE in llama.cpp</td><td class="v">+40%</td><td class="src"><a href="https://github.com/ggml-org/llama.cpp/pull/27721">PR upstream #27721, aperta</a></td></tr><tr><td>Neuroni simulati con gradiente</td><td class="v">166.700</td><td class="src"><a href="#fig2">fig. 2, male-cns:v1.0</a></td></tr><tr><td>Modelli portati su 8 GB</td><td class="v">Llama-3-8B · Bonsai 4B · Kimodo</td><td class="src"><a href="#motion">Motion ed embedding</a></td></tr></tbody>
+</table>
+</section>
+
+<section class="sec wrap grid" id="ricerca" data-k="Ricerca su attention e memoria" aria-labelledby="h-ricerca">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><p class="kicker">Ricerca su attention e memoria</p></div>
+<div class="sec-main"><h2 id="h-ricerca">Language model su un connettoma reale</h2><p class="lead" data-notes="n1">Quanto del contesto lo tiene l'attention e quanto un nucleo ricorrente? Banco di prova: il connettoma completo del sistema nervoso di Drosophila (male-cns:v1.0, <span class="m">166.700</span> neuroni, <span class="m">2,75 M</span> sinapsi a soglia 10)<sup class="n">1</sup> come nucleo ricorrente LIF di un language model: segni sinaptici fissati dal neurotrasmettitore, magnitudini inizializzate dal conteggio di sinapsi, gradiente surrogato, CUDA Graph FP32. Protocollo con null model a gradi conservati, baseline a pari token e lesioni in silico.</p></div>
+<aside class="notes"><p id="n1"><sup class="n">1</sup>Connettoma male-cns:v1.0 (Janelia FlyEM · Google Research, licenza CC-BY): 25,6 M connessioni in totale, 2.753.975 sopra la soglia di 10 sinapsi.</p></aside>
+<figure class="fig fig2" id="fig2">
+<svg class="cns" id="cns" role="img" aria-labelledby="cap2"></svg>
+<figcaption id="cap2"><b>Fig. 2.</b> Pipeline di FlyToLLM. Il grafo è un'illustrazione generata in questa pagina sulla sagoma del sistema nervoso centrale (cervello, lobi ottici, cordone ventrale): ogni punto vale circa <span class="pd">290</span> neuroni. La tinta indica la distanza in salti dalle porte d'ingresso e lo scorrimento ne rivela uno alla volta. Nel connettoma vero il readout sta a 2 salti dalle porte, per questo la profondità 4+4 basta.</figcaption>
+</figure>
+<article class="proj">
+<h3>FlyToLLM</h3>
+<p class="dateline">ricerca · 2026</p>
+<p data-notes="n2">Ingresso del testo tramite i <span class="m">17.937</span> neuroni sensoriali reali, lettura dai <span class="m">2.241</span> neuroni discendenti e motori, attention causale esterna (4 teste, cache 128) che rientra dalle stesse porte. Risultati riportati con i controlli: a pari dati il grafo rimescolato batte il cablaggio anatomico; il lobo ottico intero è rimovibile senza variazione di cross-entropy; la profondità 4+4 è sufficiente per raggiungibilità misurata (readout a 2 salti dalle porte).<sup class="n">2</sup></p>
+<p class="go"><a href="https://artyomita.github.io/flytollm/">pipeline animata e numeri</a><a href="https://github.com/ArtyomITA/flytollm">repository</a></p>
+<p class="meth"><span class="runin">Metodi.</span> PyTorch · CUDA Graphs; LIF · surrogate gradient; TBPTT · Adam; TinyStories · BPE 4096</p>
+</article>
+<aside class="notes"><p id="n2"><sup class="n">2</sup>4+4 sottopassi per token, TBPTT 8, CUDA Graph FP32: 0,65 s per update su GTX 1080, 0,38 s con il kernel fuso; 5,46 M parametri.</p></aside>
+</section>
+
+<section class="sec wrap grid" id="inferenza" data-k="Ottimizzazione dell'inferenza CUDA" aria-labelledby="h-inferenza">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><p class="kicker">Ottimizzazione dell'inferenza CUDA</p><p class="epi" aria-hidden="true">sm_61</p></div>
+<div class="sec-main"><h2 id="h-inferenza">Architettura Pascal (sm_61)</h2><p class="lead">Nessun tensor core, FP16 a 1/64 del throughput FP32, 8 GB di VRAM. Profilazione, root cause analysis, patch minime con benchmark riproducibili, contributi upstream.</p></div>
+<article class="proj withmeta">
+<h3 lang="en">CUDA graphs on Pascal</h3>
+<p class="dateline">llama.cpp · PR upstream</p>
+<dl class="meta"><div><dt>Dove</dt><dd>llama.cpp (ggml-org)</dd></div><div><dt>Stack</dt><dd>C++ · CUDA; GGML</dd></div><div><dt>Stato</dt><dd>aperta, non ancora integrata</dd></div></dl>
+<p>Abilitazione dei CUDA Graphs su sm_61 in llama.cpp: <span class="m">+40%</span> di throughput sui modelli Mixture-of-Experts, <span class="m">+7%</span> sui densi, nessuna regressione misurata. Diff di una riga con benchmark allegati.</p>
+<p class="go"><a href="https://github.com/ggml-org/llama.cpp/pull/27721">PR #27721</a><a href="https://github.com/ArtyomITA/llama.cpp">fork</a></p>
+</article>
+<figure class="fig fig3" id="fig3">
+<svg class="kt" id="kt" role="img" aria-labelledby="cap3" viewBox="0 0 1014 204"><text x="0" y="18" class="fl">MoE · un lancio per kernel</text><path class="tk" d="M204 3h2v22h-2zM244.4 3h2v22h-2zM272.3 3h2v22h-2zM311.5 3h2v22h-2zM363.7 3h2v22h-2zM410.8 3h2v22h-2zM445.5 3h2v22h-2zM474 3h2v22h-2zM516.1 3h2v22h-2zM565.6 3h2v22h-2zM614.6 3h2v22h-2zM661.9 3h2v22h-2zM700.9 3h2v22h-2zM742.2 3h2v22h-2zM792.4 3h2v22h-2zM835.8 3h2v22h-2zM876.8 3h2v22h-2zM917.3 3h2v22h-2z"></path><path class="kn" d="M220.7 6h23.7v16h-23.7zM261.1 6h11.2v16h-11.2zM289 6h22.5v16h-22.5zM328.2 6h35.5v16h-35.5zM380.5 6h30.3v16h-30.3zM427.5 6h18v16h-18zM462.2 6h11.8v16h-11.8zM490.8 6h25.3v16h-25.3zM532.8 6h32.8v16h-32.8zM582.3 6h32.3v16h-32.3zM631.3 6h30.6v16h-30.6zM678.6 6h22.2v16h-22.2zM717.6 6h24.6v16h-24.6zM758.9 6h33.6v16h-33.6zM809.1 6h26.6v16h-26.6zM852.5 6h24.3v16h-24.3zM893.5 6h23.8v16h-23.8zM934 6h22v16h-22z"></path><text x="0" y="48" class="fl">MoE · CUDA graph</text><path class="tk" d="M204 33h2v22h-2z"></path><path class="kn" data-r="0" d="M210.7 36h23.7v16h-23.7zM239 36h11.2v16h-11.2zM254.9 36h22.5v16h-22.5zM282 36h35.5v16h-35.5zM322.2 36h30.3v16h-30.3zM357.2 36h18v16h-18zM379.9 36h11.8v16h-11.8zM396.4 36h25.3v16h-25.3zM426.3 36h32.8v16h-32.8zM463.8 36h32.3v16h-32.3zM500.8 36h30.6v16h-30.6zM536 36h22.2v16h-22.2zM562.9 36h24.6v16h-24.6zM592.2 36h33.6v16h-33.6zM630.4 36h26.6v16h-26.6zM661.7 36h24.3v16h-24.3zM690.7 36h23.8v16h-23.8zM719.1 36h22v16h-22z"></path><line class="endl" data-r="0" y1="30" y2="58" x1="741.1" x2="741.1"></line><text x="1014" y="48" class="fv" text-anchor="end" data-r="0">0,71×</text><text x="0" y="92" class="fl">denso · un lancio per kernel</text><path class="tk" d="M204 77h2v22h-2zM243.9 77h2v22h-2zM291.7 77h2v22h-2zM340.4 77h2v22h-2zM380.9 77h2v22h-2zM411.5 77h2v22h-2zM454 77h2v22h-2zM499.8 77h2v22h-2zM545.8 77h2v22h-2zM571.6 77h2v22h-2zM613.5 77h2v22h-2zM653.4 77h2v22h-2zM702 77h2v22h-2zM743.5 77h2v22h-2zM789.8 77h2v22h-2zM837.2 77h2v22h-2zM885.1 77h2v22h-2zM919.2 77h2v22h-2z"></path><path class="kn" d="M208.2 80h35.7v16h-35.7zM248.1 80h43.7v16h-43.7zM295.9 80h44.5v16h-44.5zM344.6 80h36.2v16h-36.2zM385 80h26.5v16h-26.5zM415.7 80h38.3v16h-38.3zM458.2 80h41.6v16h-41.6zM504 80h41.9v16h-41.9zM550 80h21.6v16h-21.6zM575.8 80h37.7v16h-37.7zM617.7 80h35.7v16h-35.7zM657.6 80h44.4v16h-44.4zM706.2 80h37.4v16h-37.4zM747.7 80h42.1v16h-42.1zM793.9 80h43.3v16h-43.3zM841.4 80h43.7v16h-43.7zM889.3 80h30v16h-30zM923.4 80h32.6v16h-32.6z"></path><text x="0" y="122" class="fl">denso · CUDA graph</text><path class="tk" d="M204 107h2v22h-2z"></path><path class="kn" data-r="1" d="M207.3 110h35.7v16h-35.7zM244.4 110h43.7v16h-43.7zM289.4 110h44.5v16h-44.5zM335.2 110h36.2v16h-36.2zM372.8 110h26.5v16h-26.5zM400.6 110h38.3v16h-38.3zM440.3 110h41.6v16h-41.6zM483.2 110h41.9v16h-41.9zM526.4 110h21.6v16h-21.6zM549.3 110h37.7v16h-37.7zM588.4 110h35.7v16h-35.7zM625.4 110h44.4v16h-44.4zM671.2 110h37.4v16h-37.4zM709.9 110h42.1v16h-42.1zM753.3 110h43.3v16h-43.3zM797.9 110h43.7v16h-43.7zM842.9 110h30v16h-30zM874.2 110h32.6v16h-32.6z"></path><line class="endl" data-r="1" y1="104" y2="132" x1="906.8" x2="906.8"></line><text x="1014" y="122" class="fv" text-anchor="end" data-r="1">0,93×</text><line x1="204" y1="158" x2="956" y2="158" class="ax"></line><line x1="204" y1="158" x2="204" y2="163" class="ax"></line><text x="204" y="176" class="fm" text-anchor="start">0</text><line x1="392" y1="158" x2="392" y2="163" class="ax"></line><text x="392" y="176" class="fm" text-anchor="middle">0,25</text><line x1="580" y1="158" x2="580" y2="163" class="ax"></line><text x="580" y="176" class="fm" text-anchor="middle">0,5</text><line x1="768" y1="158" x2="768" y2="163" class="ax"></line><text x="768" y="176" class="fm" text-anchor="middle">0,75</text><line x1="956" y1="158" x2="956" y2="163" class="ax"></line><text x="956" y="176" class="fm" text-anchor="end">1</text><text x="204" y="196" class="fl">tempo per token, relativo</text></svg>
+<figcaption id="cap3"><b>Fig. 3.</b> CUDA Graphs su sm_61 in llama.cpp (PR #27721). Schema, non traccia di profilazione: stessi kernel, un solo lancio del grafo al posto di uno per kernel. Scorrendo, la riga del grafo si accorcia fino a 1/1,40 della prima sui modelli MoE (+40% misurato) e a 1/1,07 sui densi (+7%).</figcaption>
+</figure>
+<div class="briefs">
+<article class="brief"><h4 class="bn">hildanext</h4><p>Conversione di un LLM autoregressivo (Qwen3-0.6B) in modello a diffusione discreta secondo la ricetta LLaDA 2.1, con backend di training e inferenza eseguibile su Pascal.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/hildanext">repository</a></span><span class="stk">Python · PyTorch; diffusion LM</span></p></article>
+<article class="brief"><h4 class="bn">bonsai-webgpu-tiled-vae-fix</h4><p>Root cause analysis del decoder VAE tiled di Bonsai-Image 4B in WebGPU su GPU prive di shader-f16: patch da <span class="m">1,4 KB</span> che abilita 512px e oltre su Pascal e precedenti, senza perdita di qualità sui dispositivi f16.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/bonsai-webgpu-tiled-vae-fix">repository</a></span><span class="stk">JavaScript · WebGPU · WGSL; 2 stelle</span></p></article>
+</div>
+</section>
+
+<section class="sec wrap grid" id="motion" data-k="Pipeline text-to-motion ed embedding" aria-labelledby="h-motion">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><p class="kicker">Pipeline text-to-motion ed embedding</p></div>
+<div class="sec-main"><h2 id="h-motion">Modelli da 8 B su 8 GB di VRAM</h2><p class="lead">Generazione di movimento 3D con Kimodo-SOMA (NVIDIA) guidata da un encoder LLM2Vec da 8 miliardi di parametri, interamente in locale: offload CPU/GPU, batching senza degradazione numerica, integrazione in Unity con sintesi vocale.</p></div>
+<article class="proj">
+<h3 class="h3m">llm2vec-8gb-offload-lossless-batching</h3>
+<p>LLM2Vec (Llama-3-8B) su una GPU da 8 GB via offload in RAM; batching senza alterare gli embedding: il padding li sposta (similarità coseno <span class="m">0,76</span> contro il riferimento), il fix li riporta a <span class="m">0,999956</span>.</p>
+<p class="go"><a href="https://github.com/ArtyomITA/llm2vec-8gb-offload-lossless-batching">repository</a></p>
+<p class="meth"><span class="runin">Metodi.</span> Python · PyTorch; encoder testuale per Kimodo</p>
+</article>
+<figure class="fig fig4" id="fig4">
+<svg class="err" id="err" role="img" aria-labelledby="cap4" viewBox="0 0 1014 124"><line x1="12" y1="78" x2="974" y2="78" class="ax"></line><line x1="12" y1="78" x2="12" y2="84" class="ax"></line><text x="12" y="100" class="fm" text-anchor="start">1</text><line x1="204.4" y1="78" x2="204.4" y2="84" class="ax"></line><text x="204.4" y="100" class="fm" text-anchor="middle">10<tspan dy="-5" class="ex">−1</tspan></text><line x1="396.8" y1="78" x2="396.8" y2="84" class="ax"></line><text x="396.8" y="100" class="fm" text-anchor="middle">10<tspan dy="-5" class="ex">−2</tspan></text><line x1="589.2" y1="78" x2="589.2" y2="84" class="ax"></line><text x="589.2" y="100" class="fm" text-anchor="middle">10<tspan dy="-5" class="ex">−3</tspan></text><line x1="781.6" y1="78" x2="781.6" y2="84" class="ax"></line><text x="781.6" y="100" class="fm" text-anchor="middle">10<tspan dy="-5" class="ex">−4</tspan></text><line x1="974" y1="78" x2="974" y2="84" class="ax"></line><text x="974" y="100" class="fm" text-anchor="middle">10<tspan dy="-5" class="ex">−5</tspan></text><line x1="850.9" y1="68" x2="850.9" y2="88" class="tgt"></line><text x="850.9" y="118" class="fl" text-anchor="middle">fix</text><text x="12" y="118" class="fl" text-anchor="start">1 − coseno</text><text x="124.3" y="48" class="fl" text-anchor="start">padding: 0,76</text><line class="lk" x1="131.3" y1="78" x2="850.9" y2="78"></line><circle class="p0" cx="131.3" cy="78" r="4.5"></circle><circle class="p1" cx="850.9" cy="78" r="5"></circle><text x="850.9" y="66" class="fv" text-anchor="middle" id="err-v">0,999956</text></svg>
+<figcaption id="cap4"><b>Fig. 4.</b> Distanza dal riferimento degli embedding di LLM2Vec in batch, su scala logaritmica di 1 − coseno: il padding li porta a 0,76, il fix a 0,999956.</figcaption>
+</figure>
+<div class="briefs">
+<article class="brief"><h4 class="bn bt">NPC conversazionale in Unity</h4><p class="dateline soon">in arrivo</p><p>Personaggio 3D locale: LLM per il dialogo, Piper per la voce, Kimodo-SOMA per le animazioni del corpo, su GTX 1080 e CPU a 4 core. Pubblicazione in preparazione.</p><p class="bf"><span class="stk">Unity · Python; text-to-motion · TTS</span></p></article>
+</div>
+</section>
+
+<section class="sec wrap grid" id="locale" data-k="Strumenti locali" aria-labelledby="h-locale">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><p class="kicker">Strumenti locali</p><p class="epi" aria-hidden="true">127.0.0.1</p></div>
+<div class="sec-main"><h2 id="h-locale">Speech-to-text locale e strumenti privacy-first</h2><p class="lead">Applicazioni desktop che elaborano audio e testo sulla macchina dell'utente, senza servizi esterni.</p></div>
+<article class="proj">
+<h3>Vergilius</h3>
+<p class="dateline">local-first</p>
+<!-- Testo precedente, verbatim: "Assistente personale che non comunica con servizi esterni: schema architetturale pubblicato, codice in arrivo."
+     Nuovo testo dal README pubblico del repository: da confermare con l'utente. -->
+<p data-notes="n3">Assistente personale che non comunica con servizi esterni: gira in locale su GTX 1080 (8 GB), senza chiavi API e senza che una conversazione lasci la macchina. Modello predefinito LFM2.5-2.6B con drafter speculativo: <span class="m">64 tok/s</span> in decodifica, <span class="m">78-100</span> tok/s con il drafter attivo. Un controllo di groundedness confronta le cifre delle risposte con i risultati degli strumenti: le cifre non supportate sono scese da <span class="m">3</span> turni su <span class="m">35</span> a <span class="m">1</span> su <span class="m">36</span>.<sup class="n">3</sup></p>
+<p class="go"><a href="https://github.com/ArtyomITA/vergilius">repository</a><a href="https://claude.ai/code/artifact/2186dae3-4976-4862-b8cc-b0894512b87f">schema del progetto</a></p>
+</article>
+<aside class="notes"><p id="n3"><sup class="n">3</sup>Il repository include come submodule due progetti di terzi, Odysseus (assistente) e ShadowBroker (intelligence da fonti aperte), con licenza AGPL-3.0: sono dipendenze, non lavoro originale.</p></aside>
+<figure class="fig fig5" id="fig5">
+<svg class="f5" id="fence" role="img" aria-labelledby="cap5" viewBox="0 0 1014 180"><path class="fen" pathLength="1" d="M239.3 10H1013.5V179.5H0.5V10H239.3" stroke-dasharray="1.0000 1"></path><text x="22" y="44" class="fl">tok/s su GTX 1080</text><line x1="22" y1="122" x2="485" y2="122" class="ax"></line><line x1="22" y1="122" x2="22" y2="130" class="ax"></line><text x="22" y="144" class="fm" text-anchor="middle">0</text><line x1="64.1" y1="122" x2="64.1" y2="127" class="ax"></line><text x="64.1" y="144" class="fm" text-anchor="middle">10</text><line x1="106.2" y1="122" x2="106.2" y2="127" class="ax"></line><text x="106.2" y="144" class="fm" text-anchor="middle">20</text><line x1="148.3" y1="122" x2="148.3" y2="127" class="ax"></line><text x="148.3" y="144" class="fm" text-anchor="middle">30</text><line x1="190.4" y1="122" x2="190.4" y2="127" class="ax"></line><text x="190.4" y="144" class="fm" text-anchor="middle">40</text><line x1="232.5" y1="122" x2="232.5" y2="130" class="ax"></line><text x="232.5" y="144" class="fm" text-anchor="middle">50</text><line x1="274.5" y1="122" x2="274.5" y2="127" class="ax"></line><text x="274.5" y="144" class="fm" text-anchor="middle">60</text><line x1="316.6" y1="122" x2="316.6" y2="127" class="ax"></line><text x="316.6" y="144" class="fm" text-anchor="middle">70</text><line x1="358.7" y1="122" x2="358.7" y2="127" class="ax"></line><text x="358.7" y="144" class="fm" text-anchor="middle">80</text><line x1="400.8" y1="122" x2="400.8" y2="127" class="ax"></line><text x="400.8" y="144" class="fm" text-anchor="middle">90</text><line x1="442.9" y1="122" x2="442.9" y2="130" class="ax"></line><text x="442.9" y="144" class="fm" text-anchor="middle">100</text><line x1="485" y1="122" x2="485" y2="127" class="ax"></line><text x="485" y="144" class="fm" text-anchor="middle">110</text><path class="brk" d="M350.3 100v-6H442.9v6"></path><text x="442.9" y="86" class="fl2" text-anchor="end">con drafter · 78-100</text><circle class="p1" cx="291.4" cy="122" r="5"></circle><text x="294.4" y="110" class="fl2" text-anchor="end">decodifica · 64</text><text x="529" y="44" class="fl">turni con cifre non supportate</text><g class="cell in"><rect x="529" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="542" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="555" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="568" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="581" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="594" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="607" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="529" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="542" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell r in"><rect x="555" y="75" width="10" height="10" rx="1.5"></rect><path class="x" d="M557.5 77.5l5 5m0-5l-5 5"></path></g><g class="cell in"><rect x="568" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="581" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="594" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="607" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="529" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="542" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="555" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="568" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="581" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="594" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell r in"><rect x="607" y="88" width="10" height="10" rx="1.5"></rect><path class="x" d="M609.5 90.5l5 5m0-5l-5 5"></path></g><g class="cell in"><rect x="529" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="542" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="555" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="568" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="581" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="594" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="607" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="529" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="542" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="555" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell r in"><rect x="568" y="114" width="10" height="10" rx="1.5"></rect><path class="x" d="M570.5 116.5l5 5m0-5l-5 5"></path></g><g class="cell in"><rect x="581" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="594" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="607" y="114" width="10" height="10" rx="1.5"></rect></g><text x="642" y="98" class="fm" text-anchor="middle">→</text><g class="cell in"><rect x="664" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="677" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="690" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="703" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="716" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="729" y="62" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="664" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="677" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="690" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="703" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="716" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="729" y="75" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="664" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="677" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="690" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="703" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="716" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="729" y="88" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="664" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="677" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="690" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="703" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell r in"><rect x="716" y="101" width="10" height="10" rx="1.5"></rect><path class="x" d="M718.5 103.5l5 5m0-5l-5 5"></path></g><g class="cell in"><rect x="729" y="101" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="664" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="677" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="690" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="703" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="716" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="729" y="114" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="664" y="127" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="677" y="127" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="690" y="127" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="703" y="127" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="716" y="127" width="10" height="10" rx="1.5"></rect></g><g class="cell in"><rect x="729" y="127" width="10" height="10" rx="1.5"></rect></g><text x="529" y="162" class="fv">3/35</text><text x="664" y="162" class="fv">1/36</text><rect class="lbx" x="12" y="1" width="227.3" height="18"></rect><text x="20" y="14.5" class="fl lbt">GTX 1080 · nessuna chiamata esterna</text></svg>
+<figcaption id="cap5"><b>Fig. 5.</b> Vergilius su GTX 1080, dentro un recinto: nessuna chiamata esce dalla macchina (127.0.0.1). A sinistra la velocità di decodifica, 64 tok/s e 78-100 tok/s con il drafter; a destra i turni con cifre non supportate dai risultati degli strumenti, da 3 su 35 a 1 su 36.</figcaption>
+</figure>
+<div class="briefs">
+<article class="brief"><h4 class="bn">stt-whisper-pad</h4><p>Applicazione Windows per trascrizione vocale locale basata su faster-whisper (CTranslate2, int8 su CUDA): registrazione, trascrizione e incolla nel campo attivo.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/stt-whisper-pad">repository</a></span><span class="stk">Python; 1 stella</span></p></article>
+</div>
+</section>
+
+<section class="sec wrap grid" id="ml" data-k="Progetti di machine learning applicato" aria-labelledby="h-ml">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><p class="kicker">Progetti di machine learning applicato</p></div>
+<div class="sec-main"><h2 id="h-ml">Predizione, ottimizzazione, serie storiche</h2><p class="lead">Modelli con intervalli di incertezza, ottimizzazione sotto vincoli in tempo reale, valutazione fuori campione o su simulazione.</p></div>
+<article class="proj">
+<h3>FantaOracle</h3>
+<p class="dateline">codice completo</p>
+<p data-notes="n4">Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (<span class="m">75-91%</span> vinti contro strategie di riferimento). Con arena interattiva per sfidarlo.<sup class="n">4</sup></p>
+<p class="go"><a href="https://github.com/ArtyomITA/fantaoracle">repository</a></p>
+<p class="meth"><span class="runin">Metodi.</span> Python; 2 stelle; predizione · ottimizzazione · Monte Carlo</p>
+</article>
+<aside class="notes"><p id="n4"><sup class="n">4</sup>Dal README: tetto d'asta dinamico con 0 sfori su 52 lotti simulati; ponte con FantaAsta Live, 43 assegnazioni corrette su 44.</p></aside>
+<figure class="fig fig6" id="fig6">
+<svg class="mc" id="mc" role="img" aria-labelledby="cap6"></svg>
+<figcaption id="cap6"><b>Fig. 6.</b> FantaOracle, valutazione su campionati simulati. Schema generato in questa pagina (seme 2026), non i dati delle simulazioni: ogni curva è la quota cumulata di vittorie in una serie di campionati, e il fascio si stringe nell'intervallo 75-91% riportato dal progetto.</figcaption>
+</figure>
+<div class="briefs">
+<article class="brief"><h4 class="bn">fantacalcio-advisor</h4><p>Motore di analisi e raccomandazione multi-algoritmo con front-end React; il predecessore di FantaOracle.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/fantacalcio-advisor">repository</a></span><span class="stk">React · TypeScript · Python</span></p></article>
+<article class="brief"><h4 class="bn">K-Forecast</h4><p>Dashboard di previsione probabilistica: DeepAR, ARIMA/SARIMA e AutoGluon confrontati sulla stessa serie con intervalli di confidenza.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/K-Forecast">repository</a></span><span class="stk">Python; time series</span></p></article>
+<article class="brief"><h4 class="bn">sp500-predictability-lab</h4><p>Laboratorio full-stack (React + Flask) per l'analisi e la predizione di serie storiche dell'S&amp;P 500, con test di prevedibilità fuori campione.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/sp500-predictability-lab">repository</a></span><span class="stk">TypeScript · Python; time series</span></p></article>
+<article class="brief"><h4 class="bn">storico</h4><p>Pipeline supervisionata e non supervisionata su fatture aperte: apprendimento dei pattern di pagamento e ranking del rischio per la gestione del credito.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/storico">repository</a></span><span class="stk">Python; credit risk</span></p></article>
+</div>
+</section>
+
+<section class="sec sec-rl wrap grid" id="rl" data-k="Ambienti RL" aria-labelledby="h-rl">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><p class="kicker">Ambienti RL</p></div>
+<div class="sec-main"><h2 id="h-rl">Game engine e ambienti per reinforcement learning</h2><p class="lead">Ambienti simulati costruiti da zero come banco di prova per agenti.</p></div>
+<div class="briefs">
+<article class="brief"><h4 class="bn">supermario-1-1-rl</h4><p>Clone del livello 1-1 in Phaser 3 e TypeScript progettato come ambiente di training per reinforcement learning, con osservazioni e ricompense esposte.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/supermario-1-1-rl">repository</a></span><span class="stk">TypeScript · Phaser 3; RL</span></p></article>
+<article class="brief"><h4 class="bn">idle-isekai-trials</h4><p>Idle RPG nel browser con Phaser 3 e Three.js: loop di progressione, prestigio e rendering 3D.</p><p class="bf"><span class="go"><a href="https://github.com/ArtyomITA/idle-isekai-trials">repository</a></span><span class="stk">JavaScript · Three.js</span></p></article>
+</div>
+</section>
+
+<section class="sec sec-idx wrap grid" id="indice" data-k="Indice dei repository" aria-labelledby="h-indice">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><p class="kicker">Appendice</p><p class="count">15 voci · 6 aree</p></div>
+<div class="idx">
+<h2 id="h-indice">Indice dei repository</h2>
+<table>
+<caption>Repository pubblici raggruppati per area; ogni nome porta al codice.</caption>
+<thead><tr><th scope="col">repository</th><th scope="col">stack</th><th scope="col">note</th></tr></thead>
+<tbody><tr class="grp"><th colspan="3" scope="rowgroup"><a href="#ricerca">Ricerca su attention e memoria</a></th></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/flytollm">flytollm</a></td><td class="sk">PyTorch · CUDA</td><td class="nt"></td></tr></tbody><tbody><tr class="grp"><th colspan="3" scope="rowgroup"><a href="#inferenza">Ottimizzazione dell'inferenza CUDA</a></th></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/llama.cpp">llama.cpp</a> <span class="fk">(fork)</span></td><td class="sk">C++ · CUDA</td><td class="nt">PR #27721 aperta</td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/hildanext">hildanext</a></td><td class="sk">Python · PyTorch</td><td class="nt"></td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/bonsai-webgpu-tiled-vae-fix">bonsai-webgpu-tiled-vae-fix</a></td><td class="sk">JavaScript · WebGPU</td><td class="nt">2 stelle</td></tr></tbody><tbody><tr class="grp"><th colspan="3" scope="rowgroup"><a href="#motion">Pipeline text-to-motion ed embedding</a></th></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/llm2vec-8gb-offload-lossless-batching">llm2vec-8gb-offload-lossless-batching</a></td><td class="sk">Python · PyTorch</td><td class="nt"></td></tr><tr class="nolink"><td class="nm"><span>NPC conversazionale in Unity</span></td><td class="sk">Unity · Python</td><td class="nt"><i>in arrivo</i></td></tr></tbody><tbody><tr class="grp"><th colspan="3" scope="rowgroup"><a href="#locale">Strumenti locali</a></th></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/vergilius">vergilius</a></td><td class="sk">local-first</td><td class="nt"></td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/stt-whisper-pad">stt-whisper-pad</a></td><td class="sk">Python</td><td class="nt">1 stella</td></tr></tbody><tbody><tr class="grp"><th colspan="3" scope="rowgroup"><a href="#ml">Progetti di machine learning applicato</a></th></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/fantaoracle">fantaoracle</a></td><td class="sk">Python</td><td class="nt">2 stelle</td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/fantacalcio-advisor">fantacalcio-advisor</a></td><td class="sk">React · TypeScript · Python</td><td class="nt"></td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/K-Forecast">K-Forecast</a></td><td class="sk">Python</td><td class="nt"></td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/sp500-predictability-lab">sp500-predictability-lab</a></td><td class="sk">TypeScript · Python</td><td class="nt"></td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/storico">storico</a></td><td class="sk">Python</td><td class="nt"></td></tr></tbody><tbody><tr class="grp"><th colspan="3" scope="rowgroup"><a href="#rl">Ambienti RL</a></th></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/supermario-1-1-rl">supermario-1-1-rl</a></td><td class="sk">TypeScript · Phaser 3</td><td class="nt"></td></tr><tr><td class="nm"><a href="https://github.com/ArtyomITA/idle-isekai-trials">idle-isekai-trials</a></td><td class="sk">JavaScript · Three.js</td><td class="nt"></td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section class="sec sec-note wrap grid" id="note" data-k="Nota sulle figure" aria-labelledby="h-note">
+<div class="rule" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="runhead"><h2 class="kicker" id="h-note">Nota sulle figure</h2></div>
+<div class="sec-main"><p class="notetext">Tutte le figure sono calcolate in questa pagina con canvas e SVG scritti a mano, senza immagini né librerie. I generatori pseudo-casuali hanno seme fisso (27721, il numero della PR, per <a href="#fig1">Fig. 1</a> e <a href="#fig3">Fig. 3</a>; 166700, il numero di neuroni, per <a href="#fig2">Fig. 2</a>; 2026 per <a href="#fig6">Fig. 6</a>), quindi ogni lettore vede lo stesso disegno. Lo scorrimento è un ingresso: in Fig. 1 alza la corrente sensoriale, nelle altre fa avanzare la figura, che torna indietro se si risale. Con la riduzione del movimento attiva ogni figura mostra un solo fotogramma scelto. Fig. 1, 2, 3 e 6 sono schemi; <a href="#fig4">Fig. 4</a> e <a href="#fig5">Fig. 5</a> riportano numeri misurati; i numeri di testo, didascalie e Tab. 1 vengono dai repository.</p></div>
+</section>
+
+<section class="sec sec-aut wrap grid" id="autore" data-k="L'autore" aria-labelledby="h-autore">
+<div class="runhead"><h2 class="kicker" id="h-autore">L'autore</h2></div>
+<div class="sec-main author">
+<img src="img/avatar-192.webp" width="96" height="96" alt="Avatar GitHub di Adrian Iancu" loading="lazy" decoding="async">
+<div><p class="aname">Adrian Iancu</p><p class="arole" lang="en">AI Engineer · inference optimization · attention mechanisms research (transformer) · local-first systems</p>
+<p class="go"><a href="https://github.com/ArtyomITA">GitHub</a><a href="https://www.linkedin.com/in/adrian-ciprian-iancu-a2a477391/">LinkedIn</a></p></div>
+</div>
+</section>
+</main>
+
+<footer class="foot wrap">
+<p><span>niente tracker, niente pubblicità</span><span>pagina fatta in casa</span><span>aggiornata settembre 2026</span><button type="button" id="gridbtn" aria-pressed="false">mostra la griglia</button></p>
+</footer>
 </body>
 </html>
