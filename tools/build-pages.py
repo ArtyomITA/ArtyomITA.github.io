@@ -70,16 +70,16 @@ T["it"] = dict(
     th=("chiaro", "scuro", "auto"), thtitle=("Tema chiaro (carta)", "Tema scuro (cianotipia)", "Tema auto (come il sistema)"),
     nav=["ricerca", "inferenza", "motion ed embedding", "strumenti locali", "ML applicato", "ambienti RL", "indice"], navnote="nota sulle figure",
     folio="aggiornata settembre 2026",
-    abs='<span class="runin">Sommario.</span> <b>Ottimizzazione CUDA su GPU consumer</b>, <b>ricerca su attention e memoria nei language model</b> (fino a un nucleo ricorrente preso da un connettoma reale), <b>pipeline ML locali</b> senza cloud. Tutto open source.',
+    abs='<span class="runin">Sommario.</span> <b>Ottimizzazione CUDA su GPU consumer</b>, <b>ricerca su attention e memoria nei language model</b> (fino a un nucleo ricorrente preso da un connettoma reale), <b>pipeline ML locali</b> senza cloud. Tutto open&nbsp;source.',
     rasterlabel="Raster di neuroni leaky integrate-and-fire simulati: tratti di spike nel tempo per neuroni sensoriali, centrali e discendenti, con il tasso di popolazione sotto.",
-    cap1='<b>Fig. 1.</b> Raster di <span class="nn">128</span> neuroni leaky integrate-and-fire simulati in questa pagina (dt = 1 ms), ordinati per distanza dalle porte d\'ingresso. Ogni tratto è uno spike. Circa ogni 120 ms un token entra dai neuroni sensoriali; scorrere la pagina aumenta l\'ingresso. È un\'illustrazione: il modello vero ha 166.700 neuroni (<a href="#fig2">fig. 2</a>).',
+    cap1='<b>Fig. 1.</b> Raster di <span class="nn">128</span> neuroni leaky integrate-and-fire simulati in questa pagina (dt = 1 ms), ordinati per distanza dalle porte d\'ingresso. Ogni tratto è uno spike. Circa ogni 120 ms un token entra dai neuroni sensoriali; scorrere la pagina aumenta l\'ingresso. È un\'illustrazione: il modello vero ha 166.700 neuroni (<a href="#fig2">fig.&nbsp;2</a>).',
     legend=["sensoriale (porta d'ingresso)", "eccitatorio", "inibitorio", "discendente (uscita)", "tasso di popolazione"],
     kw='CUDA, CUDA Graphs; PyTorch; llama.cpp, GGML; WebGPU, WGSL; Spiking NN, surrogate gradient; LLM inference, quantizzazione, offload; Diffusion LM; Embedding, LLM2Vec; Time series, probabilistic forecasting; Python, C++, TypeScript; Unity, Phaser; faster-whisper, Piper.',
     tcap="<b>Tab. 1.</b> Numeri di riferimento, ciascuno con la sua fonte.", thq="grandezza", thv="valore", ths="fonte",
-    rows=[("Hardware di riferimento", "GTX&nbsp;1080&nbsp;· 8&nbsp;GB&nbsp;· sm_61", "ogni benchmark della pagina"),
+    rows=[("Hardware di riferimento", "GTX&nbsp;1080|8&nbsp;GB|sm_61", "ogni benchmark della pagina"),
           ("Speedup MoE in llama.cpp", "+40%", '<a href="%s">PR upstream #27721, aperta</a>' % PR),
           ("Neuroni simulati con gradiente", "166.700", '<a href="%sflytollm">repository flytollm</a>, male-cns:v1.0' % GH),
-          ("Modelli portati su 8&nbsp;GB", "Llama-3-8B&nbsp;· Bonsai&nbsp;4B&nbsp;· Kimodo", '<a href="#motion">Motion ed embedding</a>; <a href="#inferenza">Inferenza</a>')],
+          ("Modelli portati su 8&nbsp;GB", "Llama-3-8B|Bonsai&nbsp;4B|Kimodo", '<a href="#motion">Motion ed embedding</a>; <a href="#inferenza">Inferenza</a>')],
     # Ricerca
     k1="Ricerca su attention e memoria", h1s="Language model su un connettoma reale",
     lead1="Quanto del contesto lo tiene l'attention e quanto un nucleo ricorrente? Banco di prova: il connettoma completo del sistema nervoso di Drosophila (male-cns:v1.0, " + m("166.700") + " neuroni, " + m("2,75 M") + ' sinapsi a soglia 10)<sup class="n">1</sup> come nucleo ricorrente LIF di un language model: segni sinaptici fissati dal neurotrasmettitore, magnitudini inizializzate dal conteggio di sinapsi, gradiente surrogato, CUDA Graph FP32. Protocollo con null model a gradi conservati, baseline a pari token e lesioni in silico.',
@@ -115,7 +115,7 @@ T["it"] = dict(
     lead4="Applicazioni desktop che elaborano audio e testo sulla macchina dell'utente, senza servizi esterni.",
     # testo precedente di Vergilius, non piu' pubblicato: sostituito dal testo del README pubblico (verg)
     vold="Assistente personale che non comunica con servizi esterni: schema architetturale pubblicato, codice in arrivo.",
-    verg="Assistente personale che non comunica con servizi esterni: gira in locale su GTX&nbsp;1080 (8&nbsp;GB), senza chiavi API e senza che una conversazione lasci la macchina. Modello predefinito LFM2.5-2.6B con drafter speculativo: " + m("64&nbsp;tok/s") + " in decodifica, " + m("78-100") + "&nbsp;tok/s con il drafter attivo. Un controllo di groundedness confronta le cifre delle risposte con i risultati degli strumenti: le cifre non supportate sono scese da " + m("3") + " turni su " + m("35") + " a " + m("1") + " su " + m("36") + '.<sup class="n">3</sup>',
+    verg="Assistente personale che non comunica con servizi esterni: gira in locale su GTX&nbsp;1080 (8&nbsp;GB), senza chiavi API e senza che una conversazione lasci la macchina. Modello predefinito LFM2.5-2.6B con drafter speculativo: " + m("64&nbsp;tok/s") + " in decodifica, " + m("78-100") + "&nbsp;tok/s con il drafter attivo. Un controllo di groundedness confronta le cifre delle risposte con i risultati degli strumenti: le cifre non supportate sono scese da " + m("3") + " turni su " + m("35") + " a " + m("1") + "&nbsp;su&nbsp;" + m("36") + '.<sup class="n">3</sup>',
     n3="Il repository include come submodule due progetti di terzi, Odysseus (assistente) e ShadowBroker (intelligence da fonti aperte), con licenza AGPL-3.0: sono dipendenze, non lavoro originale.",
     cap5="<b>Fig. 5.</b> Vergilius su GTX&nbsp;1080, dentro un recinto: nessuna chiamata esce dalla macchina (127.0.0.1). A sinistra la velocità di decodifica, 64&nbsp;tok/s e 78-100&nbsp;tok/s con il drafter; a destra i turni con cifre non supportate dai risultati degli strumenti, da 3 su 35 a 1 su 36.",
     stt="Applicazione Windows per trascrizione vocale locale basata su faster-whisper (CTranslate2, int8 su CUDA): registrazione, trascrizione e incolla nel campo attivo.",
@@ -124,10 +124,10 @@ T["it"] = dict(
     k5="Progetti di machine learning applicato", h5s="Predizione, ottimizzazione, serie storiche",
     lead5="Modelli con intervalli di incertezza, ottimizzazione sotto vincoli in tempo reale, valutazione fuori campione o su simulazione.",
     dl5="codice completo",
-    fo="Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (probabilità di arrivare primi " + m("56%") + " in scelta su 100 simulazioni, " + m("57% ± 5") + " in verifica, contro archetipi interni del modello). Con arena interattiva per sfidarlo.<sup class=\"n\">4</sup>",
+    fo="Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (probabilità di arrivare primi " + m("56%") + " sulle 100 simulazioni usate per la scelta dei parametri, " + m("57% ± 5") + " su simulazioni di verifica separate, contro archetipi interni del modello). Con arena interattiva per sfidarlo.<sup class=\"n\">4</sup>",
     m5="Python; 2 stelle; predizione · ottimizzazione · Monte Carlo",
-    n4="Dal README: la probabilità di arrivare primi è un numero interno del modello contro i suoi archetipi, non una promessa sul tavolo vero. Tetto d'asta dinamico con 0 sfori su 52 lotti simulati e ponte con FantaAsta Live, 43 assegnazioni corrette su 44: <a href=\"#fig6\">fig. 6</a>.",
-    cap6="<b>Fig. 6.</b> FantaOracle, replay del tetto d'asta su 28 lotti simulati (attaccanti battuti a 40 crediti o più, in ordine d'asta). Ogni tratto è il tetto proposto dal bot; la linea a gradini è il massimo spendibile in quel momento, cioè la cassa meno un credito per ogni altro slot ancora vuoto. Nessun tratto supera la linea: 0 sfori, come sugli altri 24 lotti del campione (52 in tutto). Sotto, il ponte con FantaAsta Live su un'asta di prova: 43 assegnazioni su 44 identiche per giocatore, squadra e prezzo; le celle sono ordinate, non in sequenza d'asta. Dati dai report pubblici del repository.",
+    n4="Dal README: la probabilità di arrivare primi è un numero interno del modello contro i suoi archetipi, non una promessa sul tavolo vero. Tetto d'asta dinamico, che su 28 lotti simulati arriva al prezzo di aggiudicazione in 8, e ponte con FantaAsta Live, 43 assegnazioni corrette su 44: <a href=\"#fig6\">fig.&nbsp;6</a>.",
+    cap6="<b>Fig. 6.</b> FantaOracle, replay del tetto d'asta su 28 lotti simulati (attaccanti battuti a 40 crediti o più, in ordine d'asta). Le barre sono il tetto proposto dal bot, le tacche il prezzo a cui il giocatore è stato aggiudicato; la linea a gradini è il massimo spendibile in quel momento, cioè la cassa meno un credito per ogni altro slot ancora vuoto. Il dato è che il tetto arriva al prezzo in 8 lotti su 28. Gli 0 sfori (nessuna barra sopra la linea, anche sugli altri 24 lotti del campione) sono garantiti dalla formula, che taglia il tetto al massimo spendibile: non sono un risultato. Negli ultimi 7 lotti il massimo spendibile è 1 credito e il tetto con lui (punti sulla base). Sotto, il ponte con FantaAsta Live su un'asta di prova: 43 assegnazioni su 44 identiche per giocatore, squadra e prezzo; le celle sono ordinate, non in sequenza d'asta. Dati dai report pubblici del repository.",
     fca="Motore di analisi e raccomandazione multi-algoritmo con front-end React; il predecessore di FantaOracle.", fcas="React · TypeScript · Python",
     kf="Dashboard di previsione probabilistica: DeepAR, ARIMA/SARIMA e AutoGluon confrontati sulla stessa serie con intervalli di confidenza.", kfs="Python; time series",
     sp="Laboratorio full-stack (React + Flask) per l'analisi e la predizione di serie storiche dell'S&amp;P 500, con test di prevedibilità fuori campione.", sps="TypeScript · Python; time series",
@@ -156,16 +156,16 @@ T["en"] = dict(
     th=("light", "dark", "auto"), thtitle=("Light theme (paper)", "Dark theme (cyanotype)", "Auto theme (follow the system)"),
     nav=["research", "inference", "motion and embeddings", "local tools", "applied ML", "reinforcement learning", "index"], navnote="a note on the figures",
     folio="updated September 2026",
-    abs='<span class="runin">Abstract.</span> <b>CUDA optimization on consumer GPUs</b>, <b>research on attention and memory in language models</b> (down to a recurrent core taken from a real connectome), <b>local ML pipelines</b> with no cloud. Everything open source.',
+    abs='<span class="runin">Abstract.</span> <b>CUDA optimization on consumer GPUs</b>, <b>research on attention and memory in language models</b> (down to a recurrent core taken from a real connectome), <b>local ML pipelines</b> with no cloud. Everything open&nbsp;source.',
     rasterlabel="Raster of simulated leaky integrate-and-fire neurons: spike ticks over time for sensory, central and descending neurons, with the population rate below.",
-    cap1='<b>Fig. 1.</b> Raster of <span class="nn">128</span> leaky integrate-and-fire neurons simulated in this page (dt = 1 ms), ordered by distance from the input ports. Each tick is a spike. Roughly every 120 ms a token enters through the sensory neurons; scrolling the page raises the input. An illustration: the real model has 166,700 neurons (<a href="#fig2">fig. 2</a>).',
+    cap1='<b>Fig. 1.</b> Raster of <span class="nn">128</span> leaky integrate-and-fire neurons simulated in this page (dt = 1 ms), ordered by distance from the input ports. Each tick is a spike. Roughly every 120 ms a token enters through the sensory neurons; scrolling the page raises the input. An illustration: the real model has 166,700 neurons (<a href="#fig2">fig.&nbsp;2</a>).',
     legend=["sensory (input port)", "excitatory", "inhibitory", "descending (output)", "population rate"],
     kw='CUDA, CUDA Graphs; PyTorch; llama.cpp, GGML; WebGPU, WGSL; Spiking NN, surrogate gradient; LLM inference, quantization, offload; Diffusion LM; Embeddings, LLM2Vec; Time series, probabilistic forecasting; Python, C++, TypeScript; Unity, Phaser; faster-whisper, Piper.',
     tcap="<b>Table 1.</b> Reference numbers, each with its source.", thq="quantity", thv="value", ths="source",
-    rows=[("Reference hardware", "GTX&nbsp;1080&nbsp;· 8&nbsp;GB&nbsp;· sm_61", "every benchmark on this page"),
+    rows=[("Reference hardware", "GTX&nbsp;1080|8&nbsp;GB|sm_61", "every benchmark on this page"),
           ("MoE speedup in llama.cpp", "+40%", '<a href="%s">upstream PR #27721, open</a>' % PR),
           ("Neurons trained by gradient", "166,700", '<a href="%sflytollm">flytollm repository</a>, male-cns:v1.0' % GH),
-          ("Models fitted into 8&nbsp;GB", "Llama-3-8B&nbsp;· Bonsai&nbsp;4B&nbsp;· Kimodo", '<a href="#motion">Motion and embeddings</a>; <a href="#inferenza">Inference</a>')],
+          ("Models fitted into 8&nbsp;GB", "Llama-3-8B|Bonsai&nbsp;4B|Kimodo", '<a href="#motion">Motion and embeddings</a>; <a href="#inferenza">Inference</a>')],
     k1="Research on attention and memory", h1s="A language model on a real connectome",
     lead1="How much of the context is held by attention, and how much by a recurrent core? Test bed: the complete connectome of the Drosophila nervous system (male-cns:v1.0, " + m("166,700") + " neurons, " + m("2.75 M") + ' synapses at threshold 10)<sup class="n">1</sup> as the recurrent LIF core of a language model: synaptic signs fixed by the neurotransmitter, magnitudes initialised from synapse counts, surrogate gradient, FP32 CUDA Graph. Protocol with degree-preserving null models, token-matched baselines and in-silico lesions.',
     n1="male-cns:v1.0 connectome (Janelia FlyEM · Google Research, CC-BY licence): 25.6 M connections in total, 2,753,975 above the 10-synapse threshold.",
@@ -196,7 +196,7 @@ T["en"] = dict(
     k4="Local tools", h4s="Local speech-to-text and privacy-first tools",
     lead4="Desktop applications that process audio and text on the user's machine, with no external services.",
     vold="Personal assistant that does not talk to external services: architecture schema published, code coming.",
-    verg="A personal assistant that does not talk to external services: it runs locally on a GTX&nbsp;1080 (8&nbsp;GB), with no API keys and no conversation leaving the machine. Default model LFM2.5-2.6B with a speculative drafter: " + m("64&nbsp;tok/s") + " in decoding, " + m("78-100") + "&nbsp;tok/s with the drafter on. A groundedness check compares the numbers in each answer with the tool results: unsupported numbers dropped from " + m("3") + " turns out of " + m("35") + " to " + m("1") + " out of " + m("36") + '.<sup class="n">3</sup>',
+    verg="A personal assistant that does not talk to external services: it runs locally on a GTX&nbsp;1080 (8&nbsp;GB), with no API keys and no conversation leaving the machine. Default model LFM2.5-2.6B with a speculative drafter: " + m("64&nbsp;tok/s") + " in decoding, " + m("78-100") + "&nbsp;tok/s with the drafter on. A groundedness check compares the numbers in each answer with the tool results: unsupported numbers dropped from " + m("3") + " turns out of " + m("35") + " to " + m("1") + "&nbsp;out&nbsp;of&nbsp;" + m("36") + '.<sup class="n">3</sup>',
     n3="The repository includes two third-party projects as submodules, Odysseus (assistant) and ShadowBroker (open-source intelligence), under AGPL-3.0: they are dependencies, not original work.",
     cap5="<b>Fig. 5.</b> Vergilius on a GTX&nbsp;1080, fenced in: no call leaves the machine (127.0.0.1). Left, decoding speed, 64&nbsp;tok/s and 78-100&nbsp;tok/s with the drafter; right, turns with numbers not supported by the tool results, from 3 out of 35 to 1 out of 36.",
     stt="Windows application for local voice transcription based on faster-whisper (CTranslate2, int8 on CUDA): record, transcribe and paste into the active field.",
@@ -204,10 +204,10 @@ T["en"] = dict(
     k5="Applied machine learning projects", h5s="<span class=\"nw\">Prediction, optimization,</span> time series",
     lead5="Models with uncertainty intervals, real-time optimization under constraints, out-of-sample or simulation-based evaluation.",
     dl5="full source code",
-    fo="Decision system for fantasy football auctions: a price model with an uncertainty band, squad optimization at the table under budget and slot constraints, evaluation on simulated leagues (probability of finishing first " + m("56%") + " when choosing, over 100 simulations, " + m("57% ± 5") + " in validation, against the model's own archetypes). With an interactive arena to challenge it.<sup class=\"n\">4</sup>",
+    fo="Decision system for fantasy football auctions: a price model with an uncertainty band, squad optimization at the table under budget and slot constraints, evaluation on simulated leagues (a " + m("56%") + " chance of finishing first on the 100 simulations used for tuning, " + m("57% ± 5") + " on held-out validation runs, against the model's own archetypes). With an interactive arena to challenge it.<sup class=\"n\">4</sup>",
     m5="Python; 2 stars; prediction · optimization · Monte Carlo",
-    n4="From the README: the probability of finishing first is the model's own number against its archetypes, not a promise at the real table. Dynamic auction cap with 0 overruns in 52 simulated lots and bridge to FantaAsta Live, 43 correct assignments out of 44: <a href=\"#fig6\">fig. 6</a>.",
-    cap6="<b>Fig. 6.</b> FantaOracle, replay of the auction cap on 28 simulated lots (forwards sold for 40 credits or more, in auction order). Each bar is the cap proposed by the bot; the stepped line is the maximum spendable at that moment, the budget minus one credit for every other empty slot. No bar crosses the line: 0 overruns, as on the other 24 lots of the sample (52 in all). Below, the bridge to FantaAsta Live on a test auction: 43 of 44 assignments identical in player, team and price; the cells are sorted, not in auction order. Data from the public reports in the repository.",
+    n4="From the README: the probability of finishing first is the model's own number against its archetypes, not a promise at the real table. Dynamic auction cap, which reaches the winning price in 8 of 28 simulated lots, and bridge to FantaAsta Live, 43 correct assignments out of 44: <a href=\"#fig6\">fig.&nbsp;6</a>.",
+    cap6="<b>Fig. 6.</b> FantaOracle, replay of the auction cap on 28 simulated lots (forwards sold for 40 credits or more, in auction order). Bars are the cap proposed by the bot, ticks the price the player was sold for; the stepped line is the maximum spendable at that moment, the budget minus one credit for every other empty slot. The finding is that the cap reaches the price in 8 of 28 lots. The 0 overruns (no bar above the line, on the other 24 lots of the sample too) are guaranteed by the formula, which clips the cap at the maximum spendable: they are not a result. In the last 7 lots the maximum spendable is 1 credit and so is the cap (dots on the baseline). Below, the bridge to FantaAsta Live on a test auction: 43 of 44 assignments identical in player, team and price; the cells are sorted, not in auction order. Data from the public reports in the repository.",
     fca="Multi-algorithm analysis and recommendation engine with a React front end; the predecessor of FantaOracle.", fcas="React · TypeScript · Python",
     kf="Probabilistic forecasting dashboard: DeepAR, ARIMA/SARIMA and AutoGluon compared on the same series with confidence intervals.", kfs="Python; time series",
     sp="Full-stack lab (React + Flask) for analysing and predicting S&amp;P 500 time series, with out-of-sample predictability tests.", sps="TypeScript · Python; time series",
@@ -225,7 +225,7 @@ T["en"] = dict(
     foot=("no trackers, no ads", "home-made page"), grid="show the grid",
 )
 
-ROLE = "AI Engineer · inference optimization · attention mechanisms research (transformer) · local-first systems"
+ROLE = "AI Engineer · inference optimization · attention mechanisms research (transformer) · local-first&nbsp;systems"
 ROLE_H = ROLE.replace("AI Engineer", "<b>AI Engineer</b>", 1)
 
 
@@ -260,7 +260,8 @@ def page(t):
     def note(n, text):
         return '<aside class="notes" aria-label="%s %d"><p id="n%d"><sup class="n">%d</sup>%s</p></aside>' % (t["notelabel"], n, n, n, text)
 
-    rows = "".join('<tr><td>%s</td><td class="v">%s</td><td class="src">%s</td></tr>' % r for r in t["rows"])
+    # colonna valore: un valore per riga (niente elenco inline che va a capo sul separatore)
+    rows = "".join('<tr><td>%s</td><td class="v">%s</td><td class="src">%s</td></tr>' % (q, "".join("<span>%s</span>" % x for x in v.split("|")), f) for q, v, f in t["rows"])
     legend = ('<ul class="legend">'
               '<li><svg aria-hidden="true" width="8" height="14"><rect class="lg-f" x="3" y="2" width="1.6" height="10"/></svg>%s</li>'
               '<li><svg aria-hidden="true" width="8" height="14"><rect class="lg-i" x="3" y="2" width="1.6" height="10"/></svg>%s</li>'
@@ -323,7 +324,7 @@ def page(t):
 <link rel="preload" href="{P}fonts/tavola-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{P}css/site.css">
 <script>{boot}</script>
-<script src="{P}js/site.js" defer></script>
+<script src="{P}js/site.min.js" defer></script>
 <script type="application/ld+json">{{"@context":"https://schema.org","@type":"Person","name":"Adrian Iancu","jobTitle":"AI Engineer","url":"{site}","sameAs":["https://github.com/ArtyomITA","{li}"]}}</script>
 </head>
 """.format(L=L, desc=t["desc"], csp=CSP, canon=t["canon"], site=SITE, og=t["og"], ogimgalt=t["ogimgalt"], ogloc=t["ogloc"], ogalt=t["ogalt"], P=P, boot=BOOT, li=LI)
@@ -514,6 +515,21 @@ def page(t):
     return head + body
 
 
+def minjs(src):
+    """js/site.js (sorgente commentato) -> testo di js/site.min.js: via i commenti /* */, i rientri e le righe vuote.
+    Il sorgente non ha commenti // ne' stringhe su piu' righe ne' "/*" dentro le stringhe; gli a capo restano (niente ASI da rifare)."""
+    out = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+    return "\n".join(l.strip() for l in out.splitlines() if l.strip()) + "\n"
+
+
+def write_js():
+    src = open(os.path.join(ROOT, "js", "site.js"), encoding="utf-8").read()
+    path = os.path.join(ROOT, "js", "site.min.js")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(minjs(src))
+    return path
+
+
 def write(lang, html):
     path = os.path.join(ROOT, "index.html") if lang == "it" else os.path.join(ROOT, "en", "index.html")
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -571,6 +587,8 @@ if __name__ == "__main__":
         pages[lang] = page(T[lang])
         print(write(lang, pages[lang]), len(pages[lang].encode("utf-8")))
     open(os.path.join(ROOT, ".nojekyll"), "w").close()
+    js = write_js()
+    print(js, os.path.getsize(js))
     print("CSP hash sha256-" + BOOT_HASH)
     if "--bake" in sys.argv:
         bake(pages)

@@ -25,8 +25,8 @@
 :root{
   --paper:#EEF0EC;--ink:#15181C;--ink-2:#4B535C;--ink-3:#5F6770;--fig:#1B3E9A;--inh:#B3261E;--hl:#F2DD55;
   --rule:#BFC5C6;--rule-2:#D6DAD7;--wash:#E3E6E1;--grid:rgba(27,62,154,.08);
-  /* rampa sequenziale dei salti in Fig. 2: da --fig (salto 0) verso la carta, passi di luminanza L* di 9-10 (in scuro verso il fondo) */
-  --h1:#595D9E;--h2:#7677AF;--h3:#9292C0;--h4:#ACABCE;--h5:#C6C4DD;
+  /* rampa sequenziale dei salti in Fig. 2: da --fig (salto 0) verso la carta a tinta OKLCH costante (264,5), passi di L* 8-12 (in scuro verso il fondo, tinta ~246) */
+  --h1:#4060A7;--h2:#5F7BB4;--h3:#7F95C2;--h4:#9EAECE;--h5:#BAC4DA;
   --serif:"Newsreader","Newsreader Fallback",Georgia,serif;
   --display:"Besley","Besley Fallback",Georgia,serif;
   --mono:"Tavola Mono",ui-monospace,Consolas,monospace;
@@ -53,7 +53,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font:400 var(--s0)/1.55 v
   font-variant-numeric:oldstyle-nums proportional-nums;font-kerning:normal;text-rendering:optimizeLegibility;
   transition:background-color .5s var(--ease-out),color .5s var(--ease-out)}
 ::selection{background:var(--hl);color:var(--ink)}
-p{margin:0 0 1rem}
+p{margin:0 0 1rem;text-wrap:pretty}
 h1,h2,h3,h4{font-weight:400;margin:0;hyphens:manual;font-family:var(--display)}
 b{font-weight:600}
 img,svg,canvas{display:block}
@@ -117,7 +117,7 @@ sup.n{font:400 .66em/1 var(--mono);color:var(--fig);vertical-align:.55em;padding
 
 /* ---------- hero ---------- */
 .hero{padding-top:2.2rem;container-type:inline-size}
-.role{grid-column:1/10;margin:0;font-size:var(--lead);line-height:1.4;color:var(--ink)}
+.role{grid-column:1/10;margin:0;font-size:var(--lead);line-height:1.4;color:var(--ink);text-wrap:pretty}
 .role b{font-weight:600}
 .folio{grid-column:10/-1;margin:0;align-self:baseline;text-align:right;font-size:var(--s-1);color:var(--ink-3)}
 h1{grid-column:1/-1;margin:.2em 0 0;padding-bottom:.06em;border-bottom:1px solid var(--ink);white-space:nowrap;
@@ -148,6 +148,7 @@ caption b{color:var(--ink)}
 .tab1 td{padding:.45rem .5rem .45rem 0;border-bottom:1px solid var(--rule-2);vertical-align:baseline;line-height:1.3}
 .tab1 tr:last-child td{border-bottom:1.5px solid var(--ink)}
 .tab1 .v{font:var(--s-1)/1.45 var(--mono);font-variant-numeric:lining-nums tabular-nums}
+.tab1 .v span{display:block}
 .tab1 .src{font-size:var(--s-1);color:var(--ink-3);line-height:1.4}
 
 /* ---------- sezioni ---------- */
@@ -234,6 +235,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .cns .t-i{font:600 16px var(--serif)}
 .cns .t-r{fill:var(--inh);font:14px var(--serif)}
 .cns .t-a{fill:var(--fig);font:15px var(--serif)}
+.cns .two{stroke:var(--paper);stroke-width:3px;stroke-linejoin:round;paint-order:stroke}
 .cns .hg{transition:opacity .18s linear}
 .kt .kn{fill:var(--fig)}
 .kt .tk{fill:var(--ink-3)}
@@ -245,12 +247,14 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .err .arc{fill:none;stroke:var(--fig);stroke-width:1.2}
 .err .arh{fill:var(--fig)}
 .lots .spl{fill:none;stroke:var(--ink);stroke-width:1.4}
-.lots .tt,.lots .tt0{fill:var(--fig)}
+.lots .tt,.lots .tt0,.lots .b1{fill:var(--fig)}
+.lots .pp{stroke:var(--ink);stroke-width:1.6}
 .f5 .fen{fill:none;stroke:var(--ink);stroke-width:1;transition:stroke-width .42s var(--ease-out)}
 .f5.chiuso .fen{stroke-width:1.6}
 .f5 .lbx{fill:var(--paper)}
 .f5 .brk{fill:none;stroke:var(--fig);stroke-width:1.2}
 .f5 .p1{fill:var(--fig)}
+.f5 .arr{fill:none;stroke:var(--ink);stroke-width:1.2}
 :is(.f5,.lots) .cell rect{fill:none;stroke:var(--ink-3);stroke-width:1}
 :is(.f5,.lots) .cell.r rect{fill:var(--inh);stroke:var(--inh)}
 :is(.f5,.lots) .x{fill:none;stroke:var(--paper);stroke-width:1.6}
@@ -400,7 +404,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
   *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 }
 @media (prefers-contrast:more){
-  :root{--ink-2:var(--ink);--ink-3:var(--ink);--rule:var(--ink-3)}
+  :root,:root[data-theme],:root:not([data-theme=light]){--ink-2:var(--ink);--ink-3:var(--ink);--rule:var(--ink-3)}
 }
 @media (forced-colors:active){
   .rule,.rule i,.mast-in::after,.mast-in::before,h1{border-color:CanvasText}

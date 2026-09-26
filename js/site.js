@@ -13,7 +13,6 @@ function sst(x) { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); }
 function rng(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 /* numeri alla maniera della lingua della pagina, senza Intl (costruirlo costa decine di ms su CPU lente) */
 function nf(x, d) { var p = Math.abs(x).toFixed(d).split('.'), th = lang === 'it' ? '.' : ',', i = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, th); return (x < 0 ? '−' : '') + i + (d ? (lang === 'it' ? ',' : '.') + p[1] : ''); }
-function cv(n) { return getComputedStyle(root).getPropertyValue(n).trim(); }
 function f1(x) { return (Math.round(x * 10) / 10).toString(); }
 function T(x, y, s, cls, anc, extra) { return '<text x="' + f1(x) + '" y="' + f1(y) + '"' + (cls ? ' class="' + cls + '"' : '') + (anc ? ' text-anchor="' + anc + '"' : '') + (extra || '') + '>' + s + '</text>'; }
 function ln(x1, y1, x2, y2, cls) { return '<line x1="' + f1(x1) + '" y1="' + f1(y1) + '" x2="' + f1(x2) + '" y2="' + f1(y2) + '" class="' + cls + '"/>'; }
@@ -27,18 +26,18 @@ var L = {
   it: { sens: 'sensoriali', cen: 'centrali', desc: 'discendenti', rate: 'tasso', ro: ['t', 'ingresso ×', 'spike/ms'],
     tok: 'token · BPE 4096', in1: 'ingresso: 17.937', in2: 'neuroni sensoriali', core: 'nucleo ricorrente LIF', c2: '166.700 neuroni · 2,75 M sinapsi (≥ 10)', c3: '4+4 sottopassi per token',
     o1: 'lettura: 2.241 neuroni', o2: 'discendenti e motori', o3: '→ logit del prossimo token', att: 'attention causale esterna · 4 teste · cache 128 · rientra dalle stesse porte', attS: 'attention esterna · 4 teste · cache 128',
-    les1: 'lesione in silico:', les2: 'lobo ottico rimosso,', les3: 'cross-entropy invariata', hop: 'salti dalle porte', pin: 'ingresso', pout: 'uscita',
+    les1: 'lesione in silico:', les2: 'lobo ottico rimosso,', les3: 'cross-entropy invariata', hop: 'salti dalle porte', hop2: ['salti dalle', 'porte'], pin: 'ingresso', pout: 'uscita',
     k: ['MoE · un lancio per kernel', 'MoE · CUDA graph', 'denso · un lancio per kernel', 'denso · CUDA graph'], kax: 'tempo per token, relativo',
     pad: 'padding · cos 0,76', padv: '1 − cos = 0,24', fix: 'fix · cos 0,999956', fixv: '1 − cos = 4,4·10', ratio: '≈ 5.500 volte più vicino', cosax: '1 − coseno', ts: 'tok/s su GTX 1080', dec: 'decodifica', dr: 'con drafter', turns: 'turni con cifre non supportate', fence: 'GTX 1080 · nessuna chiamata esterna',
-    two: '2 salti', sp: 'massimo spendibile', tet: 'tetto del bot', lots: "28 lotti simulati, in ordine d'asta", sfori: '0 sfori', bridge: 'ponte FantaAsta Live · assegnazioni identiche',
+    two: '2 salti', sp: 'massimo spendibile', tet: 'tetto del bot', pag: 'prezzo pagato', hit: 'tetto ≥ prezzo', cr: 'crediti', lots: "28 lotti simulati, in ordine d'asta", bridge: 'ponte FantaAsta Live · assegnazioni identiche',
     grid: ['mostra la griglia', 'nascondi la griglia'] },
   en: { sens: 'sensory', cen: 'central', desc: 'descending', rate: 'rate', ro: ['t', 'input ×', 'spikes/ms'],
     tok: 'token · BPE 4096', in1: 'input: 17,937', in2: 'sensory neurons', core: 'recurrent LIF core', c2: '166,700 neurons · 2.75 M synapses (≥ 10)', c3: '4+4 substeps per token',
     o1: 'readout: 2,241 descending', o2: 'and motor neurons', o3: '→ next-token logits', att: 'external causal attention · 4 heads · cache 128 · re-enters through the same ports', attS: 'external attention · 4 heads · cache 128',
-    les1: 'in-silico lesion:', les2: 'optic lobe removed,', les3: 'cross-entropy unchanged', hop: 'hops from the ports', pin: 'input', pout: 'output',
+    les1: 'in-silico lesion:', les2: 'optic lobe removed,', les3: 'cross-entropy unchanged', hop: 'hops from the ports', hop2: ['hops from', 'the ports'], pin: 'input', pout: 'output',
     k: ['MoE · one launch per kernel', 'MoE · CUDA graph', 'dense · one launch per kernel', 'dense · CUDA graph'], kax: 'time per token, relative',
     pad: 'padding · cos 0.76', padv: '1 − cos = 0.24', fix: 'fix · cos 0.999956', fixv: '1 − cos = 4.4·10', ratio: '≈ 5,500 times closer', cosax: '1 − cosine', ts: 'tok/s on GTX 1080', dec: 'decoding', dr: 'with drafter', turns: 'turns with unsupported numbers', fence: 'GTX 1080 · no external calls',
-    two: '2 hops', sp: 'maximum spendable', tet: 'bot cap', lots: '28 simulated lots, in auction order', sfori: '0 overruns', bridge: 'FantaAsta Live bridge · identical assignments',
+    two: '2 hops', sp: 'maximum spendable', tet: 'bot cap', pag: 'price paid', hit: 'cap ≥ price', cr: 'credits', lots: '28 simulated lots, in auction order', bridge: 'FantaAsta Live bridge · identical assignments',
     grid: ['show the grid', 'hide the grid'] }
 }[lang];
 
@@ -82,7 +81,7 @@ var Ras = (function () {
   if (!c || !c.getContext) return { kick: function () {}, frame: function () {}, live: function () { return false; }, redraw: function () {}, motion: function () {} };
   var ctx = c.getContext('2d'), box = c.parentNode, ro = $('#readout'), WIN = 720, off = D.createElement('canvas'), oc = off.getContext('2d');
   var N, S, C, Dn, v, inp, nxt, rf, typ, tgt, wt, hist, rate, sm, rs, t, nextTok, lastTok = -1, rnd, drive = 0;
-  var W = 0, H = 0, dpr = 1, vis = false, run = false, armed = false, last = 0, lastRo = 0, col, lab = 80, forced = false, idle = performance.now(), settle = -1, settleTok = -1;
+  var cap = 1, W = 0, H = 0, dpr = 1, vis = false, run = false, armed = false, last = 0, lastRo = 0, col, lab = 80, forced = false, idle = performance.now(), settle = -1, settleTok = -1;
   var rH, top = 4, gp = 8, sb = 18, rh, th, px, painted = 0, FILL, CI = [0, 1, 2, 0];
   function build() {
     var r = rng(27721); rnd = rng(61); drive = rm ? 0 : drive;
@@ -99,7 +98,7 @@ var Ras = (function () {
       }
       tgt.push(Tg); wt.push(X);
     }
-    hist = new Array(WIN); rate = new Float32Array(WIN); sm = new Float32Array(WIN); rs = 0; t = 0; nextTok = 12; lastTok = -1; painted = 0;
+    hist = new Array(WIN); rate = new Float32Array(WIN); sm = new Float32Array(WIN); rs = 0; t = 0; cap = N * 0.04; nextTok = 12; lastTok = -1; painted = 0;
     $$('.nn').forEach(function (e) { e.textContent = N; });
   }
   function step() {
@@ -118,7 +117,9 @@ var Ras = (function () {
     var tmp = inp; inp = nxt; nxt = tmp; nxt.fill(0);
     /* tasso: media mobile su 13 ms tenuta a parte, cosi' il disegno non la ricalcola */
     rs += spk.length; if (t >= 13) rs -= rate[(t - 13) % WIN];
-    hist[t % WIN] = spk; rate[t % WIN] = spk.length; sm[t % WIN] = rs / Math.min(t + 1, 13); t++; drive *= 0.994;
+    /* scala del tasso: sale del 10% oltre ogni nuovo massimo, cosi' la curva non viene mai tagliata in un plateau */
+    var r = rs / Math.min(t + 1, 13); if (r > cap) cap = r * 1.1;
+    hist[t % WIN] = spk; rate[t % WIN] = spk.length; sm[t % WIN] = r; t++; drive *= 0.994;
   }
   /* il declassamento a 72 neuroni si decide qui, prima del primo fotogramma, mai a meta' animazione */
   function warm() {
@@ -158,7 +159,7 @@ var Ras = (function () {
       if (pos) ctx.drawImage(off, 0, 0, pos, off.height, dx + (WIN - pos) * dw, top * dpr, pos * dw, off.height);
     } else if (t) ctx.drawImage(off, 0, 0, t, off.height, dx + (WIN - t) * dw, top * dpr, t * dw, off.height);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var y0 = H - sb - rH, yb = H - sb - 4, cap = N * 0.09;
+    var y0 = H - sb - rH, yb = H - sb - 4;
     ctx.strokeStyle = col.rule; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(lab, yb + 0.5); ctx.lineTo(W, yb + 0.5); ctx.stroke();
     ctx.strokeStyle = col.fig; ctx.lineWidth = 1.3; ctx.beginPath();
     for (k = 0; k < n; k++) {
@@ -180,8 +181,10 @@ var Ras = (function () {
     var s = 0, n = Math.min(t, 32); for (var k = 0; k < n; k++) s += rate[(t - 1 - k) % WIN];
     ro.textContent = L.ro[0] + ' = ' + nf(t, 0) + ' ms · ' + L.ro[1] + nf(1 + Math.min(2.5, drive), 1) + ' · ' + nf(s / Math.max(1, n), 1) + ' ' + L.ro[2];
   }
-  function colors() { var bs = getComputedStyle(D.body); col = { fig: cv('--fig'), ink: cv('--ink'), ink2: cv('--ink-2'), ink3: cv('--ink-3'), inh: cv('--inh'), rule: cv('--rule'), font: bs.fontFamily, mono: cv('--mono') }; FILL = [col.fig, col.ink, col.inh]; }
+  /* un solo getComputedStyle per tutte le variabili; la prima lettura avviene nel ResizeObserver, a layout gia' fatto */
+  function colors() { var cs = getComputedStyle(root), v = function (n) { return cs.getPropertyValue(n).trim(); }; col = { fig: v('--fig'), ink: v('--ink'), ink2: v('--ink-2'), ink3: v('--ink-3'), inh: v('--inh'), rule: v('--rule'), font: getComputedStyle(D.body).fontFamily, mono: v('--mono') }; FILL = [col.fig, col.ink, col.inh]; }
   function size() {
+    if (!col) colors();
     var b = box.getBoundingClientRect(), nw = Math.round(b.width), old = W; W = nw; H = Math.round(b.height); dpr = Math.min(2, devicePixelRatio || 1);
     c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
     measure();
@@ -208,7 +211,7 @@ var Ras = (function () {
   }
   function arm() { armed = true; idle = performance.now(); start(); }
   function later() { if (window.requestIdleCallback) requestIdleCallback(arm, { timeout: 2500 }); else setTimeout(arm, 1200); }
-  colors(); c.setAttribute('width', 1);
+  c.setAttribute('width', 1);
   new ResizeObserver(size).observe(box);
   new IntersectionObserver(function (e) { vis = e[0].isIntersecting; if (vis) start(); }).observe(box);
   box.addEventListener('pointerenter', function () { idle = performance.now(); start(); });
@@ -217,7 +220,7 @@ var Ras = (function () {
   return {
     kick: function (vel) { if (rm) return; drive = Math.min(6, drive + vel * 0.08); idle = performance.now(); settle = -1; start(); },
     frame: frame, live: function () { return run; },
-    redraw: function () { colors(); if (W) { measure(); geo(); draw(); } },
+    redraw: function () { if (col) colors(); if (W) { measure(); geo(); draw(); } },
     motion: function () { run = false; drive = 0; build(); geo(); warm(); draw(); readout(0, true); if (!rm) { idle = performance.now(); start(); } }
   };
 })();
@@ -291,14 +294,16 @@ var Ras = (function () {
       ng[hi] += p.role === 2 ? '<rect class="d" x="' + f1(p.x * sc + ox - 2.6) + '" y="' + f1(p.y * sc + oy - 2.6) + '" width="5.2" height="5.2"/>'
         : '<circle class="' + (p.role ? 'c' : 's') + '" cx="' + X(p.x) + '" cy="' + Y(p.y) + '" r="' + (p.role ? (1.35 + sc * 0.45) * (1.12 - 0.05 * hi) : 2 + sc * 0.6).toFixed(2) + '"/>';
     }
-    s += '<path class="olc" d="M' + OUT.map(function (q) { return X(q[0]) + ' ' + Y(q[1]); }).join('L') + 'z"/>';
-    [55, 345].forEach(function (x) { s += '<ellipse class="les" cx="' + X(x) + '" cy="' + Y(127) + '" rx="' + 60 * sc + '" ry="' + 104 * sc + '"/>'; });
+    /* lesione = lobo ottico (ellisse della regione 'ol') intersecato con la sagoma: tratteggio solo sul confine vero */
+    var od = 'M' + OUT.map(function (q) { return X(q[0]) + ' ' + Y(q[1]); }).join('L') + 'z', el = '';
+    [55, 345].forEach(function (x) { el += '<ellipse cx="' + X(x) + '" cy="' + Y(127) + '" rx="' + f1(57 * sc) + '" ry="' + f1(101 * sc) + '"/>'; });
+    s += '<clipPath id="cO"><path d="' + od + '"/></clipPath><clipPath id="cE">' + el + '</clipPath><path class="olc" d="' + od + '"/><g class="les" clip-path="url(#cO)">' + el + '</g><path class="les" clip-path="url(#cE)" d="' + od + '"/>';
     for (g = 0; g < G; g++) s += '<g class="hg h' + g + '">' + ng[g] + '</g>';
-    /* legenda: a sinistra del cordone ventrale in orizzontale, a destra in verticale */
-    var lx = portrait ? 284 : 150, ly = portrait ? 640 : 574, st = portrait ? 20 : 30, lg = '<g class="lgd">' + T(lx, ly, L.hop, 't-m');
-    for (g = 0; g < G; g++) lg += '<circle class="lg' + g + '" cx="' + (lx + 6 + g * st) + '" cy="' + (ly + 18) + '" r="' + (g ? 3.6 * (1.12 - 0.05 * g) : 4).toFixed(2) + '"/>' + T(lx + 12 + g * st, ly + 22, g > 4 ? '5+' : g, 't-m');
-    var ox2 = portrait ? 0 : 94;
-    lg += '<circle class="s" cx="' + (lx + 6) + '" cy="' + (ly + 44) + '" r="3.4"/>' + T(lx + 16, ly + 48, L.pin, 't-m') + '<rect class="d lgd2" x="' + (lx + 3 + ox2) + '" y="' + (ly + (portrait ? 61 : 41)) + '" width="6" height="6"/>' + T(lx + 16 + ox2, ly + (portrait ? 68 : 48), L.pout, 't-m') + '</g>';
+    /* legenda: fuori dall'anello dell'attention, sotto le note di destra (orizzontale) o a destra del cordone (verticale, titolo su due righe
+       per restare a sinistra della scritta ruotata); numeri sotto i pallini */
+    var lx = portrait ? 282 : 888, ly = portrait ? 620 : 560, st = portrait ? 20 : 28, l2 = portrait ? 16 : 0, lg = '<g class="lgd">' + (portrait ? T3(lx, ly, 16, L.hop2, ['t-m', 't-m']) : T(lx, ly, L.hop, 't-m'));
+    for (g = 0; g < G; g++) lg += '<circle class="lg' + g + '" cx="' + (lx + 6 + g * st) + '" cy="' + (ly + l2 + 16) + '" r="' + (g ? 3.6 * (1.12 - 0.05 * g) : 4).toFixed(2) + '"/>' + T(lx + 6 + g * st, ly + l2 + 36, g > 4 ? '5+' : g, 't-m', 'middle');
+    lg += '<circle class="s" cx="' + (lx + 6) + '" cy="' + (ly + l2 + 54) + '" r="3.4"/>' + T(lx + 16, ly + l2 + 58, L.pin, 't-m') + '<rect class="d lgd2" x="' + (lx + 3) + '" y="' + (ly + l2 + 69) + '" width="6" height="6"/>' + T(lx + 16, ly + l2 + 76, L.pout, 't-m') + '</g>';
     var an = '', ld = '', lp, ah;
     function lead(d) { ld += '<path class="ld" pathLength="1" stroke-dasharray="1 1" d="' + d + '"/>'; }
     if (!portrait) {
@@ -307,14 +312,14 @@ var Ras = (function () {
       an += T(880, 40, L.core, 't-i') + T3(880, 64, 20, [L.c2, L.c3], ['t-m', 't-m']); lead('M872 35.5H' + X(216) + 'V' + Y(110));
       an += '<circle class="ldo" cx="' + X(216) + '" cy="' + Y(110) + '" r="3"/>';
       an += T(880, 392, L.o1) + T(880, 412, L.o2) + T(880, 438, L.o3, 't-m'); lead('M874 404H852L' + X(214) + ' ' + Y(226));
-      an += T(+X(174), +Y(234), L.two, 't-m', 'end');
-      lp = '<path class="loop" pathLength="1" stroke-dasharray="1 1" d="M900 452V728Q900 764 864 764H156Q120 764 120 728V224Q120 188 156 188H196"/>'; ah = 'M189 183.5L199 188L189 192.5z'; an += T(510, 794, L.att, 't-a', 'middle');
+      an += T(+X(166), +Y(234), L.two, 't-m two', 'end');
+      lp = '<path class="loop" pathLength="1" stroke-dasharray="1 1" d="M868 452V728Q868 764 832 764H156Q120 764 120 728V224Q120 188 156 188H196"/>'; ah = 'M189 183.5L199 188L189 192.5z'; an += T(494, 794, L.att, 't-a', 'middle');
     } else {
       an += T(12, 104, L.tok, 't-m') + T(12, 126, L.in1 + ' ' + L.in2); lead('M40 134V' + Y(66));
       an += T3(428, 150, 19, [L.core, L.c2, L.c3], ['t-i', 't-m', 't-m'], 'end'); lead('M300 196L' + X(200) + ' ' + Y(110));
       an += '<circle class="ldo" cx="' + X(200) + '" cy="' + Y(110) + '" r="3"/>';
       an += T(12, 826, L.o1 + ' ' + L.o2) + T(12, 848, L.o3, 't-m'); lead('M24 806V448H' + X(186));
-      an += T(+X(226), +Y(232), L.two, 't-m');
+      an += T(+X(236), +Y(232), L.two, 't-m two');
       an += T3(428, 478, 18, [L.les1, L.les2, L.les3], ['t-r', 't-r', 't-r'], 'end'); lead('M404 462L' + X(350) + ' ' + Y(212));
       /* l'anello rientra sopra l'etichetta d'ingresso, dalle stesse porte */
       lp = '<path class="loop" pathLength="1" stroke-dasharray="1 1" d="M320 862Q436 862 436 760V96Q436 80 420 80H52Q40 80 40 84"/>'; ah = 'M35.5 83L40 91L44.5 83z'; an += T(0, 0, L.attS, 't-a', 'middle', ' transform="translate(428 660) rotate(-90)"');
@@ -335,7 +340,9 @@ var Ras = (function () {
   }
   var sc = scrubber(svg, function (r, vh) { return (vh * 0.95 - r.top) / (r.height * 0.75 + vh * 0.2); }, set);
   var lastW = 0;
-  near(fig, function () { built = true; lastW = fig.getBoundingClientRect().width; build(); scrubNow(sc); });
+  function go() { if (built) return; built = true; lastW = fig.getBoundingClientRect().width; build(); scrubNow(sc); }
+  /* con movimento ridotto e in stampa la figura si genera subito: le catture a pagina intera e la carta non passano dall'observer */
+  near(fig, go); addEventListener('beforeprint', go); if (rm) setTimeout(go, 0);
   new ResizeObserver(function () { var w = fig.getBoundingClientRect().width; if (built && (w < 1100) !== (lastW < 1100)) { build(); scrubNow(sc); } lastW = w; }).observe(fig);
 })();
 
@@ -361,7 +368,7 @@ var Ras = (function () {
           for (i = 0; i < n; i++) { tk += 'M' + f1(x) + ' ' + (y - 3) + 'h2v22h-2z'; x += 2 + g0; d += 'M' + f1(x) + ' ' + y + 'h' + f1(ws[i]) + 'v16h' + f1(-ws[i]) + 'z'; x += ws[i]; }
           s += '<path class="tk" d="' + tk + '"/><path class="kn" d="' + d + '"/>';
         } else {
-          s += '<path class="tk" d="M' + f1(x0) + ' ' + (y - 3) + 'h2v22h-2z"/><path class="kn" data-r="' + rows.length + '"/>' + '<line class="endl" data-r="' + rows.length + '" y1="' + (y - 6) + '" y2="' + (y + 22) + '"/>' + T(w, y + 12, '', 'fv', 'end', ' data-r="' + rows.length + '"');
+          s += '<path class="tk" d="M' + f1(x0) + ' ' + (y - 3) + 'h2v22h-2z"/><path class="kn" data-r="' + rows.length + '"/>' + '<line class="endl" data-r="' + rows.length + '" y1="' + (y - 6) + '" y2="' + (y + 22) + '"/>' + T(w, y + 12, '', 'fv', '', ' data-r="' + rows.length + '"');
           rows.push({ x0: x0, y: y, ws: ws, g0: g0, g1: g1, R: pr[1] });
         }
         li++; y += narrow ? 48 : 30;
@@ -383,7 +390,8 @@ var Ras = (function () {
     if (!W0 || p === lastP) return; lastP = p;
     rows.forEach(function (rw) {
       var o = kpath(rw.x0 + 2, rw.y, rw.ws, lerp(rw.g0, rw.g1, p));
-      rw.path.setAttribute('d', o[0]); rw.line.setAttribute('x1', f1(o[1])); rw.line.setAttribute('x2', f1(o[1]));
+      /* la lettura segue la fine della riga */
+      rw.path.setAttribute('d', o[0]); rw.line.setAttribute('x1', f1(o[1])); rw.line.setAttribute('x2', f1(o[1])); rw.txt.setAttribute('x', f1(o[1] + 8));
       /* solo i due valori misurati: 1,00x fino a meta' corsa, poi il rapporto finale */
       rw.txt.textContent = nf(p < 0.5 ? 1 : 1 / rw.R, 2) + '×';
     });
@@ -469,7 +477,9 @@ var Ras = (function () {
     var wy = rtop + 18;
     s += waffle(rx0, wy, A, reds);
     var bx = rx0 + wA + gap;
-    s += T(rx0 + wA + gap / 2, wy + 3 * pt, '→', 'fm', 'middle');
+    /* freccia disegnata, non glifo: tratto lungo gap - 16 a meta' altezza dei blocchi */
+    var ay = f1(wy + (6 * pt - pt + cz) / 2), ax = rx0 + wA + 8;
+    s += '<path class="arr" d="M' + f1(ax) + ' ' + ay + 'h' + (gap - 16) + 'm-5 -3.5l5 3.5l-5 3.5"/>';
     s += waffle(bx, wy, B, reds);
     s += T(rx0, wy + 6 * pt + 20, '3/35', 'fv') + T(bx, wy + 6 * pt + 20, '1/36', 'fv');
     H = wy + 6 * pt + 38;
@@ -500,45 +510,56 @@ var Ras = (function () {
   RMq.addEventListener('change', function () { if (rm) { stamp(); closed = true; svg.classList.add('chiuso'); } });
 })();
 
-/* Fig. 6: FantaOracle, tetto d'asta contro massimo spendibile
+/* Fig. 6: FantaOracle, tetto d'asta contro prezzo pagato
    Dati del replay pubblico (fantaoracle, reports/asta_20260913/VERIFICA.md par. 3): 28 attaccanti battuti a 40+ crediti.
-   TET = tetto proposto dal bot; SP = massimo spendibile in quel momento. Sotto: 44 assegnazioni del ponte, 1 diversa. */
+   TET = tetto proposto dal bot, PAG = prezzo di aggiudicazione, SP = massimo spendibile in quel momento.
+   Il tetto non supera mai SP per costruzione (min nella formula); il dato e' quante volte arriva al prezzo: 8 su 28.
+   Sotto: 44 assegnazioni del ponte, 1 diversa. */
 (function () {
   var svg = $('#lots'); if (!svg) return;
-  var TET = [289, 74, 300, 55, 36, 48, 201, 251, 219, 90, 71, 101, 60, 22, 62, 49, 25, 40, 46, 21, 57, 1, 1, 1, 1, 1, 1, 1], SP = [], i;
+  var TET = [289, 74, 300, 55, 36, 48, 201, 251, 219, 90, 71, 101, 60, 22, 62, 49, 25, 40, 46, 21, 57, 1, 1, 1, 1, 1, 1, 1],
+    PAG = [275, 60, 255, 41, 137, 52, 205, 80, 200, 146, 80, 140, 50, 90, 46, 74, 61, 66, 60, 42, 63, 127, 41, 40, 47, 61, 56, 47], SP = [], i;
   [[311, 9], [112, 4], [63, 8], [1, 7]].forEach(function (r) { for (i = 0; i < r[1]; i++) SP.push(r[0]); });
-  var box = svg, W0 = 0, lastP = -1, bars = [], line, cells = [], yb, Yv;
+  var box = svg, W0 = 0, lastP = -1, lots = [], line, cells = [], yb, Yv;
   function build() {
     var w = wOf(box); if (!w) return; W0 = w;
-    var narrow = w < 600, x0 = 34, x1 = w - 4, top = 36, ch = narrow ? 140 : 180, s = '', n = TET.length, dx = (x1 - x0) / n, bw = Math.max(3, Math.min(9, dx * 0.42));
+    var narrow = w < 600, x0 = 40, x1 = w - 4, top = 44, ch = narrow ? 150 : 190, s = '', n = TET.length, dx = (x1 - x0) / n, bw = Math.max(3, Math.min(9, dx * 0.42)), hw = bw / 2 + 3;
     yb = top + ch; Yv = function (v) { return yb - v / 320 * ch; };
+    s += T(0, 16, L.cr, 'fl');
     [0, 100, 200, 300].forEach(function (v) { s += ln(x0 - 4, Yv(v), x0, Yv(v), 'ax') + T(x0 - 8, Yv(v) + 4, nf(v, 0), 'fm', 'end'); });
     s += ln(x0, yb, x1, yb, 'ax');
     var d = 'M' + f1(x0) + ' ' + f1(Yv(SP[0]));
     for (i = 0; i < n; i++) { d += 'H' + f1(x0 + (i + 1) * dx); if (i < n - 1 && SP[i + 1] !== SP[i]) d += 'V' + f1(Yv(SP[i + 1])); }
     s += '<path class="spl" pathLength="1" stroke-dasharray="1 1" d="' + d + '"/>';
     s += T(x0 + 2, Yv(311) - 9, L.sp, 'fl');
-    s += '<rect class="tt0" x="' + f1(x1 - 9) + '" y="' + (top - 30) + '" width="' + f1(bw) + '" height="11"/>' + T(x1 - 15, top - 20, L.tet, 'fl', 'end');
-    for (i = 0; i < n; i++) s += '<rect class="tt" x="' + f1(x0 + (i + 0.5) * dx - bw / 2) + '" y="' + f1(yb) + '" width="' + f1(bw) + '" height="0"/>';
-    s += T(x0, yb + 20, L.lots, 'fl') + T(x1, yb + 20, L.sfori, 'fv', 'end');
+    for (i = 0; i < n; i++) {
+      var cx = x0 + (i + 0.5) * dx;
+      s += '<rect class="tt" x="' + f1(cx - bw / 2) + '" y="' + f1(yb) + '" width="' + f1(bw) + '" height="0"/><line class="pp" opacity="0" x1="' + f1(cx - hw) + '" x2="' + f1(cx + hw) + '" y1="' + f1(Yv(PAG[i])) + '" y2="' + f1(Yv(PAG[i])) + '"/>' + (TET[i] > 1 ? '' : '<circle class="b1" opacity="0" cx="' + f1(cx) + '" cy="' + f1(yb - 3) + '" r="2.2"/>');
+    }
+    /* legenda accanto ai dati, nel vuoto sopra i lotti 13-28 (prezzi e tetti sotto 150) */
+    var lx = x0 + 12 * dx + 10, ly = top + 12, tx = lx + bw + 10;
+    s += '<rect class="tt0" x="' + f1(lx + 3) + '" y="' + (ly - 10) + '" width="' + f1(bw) + '" height="11"/>' + T(tx, ly, L.tet, 'fl');
+    s += ln(lx + 3 + bw / 2 - hw, ly + 16, lx + 3 + bw / 2 + hw, ly + 16, 'pp') + T(tx, ly + 20, L.pag, 'fl');
+    s += T(lx, ly + 46, '8/28', 'fv') + T(lx + 44, ly + 46, L.hit, 'fl');
+    s += T(x0, yb + 20, L.lots, 'fl');
     /* ponte: 44 celle in riga (due righe se stretto), prima le identiche */
     var cz = narrow ? 11 : 13, pt = cz + (narrow ? 3 : 4), per = Math.min(44, Math.floor((x1 - x0 + (pt - cz)) / pt)), cy = yb + 62, cx0 = x0;
     s += T(x0, yb + 50, L.bridge, 'fl');
-    for (i = 0; i < 44; i++) {
-      s += cell(cx0 + (i % per) * pt, cy + Math.floor(i / per) * pt, cz, i === 43);
-    }
+    for (i = 0; i < 44; i++) s += cell(cx0 + (i % per) * pt, cy + Math.floor(i / per) * pt, cz, i === 43);
     var rows = Math.ceil(44 / per), H = cy + rows * pt + 22;
     s += T(x0, cy + rows * pt + 16, '43/44', 'fv');
     vb(svg, w, H);
-    svg.innerHTML = s; bars = $$('.tt', svg); line = $('.spl', svg); cells = $$('.cell', svg); lastP = -1;
+    svg.innerHTML = s; line = $('.spl', svg); cells = $$('.cell', svg); lastP = -1;
+    lots = $$('.tt', svg).map(function (b) { var t = b.nextSibling; return { b: b, t: t, d: t.nextSibling && t.nextSibling.tagName === 'circle' ? t.nextSibling : null }; });
   }
   function set(p) {
     if (!W0 || p === lastP) return; lastP = p;
-    /* prima si traccia il massimo spendibile, poi i tetti salgono uno per lotto, sempre sotto la linea */
+    /* prima si traccia il massimo spendibile, poi per ogni lotto sale il tetto e, a barra completa, compare il prezzo */
     line.setAttribute('stroke-dashoffset', (1 - clamp(p / 0.35, 0, 1)).toFixed(3));
-    bars.forEach(function (b, k) {
+    lots.forEach(function (o, k) {
       var q = sst((p - 0.25 - k * 0.012) / 0.3), h = Math.max(1.5, yb - Yv(TET[k])) * q;
-      b.setAttribute('y', f1(yb - h)); b.setAttribute('height', f1(h));
+      o.b.setAttribute('y', f1(yb - h)); o.b.setAttribute('height', f1(h));
+      o.t.setAttribute('opacity', q >= 1 ? '1' : '0'); if (o.d) o.d.setAttribute('opacity', q > 0 ? '1' : '0');
     });
     cells.forEach(function (c, k) { c.setAttribute('opacity', p >= 0.62 + k * 0.008 ? '1' : '0'); });
   }

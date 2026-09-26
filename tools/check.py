@@ -21,7 +21,8 @@ import threading
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AXE = os.path.join(ROOT, "..", "artyomita-redesign", "tools", "axe.min.js")
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "..", "artyomita-redesign", "shots", "check")
-BUDGET = {"html": 60 * 1024, "css": 35 * 1024, "js": 45 * 1024, "font": 180 * 1024, "img": 80 * 1024, "total": 400 * 1024}
+# KB del brief = 1000 byte (non KiB) per il JS
+BUDGET = {"html": 60 * 1024, "css": 35 * 1024, "js": 45000, "font": 180 * 1024, "img": 80 * 1024, "total": 400 * 1024}
 
 PAGE_JS = r"""() => {
   const R = {}, all = [...document.querySelectorAll('body *')];
@@ -76,6 +77,19 @@ PAGE_JS = r"""() => {
 RAF = """() => new Promise(res => { let n = 0; const o = window.requestAnimationFrame; window.requestAnimationFrame = f => { n++; return o(f); }; setTimeout(() => res(n), 2000); })"""
 
 
+def oklch_hue(h):
+    """Tinta OKLCH (gradi) di un colore #RRGGBB."""
+    import math
+    c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    r, g, b = [x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    l = (0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b) ** (1 / 3)
+    m = (0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b) ** (1 / 3)
+    s = (0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b) ** (1 / 3)
+    a = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s
+    bb = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s
+    return math.degrees(math.atan2(bb, a)) % 360
+
+
 def serve():
     class Q(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *a, **k):
@@ -113,11 +127,32 @@ def main():
             fail.append("dato privato in " + rel)
 
     # immagini OG: rifatte dopo l'ultima build (tools/make-images.py og), mai piu' vecchie della pagina
-    src = max(os.path.getmtime(os.path.join(ROOT, r)) for r in ("index.html", "en/index.html", "css/site.css", "js/site.js"))
+    src = max(os.path.getmtime(os.path.join(ROOT, r)) for r in ("index.html", "en/index.html", "css/site.css", "js/site.js", "js/site.min.js"))
     for lg in ("it", "en"):
         og = os.path.join(ROOT, "img", "og-%s.png" % lg)
         if not os.path.exists(og) or os.path.getmtime(og) < src:
             fail.append("img/og-%s.png piu' vecchia della build: python tools/make-images.py og" % lg)
+
+    # js/site.min.js deve essere js/site.js ridotto dall'ultima build (tools/build-pages.py)
+    import importlib.util
+    sys.dont_write_bytecode = True
+    spec = importlib.util.spec_from_file_location("bp", os.path.join(ROOT, "tools", "build-pages.py"))
+    bp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bp)
+    src_js = open(os.path.join(ROOT, "js", "site.js"), encoding="utf-8").read()
+    if not os.path.exists(os.path.join(ROOT, "js", "site.min.js")) or open(os.path.join(ROOT, "js", "site.min.js"), encoding="utf-8").read() != bp.minjs(src_js):
+        fail.append("js/site.min.js non corrisponde a js/site.js: python tools/build-pages.py")
+
+    # rampa dei salti di Fig. 2: tinta OKLCH di --h1..--h5 entro 6 gradi da --fig, in entrambi i temi
+    css = open(os.path.join(ROOT, "css", "site.css"), encoding="utf-8").read()
+    blocks = {"light": re.search(r":root\{(.*?)\}", css, re.S).group(1), "dark": re.search(r":root\[data-theme=dark\]\{(.*?)\}", css, re.S).group(1)}
+    for th, blk in blocks.items():
+        var = dict(re.findall(r"(--[a-z0-9-]+):(#[0-9A-Fa-f]{6})", blk))
+        h0 = oklch_hue(var["--fig"])
+        for k in ("--h1", "--h2", "--h3", "--h4", "--h5"):
+            dh = abs((oklch_hue(var[k]) - h0 + 180) % 360 - 180)
+            if dh > 6:
+                fail.append("Fig.2 %s %s tinta OKLCH a %.1f gradi da --fig" % (th, k, dh))
 
     with sync_playwright() as p:
         br = p.chromium.launch(channel="chrome")
@@ -213,6 +248,13 @@ def main():
             pg = ctx.new_page()
             pg.goto(base + path)
             pg.wait_for_timeout(600)
+            # Fig. 2 generata senza passare dall'observer; legenda (verticale) staccata dalla scritta ruotata dell'anello
+            ov = pg.evaluate("""()=>{const a=document.querySelector('#cns .lgd'),b=document.querySelector('#cns .t-a');if(!a||!b)return null;
+              const r=a.getBoundingClientRect(),q=b.getBoundingClientRect();return Math.max(0,Math.min(r.right,q.right)-Math.max(r.left,q.left))*Math.max(0,Math.min(r.bottom,q.bottom)-Math.max(r.top,q.top))}""")
+            if ov is None:
+                fail.append("%s reduced motion: Fig. 2 non generata" % lang)
+            elif ov > 0:
+                fail.append("%s 390: legenda di Fig. 2 sovrapposta alla scritta dell'anello (%.0f px2)" % (lang, ov))
             n = pg.evaluate(RAF)
             v = pg.evaluate(PAGE_JS)
             if n:
