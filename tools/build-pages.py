@@ -28,6 +28,8 @@ CSP = ("default-src 'self'; script-src 'self' 'sha256-%s'; style-src 'self'; img
        "font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'") % BOOT_HASH
 
 TICKS = '<div class="rule" aria-hidden="true">' + "<i></i>" * 12 + "</div>"
+# filetto semplice per le sezioni senza progetto guida (RL, indice, nota)
+RULE = '<div class="rule plain" aria-hidden="true"></div>'
 
 
 def m(x):
@@ -39,6 +41,10 @@ def nav_items(t):
             ("#ml", t["nav"][4]), ("#rl", t["nav"][5]), ("#indice", t["nav"][6])]
 
 
+# neuroni per punto in Fig. 2: 166.700 diviso i punti generati da js/site.js (seme 166700).
+# Il bake lo ricontrolla contro il valore calcolato a runtime.
+PD = {"it": "291", "en": "291"}
+
 T = {}
 
 T["it"] = dict(
@@ -46,27 +52,27 @@ T["it"] = dict(
     desc="AI engineer: ottimizzazione dell'inferenza su GPU consumer (CUDA, Pascal sm_61), ricerca su attention e memoria nei language model, pipeline ML locali e privacy-first. Tutto open source.",
     ogimgalt="Testata della pagina: il nome Adrian Iancu in grande, sopra un raster di neuroni simulati.",
     skip="Vai al contenuto", navlabel="Sezioni", toc="Indice", langlabel="Lingua", themelabel="Tema",
-    th=("carta", "cianotipia"), thtitle=("Tema chiaro", "Tema scuro"),
+    th=("chiaro", "scuro", "auto"), thtitle=("Tema chiaro (carta)", "Tema scuro (cianotipia)", "Tema auto (come il sistema)"),
     nav=["ricerca", "inferenza", "motion ed embedding", "strumenti locali", "ML applicato", "ambienti RL", "indice"], navnote="nota sulle figure",
     folio="aggiornata settembre 2026",
     abs='<span class="runin">Sommario.</span> <b>Ottimizzazione CUDA su GPU consumer</b>, <b>ricerca su attention e memoria nei language model</b> (fino a un nucleo ricorrente preso da un connettoma reale), <b>pipeline ML locali</b> senza cloud. Tutto open source.',
     rasterlabel="Raster di neuroni leaky integrate-and-fire simulati: tratti di spike nel tempo per neuroni sensoriali, centrali e discendenti, con il tasso di popolazione sotto.",
     cap1='<b>Fig. 1.</b> Raster di <span class="nn">128</span> neuroni leaky integrate-and-fire simulati in questa pagina (dt = 1 ms), ordinati per distanza dalle porte d\'ingresso. Ogni tratto è uno spike. Circa ogni 120 ms un token entra dai neuroni sensoriali; scorrere la pagina aumenta l\'ingresso. È un\'illustrazione: il modello vero ha 166.700 neuroni (<a href="#fig2">fig. 2</a>).',
     legend=["porta d'ingresso", "eccitatorio", "inibitorio", "discendente", "tasso di popolazione"],
-    kw='<span class="runin">Parole chiave.</span> CUDA, CUDA Graphs; PyTorch; llama.cpp, GGML; WebGPU, WGSL; Spiking NN, surrogate gradient; LLM inference, quantizzazione, offload; Diffusion LM; Embedding, LLM2Vec; Time series, probabilistic forecasting; Python, C++, TypeScript; Unity, Phaser; faster-whisper, Piper.',
+    kw='CUDA, CUDA Graphs; PyTorch; llama.cpp, GGML; WebGPU, WGSL; Spiking NN, surrogate gradient; LLM inference, quantizzazione, offload; Diffusion LM; Embedding, LLM2Vec; Time series, probabilistic forecasting; Python, C++, TypeScript; Unity, Phaser; faster-whisper, Piper.',
     tcap="<b>Tab. 1.</b> Numeri di riferimento, ciascuno con la sua fonte.", thq="grandezza", thv="valore", ths="fonte",
-    rows=[("Hardware di riferimento", "GTX 1080 · 8 GB · sm_61", "ogni benchmark della pagina"),
+    rows=[("Hardware di riferimento", "GTX&nbsp;1080 ·&nbsp;8&nbsp;GB ·&nbsp;sm_61", "ogni benchmark della pagina"),
           ("Speedup MoE in llama.cpp", "+40%", '<a href="%s">PR upstream #27721, aperta</a>' % PR),
-          ("Neuroni simulati con gradiente", "166.700", '<a href="#fig2">fig. 2, male-cns:v1.0</a>'),
-          ("Modelli portati su 8 GB", "Llama-3-8B · Bonsai 4B · Kimodo", '<a href="#motion">Motion ed embedding</a>')],
+          ("Neuroni simulati con gradiente", "166.700", '<a href="%sflytollm">repository flytollm</a>, male-cns:v1.0' % GH),
+          ("Modelli portati su 8 GB", "Llama-3-8B ·&nbsp;Bonsai&nbsp;4B ·&nbsp;Kimodo", '<a href="#motion">Motion ed embedding</a>; <a href="#inferenza">Inferenza</a>')],
     # Ricerca
     k1="Ricerca su attention e memoria", h1s="Language model su un connettoma reale",
     lead1="Quanto del contesto lo tiene l'attention e quanto un nucleo ricorrente? Banco di prova: il connettoma completo del sistema nervoso di Drosophila (male-cns:v1.0, " + m("166.700") + " neuroni, " + m("2,75 M") + ' sinapsi a soglia 10)<sup class="n">1</sup> come nucleo ricorrente LIF di un language model: segni sinaptici fissati dal neurotrasmettitore, magnitudini inizializzate dal conteggio di sinapsi, gradiente surrogato, CUDA Graph FP32. Protocollo con null model a gradi conservati, baseline a pari token e lesioni in silico.',
     n1="Connettoma male-cns:v1.0 (Janelia FlyEM · Google Research, licenza CC-BY): 25,6 M connessioni in totale, 2.753.975 sopra la soglia di 10 sinapsi.",
-    cap2='<b>Fig. 2.</b> Pipeline di FlyToLLM. Il grafo è un\'illustrazione generata in questa pagina sulla sagoma del sistema nervoso centrale (cervello, lobi ottici, cordone ventrale): ogni punto vale circa <span class="pd">290</span> neuroni. La tinta indica la distanza in salti dalle porte d\'ingresso e lo scorrimento ne rivela uno alla volta. Nel connettoma vero il readout sta a 2 salti dalle porte, per questo la profondità 4+4 basta.',
+    cap2='<b>Fig. 2.</b> Pipeline di FlyToLLM. I punti sono un\'illustrazione generata in questa pagina sulla sagoma del sistema nervoso centrale (cervello, lobi ottici, cordone ventrale): ogni punto vale circa <span class="pd">' + PD["it"] + '</span> neuroni. La tinta, dal blu più deciso al più spento, indica la distanza in salti dalle porte d\'ingresso e lo scorrimento ne rivela uno alla volta. Nel connettoma vero il readout sta a 2 salti dalle porte, per questo la profondità 4+4 basta.',
     dl1="ricerca · 2026",
     d1="Ingresso del testo tramite i " + m("17.937") + " neuroni sensoriali reali, lettura dai " + m("2.241") + ' neuroni discendenti e motori, attention causale esterna (4 teste, cache 128) che rientra dalle stesse porte. Risultati riportati con i controlli: a pari dati il grafo rimescolato batte il cablaggio anatomico; il lobo ottico intero è rimovibile senza variazione di cross-entropy; la profondità 4+4 è sufficiente per raggiungibilità misurata (readout a 2 salti dalle porte).<sup class="n">2</sup>',
-    go1="pipeline animata e numeri", repo="repository", meth="Metodi.",
+    go1="pipeline animata e numeri", fork="fork di llama.cpp",
     m1="PyTorch · CUDA Graphs; LIF · surrogate gradient; TBPTT · Adam; TinyStories · BPE 4096",
     n2="4+4 sottopassi per token, TBPTT 8, CUDA Graph FP32: 0,65 s per update su GTX 1080, 0,38 s con il kernel fuso; 5,46 M parametri.",
     # Inferenza
@@ -92,6 +98,7 @@ T["it"] = dict(
     # Strumenti locali
     k4="Strumenti locali", h4s="Speech-to-text locale e strumenti privacy-first",
     lead4="Applicazioni desktop che elaborano audio e testo sulla macchina dell'utente, senza servizi esterni.",
+    # testo precedente di Vergilius, non piu' pubblicato: sostituito dal testo del README pubblico (verg)
     vold="Assistente personale che non comunica con servizi esterni: schema architetturale pubblicato, codice in arrivo.",
     verg="Assistente personale che non comunica con servizi esterni: gira in locale su GTX 1080 (8 GB), senza chiavi API e senza che una conversazione lasci la macchina. Modello predefinito LFM2.5-2.6B con drafter speculativo: " + m("64 tok/s") + " in decodifica, " + m("78-100") + " tok/s con il drafter attivo. Un controllo di groundedness confronta le cifre delle risposte con i risultati degli strumenti: le cifre non supportate sono scese da " + m("3") + " turni su " + m("35") + " a " + m("1") + " su " + m("36") + '.<sup class="n">3</sup>',
     schema="schema del progetto",
@@ -106,7 +113,6 @@ T["it"] = dict(
     fo="Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (" + m("75-91%") + ' vinti contro strategie di riferimento). Con arena interattiva per sfidarlo.<sup class="n">4</sup>',
     m5="Python; 2 stelle; predizione · ottimizzazione · Monte Carlo",
     n4="Dal README: tetto d'asta dinamico con 0 sfori su 52 lotti simulati; ponte con FantaAsta Live, 43 assegnazioni corrette su 44.",
-    cap6="<b>Fig. 6.</b> FantaOracle, valutazione su campionati simulati. Schema generato in questa pagina (seme 2026), non i dati delle simulazioni: ogni curva è la quota cumulata di vittorie in una serie di campionati, e il fascio si stringe nell'intervallo 75-91% riportato dal progetto.",
     fca="Motore di analisi e raccomandazione multi-algoritmo con front-end React; il predecessore di FantaOracle.", fcas="React · TypeScript · Python",
     kf="Dashboard di previsione probabilistica: DeepAR, ARIMA/SARIMA e AutoGluon confrontati sulla stessa serie con intervalli di confidenza.", kfs="Python; time series",
     sp="Laboratorio full-stack (React + Flask) per l'analisi e la predizione di serie storiche dell'S&amp;P 500, con test di prevedibilità fuori campione.", sps="TypeScript · Python; time series",
@@ -119,12 +125,12 @@ T["it"] = dict(
     # Indice
     kapp="Appendice", hidx="Indice dei repository", idxm="15 voci · 6 aree",
     idxcap="Repository pubblici raggruppati per area; ogni nome porta al codice.",
-    ih=("repository", "stack", "note"), fork="(fork)", pra="PR #27721 aperta", st1="1 stella", st2="2 stelle",
+    ih=("repository", "stack", "note"), fk="(fork)", pra="PR #27721 aperta", st1="1 stella", st2="2 stelle",
     # Nota
     hnote="Nota sulle figure",
-    note='Tutte le figure sono calcolate in questa pagina con canvas e SVG scritti a mano, senza immagini né librerie. I generatori pseudo-casuali hanno seme fisso (27721, il numero della PR, per <a href="#fig1">Fig. 1</a> e <a href="#fig3">Fig. 3</a>; 166700, il numero di neuroni, per <a href="#fig2">Fig. 2</a>; 2026 per <a href="#fig6">Fig. 6</a>), quindi ogni lettore vede lo stesso disegno. Lo scorrimento è un ingresso: in Fig. 1 alza la corrente sensoriale, nelle altre fa avanzare la figura, che torna indietro se si risale. Con la riduzione del movimento attiva ogni figura mostra un solo fotogramma scelto. Fig. 1, 2, 3 e 6 sono schemi; <a href="#fig4">Fig. 4</a> e <a href="#fig5">Fig. 5</a> riportano numeri misurati; i numeri di testo, didascalie e Tab. 1 vengono dai repository.',
-    haut="L'autore", avalt="Avatar GitHub di Adrian Iancu",
-    foot=("niente tracker, niente pubblicità", "pagina fatta in casa", "aggiornata settembre 2026"), grid="mostra la griglia",
+    note='Tutte le figure sono calcolate in questa pagina con canvas e SVG scritti a mano, senza immagini né librerie. I generatori pseudo-casuali hanno seme fisso (27721, il numero della PR, per <a href="#fig1">Fig. 1</a> e <a href="#fig3">Fig. 3</a>; 166700, il numero di neuroni, per <a href="#fig2">Fig. 2</a>), quindi ogni lettore vede lo stesso disegno. Lo scorrimento è un ingresso: in Fig. 1 alza la corrente sensoriale, nelle altre fa avanzare la figura, che torna indietro se si risale. Con la riduzione del movimento attiva ogni figura mostra un solo fotogramma scelto. Fig. 1, 2 e 3 sono schemi; <a href="#fig4">Fig. 4</a> e <a href="#fig5">Fig. 5</a> riportano numeri misurati; i numeri di testo, didascalie e Tab. 1 vengono dai repository.',
+    haut="L'autore", avalt="Avatar GitHub di Adrian Iancu", notelabel="Nota",
+    foot=("niente tracker, niente pubblicità", "pagina fatta in casa"), grid="mostra la griglia",
 )
 
 T["en"] = dict(
@@ -132,26 +138,26 @@ T["en"] = dict(
     desc="AI engineer: inference optimization on consumer GPUs (CUDA, Pascal sm_61), research on attention and memory in language models, local and privacy-first ML pipelines. Everything open source.",
     ogimgalt="Page header: the name Adrian Iancu set large, above a raster of simulated neurons.",
     skip="Skip to content", navlabel="Sections", toc="Contents", langlabel="Language", themelabel="Theme",
-    th=("paper", "cyanotype"), thtitle=("Light theme", "Dark theme"),
+    th=("light", "dark", "auto"), thtitle=("Light theme (paper)", "Dark theme (cyanotype)", "Auto theme (follow the system)"),
     nav=["research", "inference", "motion and embeddings", "local tools", "applied ML", "reinforcement learning", "index"], navnote="a note on the figures",
     folio="updated September 2026",
     abs='<span class="runin">Abstract.</span> <b>CUDA optimization on consumer GPUs</b>, <b>research on attention and memory in language models</b> (down to a recurrent core taken from a real connectome), <b>local ML pipelines</b> with no cloud. Everything open source.',
     rasterlabel="Raster of simulated leaky integrate-and-fire neurons: spike ticks over time for sensory, central and descending neurons, with the population rate below.",
     cap1='<b>Fig. 1.</b> Raster of <span class="nn">128</span> leaky integrate-and-fire neurons simulated in this page (dt = 1 ms), ordered by distance from the input ports. Each tick is a spike. Roughly every 120 ms a token enters through the sensory neurons; scrolling the page raises the input. An illustration: the real model has 166,700 neurons (<a href="#fig2">fig. 2</a>).',
     legend=["input port", "excitatory", "inhibitory", "descending", "population rate"],
-    kw='<span class="runin">Keywords.</span> CUDA, CUDA Graphs; PyTorch; llama.cpp, GGML; WebGPU, WGSL; Spiking NN, surrogate gradient; LLM inference, quantization, offload; Diffusion LM; Embeddings, LLM2Vec; Time series, probabilistic forecasting; Python, C++, TypeScript; Unity, Phaser; faster-whisper, Piper.',
+    kw='CUDA, CUDA Graphs; PyTorch; llama.cpp, GGML; WebGPU, WGSL; Spiking NN, surrogate gradient; LLM inference, quantization, offload; Diffusion LM; Embeddings, LLM2Vec; Time series, probabilistic forecasting; Python, C++, TypeScript; Unity, Phaser; faster-whisper, Piper.',
     tcap="<b>Table 1.</b> Reference numbers, each with its source.", thq="quantity", thv="value", ths="source",
-    rows=[("Reference hardware", "GTX 1080 · 8 GB · sm_61", "every benchmark on this page"),
+    rows=[("Reference hardware", "GTX&nbsp;1080 ·&nbsp;8&nbsp;GB ·&nbsp;sm_61", "every benchmark on this page"),
           ("MoE speedup in llama.cpp", "+40%", '<a href="%s">upstream PR #27721, open</a>' % PR),
-          ("Neurons simulated with gradients", "166,700", '<a href="#fig2">fig. 2, male-cns:v1.0</a>'),
-          ("Models brought to 8 GB", "Llama-3-8B · Bonsai 4B · Kimodo", '<a href="#motion">Motion and embeddings</a>')],
+          ("Neurons trained by gradient", "166,700", '<a href="%sflytollm">flytollm repository</a>, male-cns:v1.0' % GH),
+          ("Models fitted into 8 GB", "Llama-3-8B ·&nbsp;Bonsai&nbsp;4B ·&nbsp;Kimodo", '<a href="#motion">Motion and embeddings</a>; <a href="#inferenza">Inference</a>')],
     k1="Research on attention and memory", h1s="A language model on a real connectome",
     lead1="How much of the context is held by attention, and how much by a recurrent core? Test bed: the complete connectome of the Drosophila nervous system (male-cns:v1.0, " + m("166,700") + " neurons, " + m("2.75 M") + ' synapses at threshold 10)<sup class="n">1</sup> as the recurrent LIF core of a language model: synaptic signs fixed by the neurotransmitter, magnitudes initialised from synapse counts, surrogate gradient, FP32 CUDA Graph. Protocol with degree-preserving null models, token-matched baselines and in-silico lesions.',
     n1="male-cns:v1.0 connectome (Janelia FlyEM · Google Research, CC-BY licence): 25.6 M connections in total, 2,753,975 above the 10-synapse threshold.",
-    cap2='<b>Fig. 2.</b> The FlyToLLM pipeline. The graph is an illustration generated in this page on the outline of the central nervous system (brain, optic lobes, ventral nerve cord): each dot stands for about <span class="pd">290</span> neurons. Shade gives the distance in hops from the input ports, and scrolling reveals one hop at a time. In the real connectome the readout sits 2 hops from the ports, which is why 4+4 depth is enough.',
+    cap2='<b>Fig. 2.</b> The FlyToLLM pipeline. The dots are an illustration generated in this page on the outline of the central nervous system (brain, optic lobes, ventral nerve cord): each dot stands for about <span class="pd">' + PD["en"] + '</span> neurons. Shade, from the strongest blue to the faintest, gives the distance in hops from the input ports, and scrolling reveals one hop at a time. In the real connectome the readout sits 2 hops from the ports, which is why 4+4 depth is enough.',
     dl1="research · 2026",
     d1="Text enters through the " + m("17,937") + " real sensory neurons and is read out from the " + m("2,241") + ' descending and motor neurons; an external causal attention (4 heads, cache 128) re-enters through the same ports. Results are reported with their controls: at equal data the shuffled graph beats the anatomical wiring; the whole optic lobe can be removed with no change in cross-entropy; 4+4 depth is enough for the measured reachability (readout 2 hops from the ports).<sup class="n">2</sup>',
-    go1="animated pipeline and numbers", repo="repository", meth="Methods.",
+    go1="animated pipeline and numbers", fork="llama.cpp fork",
     m1="PyTorch · CUDA Graphs; LIF · surrogate gradient; TBPTT · Adam; TinyStories · BPE 4096",
     n2="4+4 substeps per token, TBPTT 8, FP32 CUDA Graph: 0.65 s per update on a GTX 1080, 0.38 s with the fused kernel; 5.46 M parameters.",
     k2="CUDA inference optimization", h2s="Pascal architecture (sm_61)",
@@ -181,13 +187,12 @@ T["en"] = dict(
     cap5="<b>Fig. 5.</b> Vergilius on a GTX 1080, inside an enclosure: no call leaves the machine (127.0.0.1). Left, decoding speed, 64 tok/s and 78-100 tok/s with the drafter; right, turns with figures not supported by the tool results, from 3 out of 35 to 1 out of 36.",
     stt="Windows application for local voice transcription based on faster-whisper (CTranslate2, int8 on CUDA): record, transcribe and paste into the active field.",
     stts="Python; 1 star",
-    k5="Applied machine learning projects", h5s="Prediction, optimization, time series",
+    k5="Applied machine learning projects", h5s="<span class=\"nw\">Prediction, optimization,</span> time series",
     lead5="Models with uncertainty intervals, real-time optimization under constraints, out-of-sample or simulation-based evaluation.",
-    dl5="complete code",
+    dl5="full source code",
     fo="Decision system for fantasy football auctions: a price model with an uncertainty band, squad optimization at the table under budget and slot constraints, evaluation on simulated leagues (" + m("75-91%") + ' won against reference strategies). With an interactive arena to challenge it.<sup class="n">4</sup>',
     m5="Python; 2 stars; prediction · optimization · Monte Carlo",
     n4="From the README: dynamic auction cap with 0 overruns in 52 simulated lots; bridge to FantaAsta Live, 43 correct assignments out of 44.",
-    cap6="<b>Fig. 6.</b> FantaOracle, evaluation on simulated leagues. A schematic generated in this page (seed 2026), not the simulation data: each curve is the cumulative share of wins over a series of leagues, and the bundle narrows into the 75-91% range reported by the project.",
     fca="Multi-algorithm analysis and recommendation engine with a React front end; the predecessor of FantaOracle.", fcas="React · TypeScript · Python",
     kf="Probabilistic forecasting dashboard: DeepAR, ARIMA/SARIMA and AutoGluon compared on the same series with confidence intervals.", kfs="Python; time series",
     sp="Full-stack lab (React + Flask) for analysing and predicting S&amp;P 500 time series, with out-of-sample predictability tests.", sps="TypeScript · Python; time series",
@@ -198,14 +203,15 @@ T["en"] = dict(
     idle="Browser idle RPG with Phaser 3 and Three.js: progression loop, prestige and 3D rendering.", idles="JavaScript · Three.js",
     kapp="Appendix", hidx="Repository index", idxm="15 entries · 6 areas",
     idxcap="Public repositories grouped by area; each name leads to the code.",
-    ih=("repository", "stack", "notes"), fork="(fork)", pra="PR #27721 open", st1="1 star", st2="2 stars",
+    ih=("repository", "stack", "notes"), fk="(fork)", pra="PR #27721 open", st1="1 star", st2="2 stars",
     hnote="A note on the figures",
-    note='Every figure is computed in this page with hand-written canvas and SVG, with no images or libraries. The pseudo-random generators have fixed seeds (27721, the PR number, for <a href="#fig1">Fig. 1</a> and <a href="#fig3">Fig. 3</a>; 166700, the neuron count, for <a href="#fig2">Fig. 2</a>; 2026 for <a href="#fig6">Fig. 6</a>), so every reader sees the same drawing. Scrolling is an input: in Fig. 1 it raises the sensory current, in the others it advances the figure, which rewinds if you scroll back. With reduced motion on, each figure shows a single chosen frame. Fig. 1, 2, 3 and 6 are schematics; <a href="#fig4">Fig. 4</a> and <a href="#fig5">Fig. 5</a> plot measured numbers; the numbers in the text, captions and Table 1 come from the repositories.',
-    haut="About the author", avalt="Adrian Iancu's GitHub avatar",
-    foot=("no trackers, no ads", "home-made page", "updated September 2026"), grid="show the grid",
+    note='Every figure is computed in this page with hand-written canvas and SVG, with no images or libraries. The pseudo-random generators have fixed seeds (27721, the PR number, for <a href="#fig1">Fig. 1</a> and <a href="#fig3">Fig. 3</a>; 166700, the neuron count, for <a href="#fig2">Fig. 2</a>), so every reader sees the same drawing. Scrolling is an input: in Fig. 1 it raises the sensory current, in the others it advances the figure, which rewinds if you scroll back. With reduced motion on, each figure shows a single chosen frame. Fig. 1, 2 and 3 are schematics; <a href="#fig4">Fig. 4</a> and <a href="#fig5">Fig. 5</a> plot measured numbers; the numbers in the text, captions and Table 1 come from the repositories.',
+    haut="About the author", avalt="Adrian Iancu's GitHub avatar", notelabel="Note",
+    foot=("no trackers, no ads", "home-made page"), grid="show the grid",
 )
 
 ROLE = "AI Engineer · inference optimization · attention mechanisms research (transformer) · local-first systems"
+ROLE_H = ROLE.replace("AI Engineer", "<b>AI Engineer</b>", 1)
 
 
 def page(t):
@@ -216,21 +222,28 @@ def page(t):
     nav = "".join('<a href="%s">%s</a>' % (h, s) for h, s in nav_items(t))
     toc = "".join('<li><a href="%s">%s</a></li>' % (h, s) for h, s in nav_items(t) + [("#note", t["navnote"])])
     it_href, en_href = ("./", "en/") if L == "it" else ("../", "./")
-    lang_nav = ('<!-- Versione inglese: per toglierla cancellare la cartella en/, questo blocco .lang e i tre <link rel="alternate"> nel head. -->\n'
-                '<nav class="lang" aria-label="%s"><a href="%s" hreflang="it" lang="it"%s>IT</a><span aria-hidden="true">/</span><a href="%s" hreflang="en" lang="en"%s>EN</a></nav>'
+    # Versione inglese: per toglierla cancellare la cartella en/, il blocco .lang e i tre <link rel="alternate"> nel head.
+    lang_nav = ('<nav class="lang" aria-label="%s"><a href="%s" hreflang="it" lang="it"%s>IT</a><span aria-hidden="true">/</span><a href="%s" hreflang="en" lang="en"%s>EN</a></nav>'
                 % (t["langlabel"], it_href, ' aria-current="page"' if L == "it" else "", en_href, ' aria-current="page"' if L == "en" else ""))
-    theme = ('<div class="theme" role="group" aria-label="%s"><button type="button" data-set="light" aria-pressed="false" title="%s">%s</button><span aria-hidden="true">/</span>'
-             '<button type="button" data-set="dark" aria-pressed="false" title="%s">%s</button></div>' % (t["themelabel"], t["thtitle"][0], t["th"][0], t["thtitle"][1], t["th"][1]))
+    theme = ('<div class="theme" role="group" aria-label="%s">' % t["themelabel"]
+             + '<span aria-hidden="true">/</span>'.join('<button type="button" data-set="%s" aria-pressed="false" aria-label="%s">%s</button>' % (k, t["thtitle"][i], t["th"][i])
+                                                        for i, k in enumerate(("light", "dark", "auto")))
+             + '</div>')
 
     def go(*links):
         return '<p class="go">' + "".join('<a href="%s">%s</a>' % (h, s) for h, s in links) + "</p>"
 
     def brief(name, desc, stack, href=None, mono=True, dateline=None, lang_en=False):
-        h = '<h4 class="%s"%s>%s</h4>' % ("bn" if mono else "bn bt", ' lang="en"' if lang_en else "", name)
+        # il nome e' il link al codice: niente "-> repository" ripetuto
+        inner = '<a href="%s">%s</a>' % (href, name) if href else name
+        h = '<h3 class="%s"%s>%s</h3>' % ("bn" if mono else "bn bt", ' lang="en"' if lang_en else "", inner)
         if dateline:
             h += '<p class="dateline soon">%s</p>' % dateline
-        foot = '<p class="bf">' + ('<span class="go"><a href="%s">%s</a></span>' % (href, t["repo"]) if href else "") + '<span class="stk">%s</span></p>' % stack
+        foot = '<p class="bf"><span class="stk">%s</span></p>' % stack
         return '<article class="brief">%s<p>%s</p>%s</article>' % (h, desc, foot)
+
+    def note(n, text):
+        return '<aside class="notes" aria-label="%s %d"><p id="n%d"><sup class="n">%d</sup>%s</p></aside>' % (t["notelabel"], n, n, n, text)
 
     rows = "".join('<tr><td>%s</td><td class="v">%s</td><td class="src">%s</td></tr>' % r for r in t["rows"])
     legend = ('<ul class="legend">'
@@ -243,7 +256,7 @@ def page(t):
     def idx_row(name, stack, note="", href=True, fork=False, en=False):
         cell = ('<a href="%s%s">%s</a>' % (GH, name, name)) if href else '<span%s>%s</span>' % (' lang="en"' if en else "", name)
         if fork:
-            cell += ' <span class="fk">%s</span>' % t["fork"]
+            cell += ' <span class="fk">%s</span>' % t["fk"]
         return '<tr%s><td class="nm">%s</td><td class="sk">%s</td><td class="nt">%s</td></tr>' % ("" if href else ' class="nolink"', cell, stack, note)
 
     def grp(hid, label):
@@ -254,7 +267,7 @@ def page(t):
         '<tbody>', grp("inferenza", t["k2"]), idx_row("llama.cpp", "C++ · CUDA", t["pra"], fork=True),
         idx_row("hildanext", "Python · PyTorch"), idx_row("bonsai-webgpu-tiled-vae-fix", "JavaScript · WebGPU", t["st2"]), '</tbody>',
         '<tbody>', grp("motion", t["k3"]), idx_row("llm2vec-8gb-offload-lossless-batching", "Python · PyTorch"),
-        idx_row(t["npc"], "Unity · Python", '<i>%s</i>' % t["soon"], href=False, en=(L == "it" and False)), '</tbody>',
+        idx_row(t["npc"], "Unity · Python", '<span class="soon">%s</span>' % t["soon"], href=False, en=(L == "it" and False)), '</tbody>',
         '<tbody>', grp("locale", t["k4"]), idx_row("vergilius", "local-first"), idx_row("stt-whisper-pad", "Python", t["st1"]), '</tbody>',
         '<tbody>', grp("ml", t["k5"]), idx_row("fantaoracle", "Python", t["st2"]), idx_row("fantacalcio-advisor", "React · TypeScript · Python"),
         idx_row("K-Forecast", "Python"), idx_row("sp500-predictability-lab", "TypeScript · Python"), idx_row("storico", "Python"), '</tbody>',
@@ -291,6 +304,7 @@ def page(t):
 <link rel="icon" href="{P}img/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="{P}img/apple-touch-icon.png">
 <link rel="preload" href="{P}fonts/newsreader-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{P}fonts/besley-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{P}fonts/tavola-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{P}css/site.css">
 <script>{boot}</script>
@@ -300,7 +314,6 @@ def page(t):
 """.format(L=L, desc=t["desc"], csp=CSP, canon=t["canon"], site=SITE, og=t["og"], ogimgalt=t["ogimgalt"], ogloc=t["ogloc"], ogalt=t["ogalt"], P=P, boot=BOOT, li=LI)
 
     body = f"""<body>
-<!-- Generato da tools/build-pages.py: modificare i testi li' e rigenerare. -->
 <a class="skip" href="#main">{t['skip']}</a>
 <div class="mast-slot" id="mast-slot">
 <header class="mast" id="mast">
@@ -317,19 +330,19 @@ def page(t):
 
 <main id="main">
 <section class="hero wrap grid" id="top" data-k="">
-<p class="role"{en_attr}>{ROLE}</p>
+<p class="role"{en_attr}>{ROLE_H}</p>
 <p class="folio">{t['folio']}</p>
 <h1><span>Adrian</span> <span>Iancu</span></h1>
-<div class="abstract"><p class="abs">{t['abs']}</p></div>
+<div class="abstract"><p class="abs">{t['abs']}</p>
+<p class="go contacts"><a href="https://github.com/ArtyomITA">GitHub</a><a href="{LI}">LinkedIn</a><a href="{PR}">llama.cpp · PR #27721</a></p></div>
 <figure class="fig1" id="fig1">
 <div class="rbox"><canvas id="raster" role="img" aria-label="{t['rasterlabel']}"></canvas></div>
 <p class="readout" id="readout" aria-hidden="true"></p>
-<figcaption>{t['cap1']}</figcaption>
 {legend}
+<figcaption>{t['cap1']}</figcaption>
 </figure>
 <div class="more">
 <p class="kw">{t['kw']}</p>
-<p class="go contacts"><a href="https://github.com/ArtyomITA">GitHub</a><a href="{LI}">LinkedIn</a><a href="{PR}">llama.cpp · PR #27721</a></p>
 </div>
 <table class="tab1">
 <caption>{t['tcap']}</caption>
@@ -342,31 +355,31 @@ def page(t):
 {TICKS}
 <div class="runhead"><p class="kicker">{t['k1']}</p></div>
 <div class="sec-main"><h2 id="h-ricerca">{t['h1s']}</h2><p class="lead" data-notes="n1">{t['lead1']}</p></div>
-<aside class="notes"><p id="n1"><sup class="n">1</sup>{t['n1']}</p></aside>
+{note(1, t['n1'])}
 <figure class="fig fig2" id="fig2">
 <svg class="cns" id="cns" role="img" aria-labelledby="cap2"></svg>
 <figcaption id="cap2">{t['cap2']}</figcaption>
 </figure>
 <article class="proj">
-<h3>FlyToLLM</h3>
+<h3><a href="{GH}flytollm">FlyToLLM</a></h3>
 <p class="dateline">{t['dl1']}</p>
 <p data-notes="n2">{t['d1']}</p>
-{go(("https://artyomita.github.io/flytollm/", t['go1']), (GH + "flytollm", t['repo']))}
-<p class="meth"><span class="runin">{t['meth']}</span> {t['m1']}</p>
+{go(("https://artyomita.github.io/flytollm/", t['go1']))}
+<p class="meth">{t['m1']}</p>
 </article>
-<aside class="notes"><p id="n2"><sup class="n">2</sup>{t['n2']}</p></aside>
+{note(2, t['n2'])}
 </section>
 
 <section class="sec wrap grid" id="inferenza" data-k="{t['k2']}" aria-labelledby="h-inferenza">
 {TICKS}
-<div class="runhead"><p class="kicker">{t['k2']}</p><p class="epi" aria-hidden="true">sm_61</p></div>
+<div class="runhead"><p class="kicker">{t['k2']}</p></div>
 <div class="sec-main"><h2 id="h-inferenza">{t['h2s']}</h2><p class="lead">{t['lead2']}</p></div>
 <article class="proj withmeta">
 <h3 lang="en">CUDA graphs on Pascal</h3>
 <p class="dateline">{t['dl2']}</p>
 <dl class="meta"><div><dt>{t['md'][0]}</dt><dd>{t['mdv'][0]}</dd></div><div><dt>{t['md'][1]}</dt><dd>{t['mdv'][1]}</dd></div><div><dt>{t['md'][2]}</dt><dd>{t['mdv'][2]}</dd></div></dl>
 <p>{t['d2']}</p>
-{go((PR, "PR #27721"), (GH + "llama.cpp", "fork"))}
+{go((PR, "PR #27721"), (GH + "llama.cpp", t['fork']))}
 </article>
 <figure class="fig fig3" id="fig3">
 <svg class="kt" id="kt" role="img" aria-labelledby="cap3"></svg>
@@ -383,10 +396,9 @@ def page(t):
 <div class="runhead"><p class="kicker">{t['k3']}</p></div>
 <div class="sec-main"><h2 id="h-motion">{t['h3s']}</h2><p class="lead">{t['lead3']}</p></div>
 <article class="proj">
-<h3 class="h3m">llm2vec-8gb-offload-lossless-batching</h3>
+<h3 class="h3m"><a href="{GH}llm2vec-8gb-offload-lossless-batching">llm2vec-8gb-offload-lossless-batching</a></h3>
 <p>{t['l2v']}</p>
-{go((GH + "llm2vec-8gb-offload-lossless-batching", t['repo']))}
-<p class="meth"><span class="runin">{t['meth']}</span> {t['m3']}</p>
+<p class="meth">{t['m3']}</p>
 </article>
 <figure class="fig fig4" id="fig4">
 <svg class="err" id="err" role="img" aria-labelledby="cap4"></svg>
@@ -402,14 +414,12 @@ def page(t):
 <div class="runhead"><p class="kicker">{t['k4']}</p><p class="epi" aria-hidden="true">127.0.0.1</p></div>
 <div class="sec-main"><h2 id="h-locale">{t['h4s']}</h2><p class="lead">{t['lead4']}</p></div>
 <article class="proj">
-<h3>Vergilius</h3>
+<h3><a href="{GH}vergilius">Vergilius</a></h3>
 <p class="dateline">local-first</p>
-<!-- Testo precedente, verbatim: "{t['vold']}"
-     Nuovo testo dal README pubblico del repository: da confermare con l'utente. -->
 <p data-notes="n3">{t['verg']}</p>
-{go((GH + "vergilius", t['repo']), (ART, t['schema']))}
+{go((ART, t['schema']))}
 </article>
-<aside class="notes"><p id="n3"><sup class="n">3</sup>{t['n3']}</p></aside>
+{note(3, t['n3'])}
 <figure class="fig fig5" id="fig5">
 <svg class="f5" id="fence" role="img" aria-labelledby="cap5"></svg>
 <figcaption id="cap5">{t['cap5']}</figcaption>
@@ -424,17 +434,12 @@ def page(t):
 <div class="runhead"><p class="kicker">{t['k5']}</p></div>
 <div class="sec-main"><h2 id="h-ml">{t['h5s']}</h2><p class="lead">{t['lead5']}</p></div>
 <article class="proj">
-<h3>FantaOracle</h3>
+<h3><a href="{GH}fantaoracle">FantaOracle</a></h3>
 <p class="dateline">{t['dl5']}</p>
 <p data-notes="n4">{t['fo']}</p>
-{go((GH + "fantaoracle", t['repo']))}
-<p class="meth"><span class="runin">{t['meth']}</span> {t['m5']}</p>
+<p class="meth">{t['m5']}</p>
 </article>
-<aside class="notes"><p id="n4"><sup class="n">4</sup>{t['n4']}</p></aside>
-<figure class="fig fig6" id="fig6">
-<svg class="mc" id="mc" role="img" aria-labelledby="cap6"></svg>
-<figcaption id="cap6">{t['cap6']}</figcaption>
-</figure>
+{note(4, t['n4'])}
 <div class="briefs">
 {brief("fantacalcio-advisor", t['fca'], t['fcas'], GH + "fantacalcio-advisor")}
 {brief("K-Forecast", t['kf'], t['kfs'], GH + "K-Forecast")}
@@ -444,7 +449,7 @@ def page(t):
 </section>
 
 <section class="sec sec-rl wrap grid" id="rl" data-k="{t['k6']}" aria-labelledby="h-rl">
-{TICKS}
+{RULE}
 <div class="runhead"><p class="kicker">{t['k6']}</p></div>
 <div class="sec-main"><h2 id="h-rl">{t['h6s']}</h2><p class="lead">{t['lead6']}</p></div>
 <div class="briefs">
@@ -454,7 +459,7 @@ def page(t):
 </section>
 
 <section class="sec sec-idx wrap grid" id="indice" data-k="{t['hidx']}" aria-labelledby="h-indice">
-{TICKS}
+{RULE}
 <div class="runhead"><p class="kicker">{t['kapp']}</p><p class="count">{t['idxm']}</p></div>
 <div class="idx">
 <h2 id="h-indice">{t['hidx']}</h2>
@@ -467,7 +472,7 @@ def page(t):
 </section>
 
 <section class="sec sec-note wrap grid" id="note" data-k="{t['hnote']}" aria-labelledby="h-note">
-{TICKS}
+{RULE}
 <div class="runhead"><h2 class="kicker" id="h-note">{t['hnote']}</h2></div>
 <div class="sec-main"><p class="notetext">{t['note']}</p></div>
 </section>
@@ -483,7 +488,7 @@ def page(t):
 </main>
 
 <footer class="foot wrap">
-<p><span>{t['foot'][0]}</span><span>{t['foot'][1]}</span><span>{t['foot'][2]}</span><button type="button" id="gridbtn" aria-pressed="false">{t['grid']}</button></p>
+<p><span>{t['foot'][0]}</span><span>{t['foot'][1]}</span><button type="button" id="gridbtn" aria-pressed="false">{t['grid']}</button></p>
 </footer>
 </body>
 </html>
@@ -521,6 +526,8 @@ def bake(pages):
                 pg.goto("http://127.0.0.1:%d/%s" % (port, "" if lang == "it" else "en/"))
                 pg.evaluate("document.fonts.ready")
                 pg.wait_for_timeout(300)
+                pd = pg.evaluate("document.querySelector('.pd').textContent")
+                assert pd == PD[lang], "PD statico %s diverso da quello calcolato %s" % (PD[lang], pd)
                 for sid in ("kt", "err", "fence"):
                     inner = pg.evaluate("(id)=>{var s=document.getElementById(id);return [s.getAttribute('viewBox'),s.innerHTML]}", sid)
                     assert "style=" not in inner[1], sid

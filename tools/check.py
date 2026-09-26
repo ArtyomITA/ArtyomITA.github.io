@@ -39,7 +39,7 @@ PAGE_JS = r"""() => {
   R.banned = ['passionate about', 'crafting', 'building the future', 'best-in-class', 'cutting-edge', 'all-in-one', 'next-generation', 'COMING SOON', 'IN ARRIVO', '★', 'Scopri di più', 'Learn More', 'Get Started'].filter(s => text.includes(s));
   R.italicInHeading = document.querySelectorAll('h1 em,h1 i,h2 em,h2 i,h3 em,h3 i').length;
   const lt = {}; document.querySelectorAll('a').forEach(a => { const t = a.textContent.trim(); lt[t] = (lt[t] || 0) + 1; });
-  R.repeatedLinks = Object.entries(lt).filter(([t, n]) => n > 2 && t !== 'repository');
+  R.repeatedLinks = Object.entries(lt).filter(([t, n]) => n > 2);
   R.figures = [...document.querySelectorAll('figure')].map(f => ({ id: f.id, cap: !!f.querySelector('figcaption'), named: [...f.querySelectorAll('svg[role=img],canvas[role=img]')].every(x => x.getAttribute('aria-label') || x.getAttribute('aria-labelledby')) }));
   // contrasto
   function rgb(s) { const m = s.match(/[\d.]+/g); return m ? m.map(Number) : [0, 0, 0, 1]; }
@@ -61,7 +61,6 @@ PAGE_JS = r"""() => {
   R.h1 = { sw: document.querySelector('h1').scrollWidth, cw: document.querySelector('h1').clientWidth };
   R.fig3 = [...document.querySelectorAll('#kt text.fv')].map(t => t.textContent);
   R.fig4 = document.getElementById('err-v') ? document.getElementById('err-v').textContent : null;
-  R.fig6 = document.querySelectorAll('#mc .fan path:not(.off)').length;
   R.fig5 = document.getElementById('fence').classList.contains('chiuso');
   return R;
 }"""
@@ -140,7 +139,7 @@ def main():
                     fail.append("%s latin-ext scaricato" % lang)
                 # scorre tutta la pagina a passi per portare le figure a p = 1 dove previsto
                 pg.evaluate("window.scrollTo(0,0)")
-                for id_ in ("fig3", "fig4", "fig5", "fig6"):
+                for id_ in ("fig3", "fig4", "fig5"):
                     pg.evaluate("(id)=>{const e=document.getElementById(id);window.scrollTo(0,e.getBoundingClientRect().top+scrollY-innerHeight*0.25)}", id_)
                     pg.wait_for_timeout(500)
                     v = pg.evaluate(PAGE_JS)
@@ -152,8 +151,6 @@ def main():
                         fail.append("%s %s Fig.4 %s" % (lang, theme, v["fig4"]))
                     if id_ == "fig5" and not v["fig5"]:
                         fail.append("%s %s Fig.5 recinto aperto" % (lang, theme))
-                    if id_ == "fig6" and v["fig6"] != 24:
-                        fail.append("%s %s Fig.6 curve %d" % (lang, theme, v["fig6"]))
                 v = pg.evaluate(PAGE_JS)
                 # pagina ferma: dopo 10 s nessun rAF
                 pg.evaluate("window.scrollTo(0,0)")
@@ -181,7 +178,7 @@ def main():
                         fail.append("%s %s %s: %s" % (lang, theme, key, str(bad)[:300]))
                 if [r for r in v["radius"] if not r.startswith("sup.n")]:
                     fail.append("%s %s radius: %s" % (lang, theme, v["radius"]))
-                if set(v["fonts"]) - {"Newsreader", "Tavola Mono"}:
+                if set(v["fonts"]) - {"Newsreader", "Besley", "Tavola Mono"}:
                     fail.append("%s %s font: %s" % (lang, theme, v["fonts"]))
                 if re.match(r"^(Hi|Ciao|Hey)", v["firstLine"]):
                     fail.append("prima riga " + v["firstLine"])
@@ -203,7 +200,7 @@ def main():
             v = pg.evaluate(PAGE_JS)
             if n:
                 fail.append("%s reduced motion: %d rAF" % (lang, n))
-            if v["fig6"] != 24 or not v["fig5"]:
+            if v["fig4"] != ("0,999956" if lang == "it" else "0.999956") or not v["fig5"]:
                 fail.append("%s reduced motion: figure non al fotogramma finale" % lang)
             # tastiera: primo Tab sul salto al contenuto
             pg.keyboard.press("Tab")

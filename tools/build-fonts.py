@@ -30,6 +30,8 @@ SOURCES = {
                    ["Newsreader[opsz,wght].ttf", "Newsreader-Italic[opsz,wght].ttf", "OFL.txt"]),
     "cascadiamono": ("3dd78844021e948ceb633d1dcee3f7885561b5d9",
                      ["CascadiaMono[wght].ttf", "OFL.txt"]),
+    "besley": ("c13390277dfb1fcc7415d84ef7ef9cfc1e52f8c1",
+               ["Besley[wght].ttf", "OFL.txt"]),
 }
 
 LATIN = ("U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,"
@@ -43,6 +45,8 @@ BUILDS = [
     ("newsreader-roman", "newsreader/Newsreader[opsz,wght].ttf", {"opsz": (6, 72), "wght": (400, 600)}),
     ("newsreader-italic", "newsreader/Newsreader-Italic[opsz,wght].ttf", {"opsz": 14, "wght": (400, 600)}),
     ("tavola-mono", "cascadiamono/CascadiaMono[wght].ttf", {"wght": 400}),
+    # titoli: un Clarendon (istanza statica 400) accanto al Newsreader del testo corrente
+    ("besley", "besley/Besley[wght].ttf", {"wght": 400}),
 ]
 
 
@@ -124,6 +128,7 @@ def build(log):
             print("%-40s %7d B" % (os.path.basename(dst), os.path.getsize(dst)))
     shutil.copy(os.path.join(SRC, "newsreader", "OFL.txt"), os.path.join(OUT, "OFL-newsreader.txt"))
     shutil.copy(os.path.join(SRC, "cascadiamono", "OFL.txt"), os.path.join(OUT, "OFL-cascadia.txt"))
+    shutil.copy(os.path.join(SRC, "besley", "OFL.txt"), os.path.join(OUT, "OFL-besley.txt"))
     return made, rfn
 
 
@@ -131,7 +136,7 @@ def readme(log, made, rfn):
     sysf = r"C:\Windows\Fonts\CascadiaMono.ttf"
     sysh = sha256(sysf) if os.path.exists(sysf) else "(file non presente su questa macchina)"
     L = ["# Font del sito", "",
-         "Tutti i font sono sotto SIL Open Font License 1.1 (testi in `OFL-newsreader.txt` e `OFL-cascadia.txt`).",
+         "Tutti i font sono sotto SIL Open Font License 1.1 (testi in `OFL-newsreader.txt`, `OFL-cascadia.txt` e `OFL-besley.txt`).",
          "Sorgente: repository ufficiale google/fonts su GitHub, a commit fissati. Nessun file di sistema.",
          "Generati il %s con `python tools/build-fonts.py`." % datetime.date.today().isoformat(), "",
          "## Sorgenti", "", "| famiglia | file | URL | SHA-256 |", "|---|---|---|---|"]
@@ -140,6 +145,7 @@ def readme(log, made, rfn):
     L += ["", "Controllo: SHA-256 di `%s` = `%s` (diverso dai sorgenti sopra: il file di sistema non è usato)." % (sysf, sysh), "",
           "## Reserved Font Name", "",
           "- Newsreader: RFN nel file di licenza = %s." % ("sì" if rfn["newsreader"] else "no, il nome resta Newsreader"),
+          "- Besley: RFN nel file di licenza = %s." % ("sì" if rfn["besley"] else "no, il nome resta Besley"),
           "- Cascadia Mono: RFN nel file di licenza = %s. Il sottoinsieme modificato è quindi rinominato **Tavola Mono**"
           " (nameID 1 \"Tavola Mono\", 4 \"Tavola Mono Regular\", 6 \"TavolaMono-Regular\"; nameID 16, 17, 21, 22, 25 rimossi)."
           " Copyright e licenza restano quelli originali." % ("sì" if rfn["cascadiamono"] else "no"), "",
