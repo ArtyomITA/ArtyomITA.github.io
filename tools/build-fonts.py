@@ -27,7 +27,7 @@ RAW = "https://raw.githubusercontent.com/google/fonts/{commit}/ofl/{fam}/{file}"
 # commit fissati (ultimi che toccano le cartelle al momento della build)
 SOURCES = {
     "newsreader": ("8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5",
-                   ["Newsreader[opsz,wght].ttf", "Newsreader-Italic[opsz,wght].ttf", "OFL.txt"]),
+                   ["Newsreader[opsz,wght].ttf", "OFL.txt"]),
     "cascadiamono": ("3dd78844021e948ceb633d1dcee3f7885561b5d9",
                      ["CascadiaMono[wght].ttf", "OFL.txt"]),
     "besley": ("c13390277dfb1fcc7415d84ef7ef9cfc1e52f8c1",
@@ -43,7 +43,6 @@ FEATURES = "kern,liga,onum,lnum,tnum,pnum,sups,frac,ss01"
 # (file di uscita, sorgente, limiti degli assi, nuovo nome di famiglia o None)
 BUILDS = [
     ("newsreader-roman", "newsreader/Newsreader[opsz,wght].ttf", {"opsz": (6, 72), "wght": (400, 600)}),
-    ("newsreader-italic", "newsreader/Newsreader-Italic[opsz,wght].ttf", {"opsz": 14, "wght": (400, 600)}),
     ("tavola-mono", "cascadiamono/CascadiaMono[wght].ttf", {"wght": 400}),
     # titoli: un Clarendon (istanza statica 400) accanto al Newsreader del testo corrente
     ("besley", "besley/Besley[wght].ttf", {"wght": 400}),

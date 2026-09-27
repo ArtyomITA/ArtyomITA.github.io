@@ -62,7 +62,7 @@ html,body{{margin:0;width:1200px;height:630px;overflow:hidden;background:#EEF0EC
 .nm{{font:400 150px/.9 "Besley",Georgia,serif;letter-spacing:-.035em;margin:34px 0 0;padding-bottom:8px;border-bottom:1px solid #15181C;white-space:nowrap}}
 .role{{font:400 29px/1.35 "Newsreader",Georgia,serif;margin:18px 0 0;max-width:1060px}}
 .role b{{font-weight:600}}
-.ras{{position:absolute;left:64px;right:64px;bottom:0;height:{rh}px;background:url({img}) left bottom/100% auto no-repeat}}
+.ras{{position:absolute;left:64px;right:64px;bottom:36px;height:{rh}px;background:url({img}) left bottom/100% auto no-repeat}}
 .cap{{position:absolute;right:64px;bottom:{cb}px;font:400 17px/1 "Newsreader",Georgia,serif;color:#4B535C;background:#EEF0EC;padding:4px 0 4px 10px}}
 </style></head><body><div class="card"><div class="top"><span>artyomita.github.io</span><span>{folio}</span></div>
 <div class="nm">Adrian Iancu</div><p class="role">{role}</p></div><div class="ras"></div><p class="cap">{cap}</p></body></html>"""
@@ -109,25 +109,27 @@ def og():
                 shot = Image.open(io.BytesIO(pg.locator("#raster").screenshot())).convert("RGB")
                 pg.close()
                 w, h = shot.size
-                # via le etichette di riga a sinistra, la barra dei 100 ms in basso: resta il raster con il tasso
-                sl = shot.crop((int(w * 0.13), int(h * 0.22), w, int(h * 0.93)))
-                sl = sl.resize((1072, int(1072 * sl.size[1] / sl.size[0])), Image.LANCZOS)
+                # via le etichette di riga a sinistra e la barra dei 100 ms in basso: resta il raster con il tasso,
+                # base del tasso compresa (sta 22 px CSS sopra il fondo del canvas, qui a dpr 2: si taglia 18 px sotto)
+                sl = shot.crop((int(w * 0.13), int(h * 0.22), w, h - 36))
+                # a 2144 px (1072 CSS a dpr 2): nella card a dpr 2 un pixel del raster = un pixel dello schermo
+                sl = sl.resize((2144, int(2144 * sl.size[1] / sl.size[0])), Image.LANCZOS)
                 buf = io.BytesIO()
                 sl.save(buf, "PNG")
-                rh = min(250, sl.size[1])
-                html = OG_HTML.format(lang=lang, folio=OG_TXT[lang][0], cap=OG_TXT[lang][1], role=role(), rh=rh, cb=rh + 6,
+                rh = min(210, sl.size[1] // 2)
+                html = OG_HTML.format(lang=lang, folio=OG_TXT[lang][0], cap=OG_TXT[lang][1], role=role(), rh=rh, cb=rh + 36 + 6,
                                       img="data:image/png;base64," + base64.b64encode(buf.getvalue()).decode())
                 with open(tmp, "w", encoding="utf-8") as f:
                     f.write(html)
-                # 2. la card
-                pg = b.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=1)
+                # 2. la card, resa a dpr 2 e ridotta a 1200 x 630: raster e testo senza pixel ingranditi
+                pg = b.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=2)
                 pg.goto("http://127.0.0.1:%d/_og.html" % port)
                 pg.evaluate("document.fonts.ready")
                 pg.wait_for_timeout(300)
                 raw = os.path.join(IMG, "og-%s.raw.png" % lang)
                 pg.screenshot(path=raw)
                 pg.close()
-                im = Image.open(raw).convert("RGB").quantize(colors=64, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+                im = Image.open(raw).convert("RGB").resize((1200, 630), Image.LANCZOS).quantize(colors=64, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
                 dst = os.path.join(IMG, "og-%s.png" % lang)
                 im.save(dst, optimize=True)
                 os.remove(raw)

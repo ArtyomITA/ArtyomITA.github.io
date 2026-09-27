@@ -24,7 +24,7 @@ LI = "https://www.linkedin.com/in/adrian-ciprian-iancu-a2a477391/"
 BOOT = "(function(d){d.className='js';try{var t=localStorage.getItem('ai-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t)}catch(e){}})(document.documentElement);"
 BOOT_HASH = base64.b64encode(hashlib.sha256(BOOT.encode("utf-8")).digest()).decode()
 CSP = ("default-src 'self'; script-src 'self' 'sha256-%s'; style-src 'self'; img-src 'self' data:; "
-       "font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'") % BOOT_HASH
+       "font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'") % BOOT_HASH
 
 TICKS = '<div class="rule" aria-hidden="true">' + "<i></i>" * 12 + "</div>"
 # filetto semplice per le sezioni senza progetto guida (RL, indice, nota)
@@ -126,8 +126,8 @@ T["it"] = dict(
     dl5="codice completo",
     fo="Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (probabilità di arrivare primi " + m("56%") + " sulle 100 simulazioni usate per la scelta dei parametri, " + m("57% ± 5") + " su simulazioni di verifica separate, contro archetipi interni del modello). Con arena interattiva per sfidarlo.<sup class=\"n\">4</sup>",
     m5="Python; 2 stelle; predizione · ottimizzazione · Monte Carlo",
-    n4="Dal README: la probabilità di arrivare primi è un numero interno del modello contro i suoi archetipi, non una promessa sul tavolo vero. Tetto d'asta dinamico, che su 28 lotti simulati arriva al prezzo di aggiudicazione in 8, e ponte con FantaAsta Live, 43 assegnazioni corrette su 44: <a href=\"#fig6\">fig.&nbsp;6</a>.",
-    cap6="<b>Fig. 6.</b> FantaOracle, replay del tetto d'asta su 28 lotti simulati (attaccanti battuti a 40 crediti o più, in ordine d'asta). Le barre sono il tetto proposto dal bot, le tacche il prezzo a cui il giocatore è stato aggiudicato; la linea a gradini è il massimo spendibile in quel momento, cioè la cassa meno un credito per ogni altro slot ancora vuoto. Il dato è che il tetto arriva al prezzo in 8 lotti su 28. Gli 0 sfori (nessuna barra sopra la linea, anche sugli altri 24 lotti del campione) sono garantiti dalla formula, che taglia il tetto al massimo spendibile: non sono un risultato. Negli ultimi 7 lotti il massimo spendibile è 1 credito e il tetto con lui (punti sulla base). Sotto, il ponte con FantaAsta Live su un'asta di prova: 43 assegnazioni su 44 identiche per giocatore, squadra e prezzo; le celle sono ordinate, non in sequenza d'asta. Dati dai report pubblici del repository.",
+    n4="Dal README: la probabilità di arrivare primi è un numero interno del modello contro i suoi archetipi, non una promessa sul tavolo vero. Il tetto d'asta non supera mai il massimo spendibile, per vincolo della formula; ponte con FantaAsta Live, 43 assegnazioni su 44; 250 martelletti rigiocati contro il server, 0 errori, al massimo 354 ms: <a href=\"#fig6\">fig.&nbsp;6</a>.",
+    cap6="<b>Fig. 6.</b> FantaOracle alla prova del proprio server. In alto 250 martelletti rigiocati, una cella ciascuno: 0 errori, in entrambi gli ordini dei ruoli. Al centro il tempo di risposta a ogni martelletto, con media, p95 e massimo. In basso il ponte con FantaAsta Live su un'asta di prova: 43 assegnazioni su 44 identiche. Dati dai report pubblici del repository.",
     fca="Motore di analisi e raccomandazione multi-algoritmo con front-end React; il predecessore di FantaOracle.", fcas="React · TypeScript · Python",
     kf="Dashboard di previsione probabilistica: DeepAR, ARIMA/SARIMA e AutoGluon confrontati sulla stessa serie con intervalli di confidenza.", kfs="Python; time series",
     sp="Laboratorio full-stack (React + Flask) per l'analisi e la predizione di serie storiche dell'S&amp;P 500, con test di prevedibilità fuori campione.", sps="TypeScript · Python; time series",
@@ -154,7 +154,7 @@ T["en"] = dict(
     ogimgalt="The name Adrian Iancu set large, the role line and a strip of the simulated neuron raster from figure 1.",
     skip="Skip to content", navlabel="Sections", toc="Contents", langlabel="Language", themelabel="Theme",
     th=("light", "dark", "auto"), thtitle=("Light theme (paper)", "Dark theme (cyanotype)", "Auto theme (follow the system)"),
-    nav=["research", "inference", "motion and embeddings", "local tools", "applied ML", "reinforcement learning", "index"], navnote="a note on the figures",
+    nav=["research", "inference", "motion and embeddings", "local tools", "applied ML", "RL environments", "index"], navnote="a note on the figures",
     folio="updated September 2026",
     abs='<span class="runin">Abstract.</span> <b>CUDA optimization on consumer GPUs</b>, <b>research on attention and memory in language models</b> (down to a recurrent core taken from a real connectome), <b>local ML pipelines</b> with no cloud. Everything open&nbsp;source.',
     rasterlabel="Raster of simulated leaky integrate-and-fire neurons: spike ticks over time for sensory, central and descending neurons, with the population rate below.",
@@ -167,7 +167,7 @@ T["en"] = dict(
           ("Neurons trained by gradient", "166,700", '<a href="%sflytollm">flytollm repository</a>, male-cns:v1.0' % GH),
           ("Models fitted into 8&nbsp;GB", "Llama-3-8B|Bonsai&nbsp;4B|Kimodo", '<a href="#motion">Motion and embeddings</a>; <a href="#inferenza">Inference</a>')],
     k1="Research on attention and memory", h1s="A language model on a real connectome",
-    lead1="How much of the context is held by attention, and how much by a recurrent core? Test bed: the complete connectome of the Drosophila nervous system (male-cns:v1.0, " + m("166,700") + " neurons, " + m("2.75 M") + ' synapses at threshold 10)<sup class="n">1</sup> as the recurrent LIF core of a language model: synaptic signs fixed by the neurotransmitter, magnitudes initialised from synapse counts, surrogate gradient, FP32 CUDA Graph. Protocol with degree-preserving null models, token-matched baselines and in-silico lesions.',
+    lead1="How much of the context is held by attention, and how much by a recurrent core? Test bed: the complete connectome of the Drosophila nervous system (male-cns:v1.0, " + m("166,700") + " neurons, " + m("2.75 M") + ' synapses at threshold 10)<sup class="n">1</sup> as the recurrent LIF core of a language model: synaptic signs fixed by the neurotransmitter, magnitudes initialized from synapse counts, surrogate gradient, FP32 CUDA Graph. Protocol with degree-preserving null models, token-matched baselines and in-silico lesions.',
     n1="male-cns:v1.0 connectome (Janelia FlyEM · Google Research, CC-BY licence): 25.6 M connections in total, 2,753,975 above the 10-synapse threshold.",
     cap2='<b>Fig. 2.</b> The FlyToLLM pipeline. The dots are an illustration generated in this page inside the outline of the central nervous system (brain, optic lobes, ventral nerve cord): each dot stands for about <span class="pd">' + PD["en"] + '</span> neurons. The larger solid dots are the input ports, on the rim of the optic lobes and along the top of the brain; the shade fades with the distance in hops from the ports, and scrolling reveals one hop at a time. The small squares are the readout: in the real connectome it sits 2 hops from the ports, which is why 4+4 depth is enough.',
     dl1="research · 2026",
@@ -206,8 +206,8 @@ T["en"] = dict(
     dl5="full source code",
     fo="Decision system for fantasy football auctions: a price model with an uncertainty band, squad optimization at the table under budget and slot constraints, evaluation on simulated leagues (a " + m("56%") + " chance of finishing first on the 100 simulations used for tuning, " + m("57% ± 5") + " on held-out validation runs, against the model's own archetypes). With an interactive arena to challenge it.<sup class=\"n\">4</sup>",
     m5="Python; 2 stars; prediction · optimization · Monte Carlo",
-    n4="From the README: the probability of finishing first is the model's own number against its archetypes, not a promise at the real table. Dynamic auction cap, which reaches the winning price in 8 of 28 simulated lots, and bridge to FantaAsta Live, 43 correct assignments out of 44: <a href=\"#fig6\">fig.&nbsp;6</a>.",
-    cap6="<b>Fig. 6.</b> FantaOracle, replay of the auction cap on 28 simulated lots (forwards sold for 40 credits or more, in auction order). Bars are the cap proposed by the bot, ticks the price the player was sold for; the stepped line is the maximum spendable at that moment, the budget minus one credit for every other empty slot. The finding is that the cap reaches the price in 8 of 28 lots. The 0 overruns (no bar above the line, on the other 24 lots of the sample too) are guaranteed by the formula, which clips the cap at the maximum spendable: they are not a result. In the last 7 lots the maximum spendable is 1 credit and so is the cap (dots on the baseline). Below, the bridge to FantaAsta Live on a test auction: 43 of 44 assignments identical in player, team and price; the cells are sorted, not in auction order. Data from the public reports in the repository.",
+    n4="From the README: the probability of finishing first is the model's own number against its archetypes, not a promise at the real table. The auction cap never exceeds the maximum spendable, a constraint of the formula; bridge to FantaAsta Live, 43 assignments out of 44; 250 hammer calls replayed against the server, 0 errors, 354 ms at most: <a href=\"#fig6\">fig.&nbsp;6</a>.",
+    cap6="<b>Fig. 6.</b> FantaOracle against its own server. Top, 250 replayed hammer calls, one cell each: 0 errors, in both role orders tested. Middle, the response time of each hammer call, with mean, p95 and maximum. Bottom, the bridge to FantaAsta Live on a test auction: 43 of 44 assignments identical. Data from the public reports in the repository.",
     fca="Multi-algorithm analysis and recommendation engine with a React front end; the predecessor of FantaOracle.", fcas="React · TypeScript · Python",
     kf="Probabilistic forecasting dashboard: DeepAR, ARIMA/SARIMA and AutoGluon compared on the same series with confidence intervals.", kfs="Python; time series",
     sp="Full-stack lab (React + Flask) for analysing and predicting S&amp;P 500 time series, with out-of-sample predictability tests.", sps="TypeScript · Python; time series",
@@ -224,6 +224,33 @@ T["en"] = dict(
     haut="About the author", avalt="Adrian Iancu's GitHub avatar", notelabel="Note",
     foot=("no trackers, no ads", "home-made page"), grid="show the grid",
 )
+
+# identificatori e intervalli che non devono andare a capo sul trattino (Qwen3- / 0.6B, 78- / 100)
+NB = ["Qwen3-0.6B", "Llama-3-8B", "male-cns:v1.0", "78-100", "Speech-to-text", "LFM2.5-2.6B", "Kimodo-SOMA", "Bonsai-Image",
+      "shader-f16", "AGPL-3.0", "CC-BY", "1-1", "text-to-motion", "8-billion-parameter", "10-synapse"]
+# chiavi che finiscono dentro attributi (meta, aria-label, alt, title): niente <span>
+ATTR = {"desc", "ogimgalt", "rasterlabel", "avalt", "thtitle", "th", "nav", "navnote", "legend", "langlabel", "themelabel", "navlabel", "skip", "toc"}
+
+
+def plain(x):
+    """testo senza tag, per gli attributi (data-k)"""
+    return re.sub(r"<[^>]+>", "", x)
+
+
+def nb(x):
+    if isinstance(x, str):
+        for tok in NB:
+            x = re.sub(r"(?<![\w.>-])%s(?![\w-])" % re.escape(tok), '<span class="nb">%s</span>' % tok, x)
+        return x
+    if isinstance(x, (list, tuple)):
+        return type(x)(nb(y) for y in x)
+    return x
+
+
+for _t in T.values():
+    for _k in list(_t):
+        if _k not in ATTR:
+            _t[_k] = nb(_t[_k])
 
 ROLE = "AI Engineer · inference optimization · attention mechanisms research (transformer) · local-first&nbsp;systems"
 ROLE_H = ROLE.replace("AI Engineer", "<b>AI Engineer</b>", 1)
@@ -367,7 +394,7 @@ def page(t):
 </table>
 </section>
 
-<section class="sec wrap grid" id="ricerca" data-k="{t['k1']}" aria-labelledby="h-ricerca">
+<section class="sec wrap grid" id="ricerca" data-k="{plain(t['k1'])}" aria-labelledby="h-ricerca">
 {TICKS}
 <div class="runhead"><p class="kicker">{t['k1']}</p></div>
 <div class="sec-main"><h2 id="h-ricerca">{t['h1s']}</h2><p class="lead" data-notes="n1">{t['lead1']}</p></div>
@@ -386,7 +413,7 @@ def page(t):
 {note(2, t['n2'])}
 </section>
 
-<section class="sec wrap grid" id="inferenza" data-k="{t['k2']}" aria-labelledby="h-inferenza">
+<section class="sec wrap grid" id="inferenza" data-k="{plain(t['k2'])}" aria-labelledby="h-inferenza">
 {TICKS}
 <div class="runhead"><p class="kicker">{t['k2']}</p></div>
 <div class="sec-main"><h2 id="h-inferenza">{t['h2s']}</h2><p class="lead">{t['lead2']}</p></div>
@@ -407,7 +434,7 @@ def page(t):
 </div>
 </section>
 
-<section class="sec wrap grid" id="motion" data-k="{t['k3']}" aria-labelledby="h-motion">
+<section class="sec wrap grid" id="motion" data-k="{plain(t['k3'])}" aria-labelledby="h-motion">
 {TICKS}
 <div class="runhead"><p class="kicker">{t['k3']}</p></div>
 <div class="sec-main"><h2 id="h-motion">{t['h3s']}</h2><p class="lead">{t['lead3']}</p></div>
@@ -425,7 +452,7 @@ def page(t):
 </div>
 </section>
 
-<section class="sec wrap grid" id="locale" data-k="{t['k4']}" aria-labelledby="h-locale">
+<section class="sec wrap grid" id="locale" data-k="{plain(t['k4'])}" aria-labelledby="h-locale">
 {TICKS}
 <div class="runhead"><p class="kicker">{t['k4']}</p><p class="epi" aria-hidden="true">127.0.0.1</p></div>
 <div class="sec-main"><h2 id="h-locale">{t['h4s']}</h2><p class="lead">{t['lead4']}</p></div>
@@ -444,7 +471,7 @@ def page(t):
 </div>
 </section>
 
-<section class="sec wrap grid" id="ml" data-k="{t['k5']}" aria-labelledby="h-ml">
+<section class="sec wrap grid" id="ml" data-k="{plain(t['k5'])}" aria-labelledby="h-ml">
 {TICKS}
 <div class="runhead"><p class="kicker">{t['k5']}</p></div>
 <div class="sec-main"><h2 id="h-ml">{t['h5s']}</h2><p class="lead">{t['lead5']}</p></div>
@@ -467,7 +494,7 @@ def page(t):
 </div>
 </section>
 
-<section class="sec sec-rl wrap grid" id="rl" data-k="{t['k6']}" aria-labelledby="h-rl">
+<section class="sec sec-rl wrap grid" id="rl" data-k="{plain(t['k6'])}" aria-labelledby="h-rl">
 {RULE}
 <div class="runhead"><p class="kicker">{t['k6']}</p></div>
 <div class="sec-main"><h2 id="h-rl">{t['h6s']}</h2><p class="lead">{t['lead6']}</p></div>
@@ -477,7 +504,7 @@ def page(t):
 </div>
 </section>
 
-<section class="sec sec-idx wrap grid" id="indice" data-k="{t['hidx']}" aria-labelledby="h-indice">
+<section class="sec sec-idx wrap grid" id="indice" data-k="{plain(t['hidx'])}" aria-labelledby="h-indice">
 {RULE}
 <div class="runhead"><p class="kicker">{t['kapp']}</p><p class="count">{t['idxm']}</p></div>
 <div class="idx">
@@ -490,13 +517,13 @@ def page(t):
 </div>
 </section>
 
-<section class="sec sec-note wrap grid" id="note" data-k="{t['hnote']}" aria-labelledby="h-note">
+<section class="sec sec-note wrap grid" id="note" data-k="{plain(t['hnote'])}" aria-labelledby="h-note">
 {RULE}
 <div class="runhead"><h2 class="kicker" id="h-note">{t['hnote']}</h2></div>
 <div class="sec-main"><p class="notetext">{t['note']}</p></div>
 </section>
 
-<section class="sec sec-aut wrap grid" id="autore" data-k="{t['haut']}" aria-labelledby="h-autore">
+<section class="sec sec-aut wrap grid" id="autore" data-k="{plain(t['haut'])}" aria-labelledby="h-autore">
 <div class="runhead"><h2 class="kicker" id="h-autore">{t['haut']}</h2></div>
 <div class="sec-main author">
 <img src="{P}img/avatar-192.webp" width="96" height="96" alt="{t['avalt']}" loading="lazy" decoding="async">

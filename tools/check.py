@@ -41,7 +41,8 @@ PAGE_JS = r"""() => {
   R.firstLine = text.trim().split('\n')[0];
   R.banned = ['passionate about', 'crafting', 'building the future', 'best-in-class', 'cutting-edge', 'all-in-one', 'next-generation', 'COMING SOON', 'IN ARRIVO', '★', 'Scopri di più', 'Learn More', 'Get Started'].filter(s => text.includes(s));
   R.italicInHeading = document.querySelectorAll('h1 em,h1 i,h2 em,h2 i,h3 em,h3 i').length;
-  const lt = {}; document.querySelectorAll('a').forEach(a => { const t = a.textContent.trim(); lt[t] = (lt[t] || 0) + 1; });
+  // solo i link visibili: il menu a comparsa (details.toc) e la barra .nav sono lo stesso indice in due forme, mai visibili insieme
+  const lt = {}; document.querySelectorAll('a').forEach(a => { if (!vis(a)) return; const t = a.textContent.trim(); lt[t] = (lt[t] || 0) + 1; });
   R.repeatedLinks = Object.entries(lt).filter(([t, n]) => n > 2);
   R.figures = [...document.querySelectorAll('figure')].map(f => ({ id: f.id, cap: !!f.querySelector('figcaption'), named: [...f.querySelectorAll('svg[role=img],canvas[role=img]')].every(x => x.getAttribute('aria-label') || x.getAttribute('aria-labelledby')) }));
   // contrasto
@@ -65,13 +66,37 @@ PAGE_JS = r"""() => {
   R.fig3 = [...document.querySelectorAll('#kt text.fv')].map(t => t.textContent);
   R.fig4 = document.getElementById('err-v') ? document.getElementById('err-v').textContent : null;
   R.fig5 = document.getElementById('fence').classList.contains('chiuso');
-  R.fig6 = [...document.querySelectorAll('#lots .tt')].filter(r => +r.getAttribute('height') > 1).length;
+  R.fig6 = +(document.getElementById('lots').getAttribute('data-n') || 0);
   // grassetti e corsivi sintetici: Besley e Tavola Mono esistono solo a 400 dritto, Newsreader 400-600
   R.synth = [...new Set(all.filter(e => vis(e) && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())).map(e => {
     const s = getComputedStyle(e), f = s.fontFamily.split(',')[0].replace(/"/g, '').trim(), w = parseInt(s.fontWeight);
     const bad = (f === 'Besley' || f === 'Tavola Mono') ? (w > 400 || s.fontStyle !== 'normal') : (f === 'Newsreader' && w > 600);
     return bad ? e.tagName.toLowerCase() + '.' + e.className + ' ' + f + ' ' + w + ' ' + s.fontStyle : null; }).filter(Boolean))];
   return R;
+}"""
+
+# a capo dentro un identificatore o un intervallo con trattino (Qwen3- / 0.6B, 78- / 100): una parola con trattino
+# che contiene una cifra o sta nella lista NB di build-pages.py non deve occupare due righe. I nomi di repository
+# (.nm, .h3m, .bn) vanno a capo apposta.
+HYPH_JS = r"""(nb) => {
+  const out = [], re = /[A-Za-z0-9][A-Za-z0-9.:_]*(?:-[A-Za-z0-9.:_]+)+/g;
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let n;
+  while ((n = w.nextNode())) {
+    const el = n.parentElement;
+    if (!el || el.closest('.nm,.h3m,.bn,svg,script,style,[hidden]')) continue;
+    let m;
+    re.lastIndex = 0;
+    while ((m = re.exec(n.textContent))) {
+      const tok = m[0];
+      if (!/\d/.test(tok) && !nb.includes(tok)) continue;
+      const r = document.createRange();
+      r.setStart(n, m.index); r.setEnd(n, m.index + tok.length);
+      const tops = new Set([...r.getClientRects()].filter(q => q.width > 0).map(q => Math.round(q.top)));
+      if (tops.size > 1) out.push(tok + ' in ' + el.tagName.toLowerCase() + '.' + el.className);
+    }
+  }
+  return out;
 }"""
 
 RAF = """() => new Promise(res => { let n = 0; const o = window.requestAnimationFrame; window.requestAnimationFrame = f => { n++; return o(f); }; setTimeout(() => res(n), 2000); })"""
@@ -125,6 +150,10 @@ def main():
             fail.append("style= inline in " + rel)
         if re.search(r"adriandj|@gmail|vergilius-privato", html):
             fail.append("dato privato in " + rel)
+        # Fig. 6: niente dati dell'asta passata (tolti dal README pubblico il 13/9, commit 12d3c62)
+        for bad in ("8/28", "28 lotti", "28 lots", "28 simulated", "lotti simulati", "simulated lots"):
+            if bad in html:
+                fail.append("Fig. 6: '%s' in %s" % (bad, rel))
 
     # immagini OG: rifatte dopo l'ultima build (tools/make-images.py og), mai piu' vecchie della pagina
     src = max(os.path.getmtime(os.path.join(ROOT, r)) for r in ("index.html", "en/index.html", "css/site.css", "js/site.js", "js/site.min.js"))
@@ -142,6 +171,9 @@ def main():
     src_js = open(os.path.join(ROOT, "js", "site.js"), encoding="utf-8").read()
     if not os.path.exists(os.path.join(ROOT, "js", "site.min.js")) or open(os.path.join(ROOT, "js", "site.min.js"), encoding="utf-8").read() != bp.minjs(src_js):
         fail.append("js/site.min.js non corrisponde a js/site.js: python tools/build-pages.py")
+    for bad in ("8/28", "28 lotti", "28 simulated", "TET =", "PAG ="):
+        if bad in src_js:
+            fail.append("Fig. 6: '%s' in js/site.js" % bad)
 
     # rampa dei salti di Fig. 2: tinta OKLCH di --h1..--h5 entro 6 gradi da --fig, in entrambi i temi
     css = open(os.path.join(ROOT, "css", "site.css"), encoding="utf-8").read()
@@ -201,8 +233,8 @@ def main():
                         fail.append("%s %s Fig.4 %s" % (lang, theme, v["fig4"]))
                     if id_ == "fig5" and not v["fig5"]:
                         fail.append("%s %s Fig.5 recinto aperto" % (lang, theme))
-                    if id_ == "fig6" and v["fig6"] != 28:
-                        fail.append("%s %s Fig.6 tetti visibili %s su 28" % (lang, theme, v["fig6"]))
+                    if id_ == "fig6" and v["fig6"] != 250:
+                        fail.append("%s %s Fig.6 martelletti visibili %s su 250" % (lang, theme, v["fig6"]))
                 v = pg.evaluate(PAGE_JS)
                 # pagina ferma: dopo 10 s nessun rAF
                 pg.evaluate("window.scrollTo(0,0)")
@@ -259,14 +291,29 @@ def main():
             v = pg.evaluate(PAGE_JS)
             if n:
                 fail.append("%s reduced motion: %d rAF" % (lang, n))
-            if ("0,999956" if lang == "it" else "0.999956") not in (v["fig4"] or "") or not v["fig5"] or v["fig6"] != 28:
+            if ("0,999956" if lang == "it" else "0.999956") not in (v["fig4"] or "") or not v["fig5"] or v["fig6"] != 250:
                 fail.append("%s reduced motion: figure non al fotogramma finale" % lang)
+            hy = pg.evaluate(HYPH_JS, bp.NB)
+            if hy:
+                fail.append("%s 390: a capo sul trattino %s" % (lang, hy[:6]))
             # tastiera: primo Tab sul salto al contenuto
             pg.keyboard.press("Tab")
             f = pg.evaluate("document.activeElement.className")
             if f != "skip":
                 fail.append("%s primo Tab su %s" % (lang, f))
             ctx.close()
+
+        for w in (360, 1024):
+            for lang, path in (("it", ""), ("en", "en/")):
+                ctx = br.new_context(viewport={"width": w, "height": 900}, reduced_motion="reduce")
+                pg = ctx.new_page()
+                pg.goto(base + path)
+                pg.evaluate("document.fonts.ready")
+                pg.wait_for_timeout(400)
+                hy = pg.evaluate(HYPH_JS, bp.NB)
+                if hy:
+                    fail.append("%s %d: a capo sul trattino %s" % (lang, w, hy[:6]))
+                ctx.close()
 
         # localStorage che lancia: la pagina funziona e il tema si cambia
         ctx = br.new_context(viewport={"width": 1024, "height": 800})

@@ -6,10 +6,6 @@
   unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2070-209F,U+20AC,U+2122,U+2190-2193,U+2212,U+2215,U+2248,U+2264-2265,U+FEFF,U+FFFD}
 @font-face{font-family:"Newsreader";src:url(../fonts/newsreader-roman-latin-ext.woff2) format("woff2");font-weight:400 600;font-style:normal;font-display:swap;
   unicode-range:U+0100-024F,U+0259,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF}
-@font-face{font-family:"Newsreader";src:url(../fonts/newsreader-italic-latin.woff2) format("woff2");font-weight:400 600;font-style:italic;font-display:swap;
-  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2070-209F,U+20AC,U+2122,U+2190-2193,U+2212,U+2215,U+2248,U+2264-2265,U+FEFF,U+FFFD}
-@font-face{font-family:"Newsreader";src:url(../fonts/newsreader-italic-latin-ext.woff2) format("woff2");font-weight:400 600;font-style:italic;font-display:swap;
-  unicode-range:U+0100-024F,U+0259,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:"Tavola Mono";src:url(../fonts/tavola-mono-latin.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap;
   unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2070-209F,U+20AC,U+2122,U+2190-2193,U+2212,U+2215,U+2248,U+2264-2265,U+FEFF,U+FFFD}
 @font-face{font-family:"Tavola Mono";src:url(../fonts/tavola-mono-latin-ext.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap;
@@ -70,6 +66,8 @@ button:hover,button:focus-visible{color:var(--ink)}
 summary{cursor:pointer;transition:color .18s linear}
 summary:hover,summary:focus-visible{color:var(--ink)}
 .m{color:var(--fig);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+/* identificatori e intervalli (Qwen3-0.6B, 78-100): niente a capo sul trattino */
+.nb{white-space:nowrap}
 /* unico run-in della pagina (Sommario.): nel carattere dei titoli, cosi' il corsivo non si scarica affatto */
 .runin{font-family:var(--display);font-weight:400;letter-spacing:-.01em}
 sup.n{font:400 .66em/1 var(--mono);color:var(--fig);vertical-align:.55em;padding:.08em .14em;border-radius:.18em;
@@ -235,6 +233,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .cns .t-i{font:600 16px var(--serif)}
 .cns .t-r{fill:var(--inh);font:14px var(--serif)}
 .cns .t-a{fill:var(--fig);font:15px var(--serif)}
+.cns.xs .t-m,.cns.xs .t-r{font-size:15px}
 .cns .two{stroke:var(--paper);stroke-width:3px;stroke-linejoin:round;paint-order:stroke}
 .cns .hg{transition:opacity .18s linear}
 .kt .kn{fill:var(--fig)}
@@ -246,9 +245,11 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .err .tgt{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2}
 .err .arc{fill:none;stroke:var(--fig);stroke-width:1.2}
 .err .arh{fill:var(--fig)}
-.lots .spl{fill:none;stroke:var(--ink);stroke-width:1.4}
-.lots .tt,.lots .tt0,.lots .b1{fill:var(--fig)}
-.lots .pp{stroke:var(--ink);stroke-width:1.6}
+.lots .pc{fill:none;stroke:var(--ink-3);stroke-width:1}
+.lots .rg{stroke:var(--fig);stroke-width:1.4}
+.lots .q95{stroke:var(--fig);stroke-width:1.6}
+.lots .qmx{stroke:var(--ink);stroke-width:1.6}
+.lots .p1{fill:var(--fig)}
 .f5 .fen{fill:none;stroke:var(--ink);stroke-width:1;transition:stroke-width .42s var(--ease-out)}
 .f5.chiuso .fen{stroke-width:1.6}
 .f5 .lbx{fill:var(--paper)}
@@ -264,6 +265,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 /* ---------- indice dei repository ---------- */
 .idx{grid-column:4/-1}
 .idx h2{font-size:var(--s3);margin-bottom:1rem}
+.idx caption{max-width:66ch}
 .sec-idx .runhead{grid-row:2/span 2;position:sticky;top:60px}
 .idx thead th{font-weight:600;font-size:var(--s-1);color:var(--ink-3);text-align:left;padding:0 .8rem .4rem 0;border-bottom:1.5px solid var(--ink)}
 .idx .grp th{font-weight:400;text-align:left;padding:1.7rem 0 .45rem;border-bottom:.75px solid var(--ink)}
@@ -302,6 +304,8 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
   background-image:repeating-linear-gradient(90deg,var(--grid) 0 var(--cw),transparent var(--cw) calc(var(--cw) + var(--gap)))}
 
 .no-js .rbox,.no-js .readout,.no-js #cns{display:none}
+/* senza JS le figure 3-6 restano la copia disegnata per 1440 px: sotto i 1200 px il testo scende sotto i 10 px, resta la didascalia */
+@media (max-width:1199px){.no-js :is(.fig3,.fig4,.fig5,.fig6)>svg{display:none}}
 
 /* ---------- M: 900-1199 ---------- */
 @media (max-width:1199px){
@@ -408,7 +412,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 }
 @media (forced-colors:active){
   .rule,.rule i,.mast-in::after,.mast-in::before,h1{border-color:CanvasText}
-  .fig svg .ax,.cns .ld,.cns .olc,.f5 .fen,.lots .spl{stroke:CanvasText}
+  .fig svg .ax,.cns .ld,.cns .olc,.f5 .fen,.lots .qmx{stroke:CanvasText}
   .fig1 .rbox{display:none}
 }
 @media print{
