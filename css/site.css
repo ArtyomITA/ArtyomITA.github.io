@@ -77,6 +77,8 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 .theme button:hover{color:var(--ink)}
 .theme button[aria-pressed=true]{background:var(--mint);color:var(--on-mint);font-weight:600}
 @media (max-width:1080px){.nav,.bar-tools{display:none}.toc{display:block}}
+@media (min-width:1600px){.wrap{max-width:1480px}.bar{width:min(1480px,calc(100% - 24px))}}
+@media (min-width:1900px){.wrap{max-width:1600px}.bar{width:min(1600px,calc(100% - 24px))}}
 
 /* hero */
 .hero{position:relative;min-height:max(100svh,700px);display:flex;align-items:center;padding:112px 0 48px;overflow:clip;isolation:isolate;background:var(--bg);color:var(--ink)}
@@ -90,18 +92,18 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 .hero.gl .hero-bg{opacity:0}
 .hero-cv{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block;opacity:0;transition:opacity 1.6s ease;pointer-events:none}
 .hero.gl .hero-cv{opacity:1}
-.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,var(--bg) 0%,rgba(13,15,19,.9) 30%,rgba(13,15,19,.4) 52%,rgba(13,15,19,0) 76%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,var(--bg) 0%,rgba(13,15,19,.94) 22%,rgba(13,15,19,.78) 40%,rgba(13,15,19,.4) 56%,rgba(13,15,19,.12) 68%,rgba(13,15,19,0) 80%)}
 .hero-in>*{animation:rise .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*80ms)}
 @keyframes rise{from{transform:translateY(18px)}to{transform:none}}
 .hero-in{position:relative;display:flex;flex-direction:column;align-self:stretch;min-height:calc(max(100svh,700px) - 192px)}
 .hero-in>.stats{margin-top:auto;padding-top:44px}
 .folio{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;margin:0 0 28px;padding:7px 14px 7px 12px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);font:500 .78rem/1 var(--f-mono);color:var(--ink-2)}
 .folio::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mint);animation:pulse 2.4s ease-in-out infinite}
-h1{margin:0;font-weight:640;font-size:clamp(3rem,7.6vw,6.4rem);line-height:.95;letter-spacing:-.05em;font-feature-settings:"ss05"}
+h1{margin:0;font-weight:640;font-size:clamp(3rem,6.8vw,7.4rem);line-height:.95;letter-spacing:-.05em;font-feature-settings:"ss05"}
 h1 span:last-child{display:block}
 @media (max-width:700px){h1 span{display:block}}
 h1 span:last-child{background:linear-gradient(100deg,var(--mint) 10%,#b8ffe6 90%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
-.role{margin:30px 0 0;max-width:34em;font-size:clamp(1.1rem,1.7vw,1.4rem);line-height:1.4;color:var(--ink);letter-spacing:-.012em}
+.role{margin:30px 0 0;max-width:30em;font-size:clamp(1.1rem,1.7vw,1.4rem);line-height:1.4;color:var(--ink);letter-spacing:-.012em}
 .role b{color:var(--mint-t);font-weight:600}
 .abs{margin:16px 0 0;max-width:41em;color:var(--ink-2);font-size:1.02rem}
 .abs b{color:var(--ink);font-weight:550}
@@ -345,9 +347,18 @@ html.rv-on .rv.in.done{transition:transform .2s ease-out,opacity .3s}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.7)}}
 @keyframes ring{0%{box-shadow:0 0 0 0 var(--coral-l)}70%,100%{box-shadow:0 0 0 12px transparent}}
 
-@media (max-width:1000px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero::after{background:linear-gradient(180deg,rgba(13,15,19,.15) 0%,rgba(13,15,19,.3) 24%,rgba(13,15,19,.84) 46%,var(--bg) 74%)}}
+@media (max-width:1000px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* telefono: la scena e' una fascia sopra il nome, col bordo sfumato; il testo sta su fondo pulito */
+@media (max-width:759px){
+  .hero{padding-top:0;align-items:flex-start}
+  .hero-bg,.hero-cv{inset:0 0 auto 0;height:38svh;-webkit-mask-image:linear-gradient(#000 52%,transparent);mask-image:linear-gradient(#000 52%,transparent)}
+  .hero-bg::before{right:-25%;width:150%;height:150%;bottom:-40%}
+  .hero-bg::after{right:30%;bottom:34%}
+  .hero::after{display:none}
+  .hero-in{min-height:0;padding-top:calc(38svh - 28px)}
+}
 @media (max-width:560px){
-  .hero{padding:104px 0 56px;align-items:flex-start}
+  .hero{padding-bottom:56px}
   .stats{gap:10px;margin-top:40px}.stat{padding:16px 14px 14px}.stat .lab{font-size:.82rem}
   .pr,.brief,.idx-c{padding-left:18px;padding-right:18px}
   .tl{padding-left:26px}.tl>li::before{left:-26px;width:17px;height:17px}.tl::before{left:7px}

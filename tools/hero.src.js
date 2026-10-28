@@ -11,6 +11,8 @@ const MINT = [0.18, 0.95, 0.69], CORAL = [1.0, 0.42, 0.34];
 
 function rng(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
+const MASK_U = 'uniform vec2 uRes; uniform vec3 uMask;';
+const MASK_F = 'float mk = uMask.x > 0.5 ? smoothstep(uMask.y, uMask.z, gl_FragCoord.x / uRes.x) : 1.0;';
 const TILE_VS = `
 attribute vec3 aTile;
 uniform float uTime; uniform vec2 uMouse;
@@ -27,26 +29,28 @@ void main(){
   gl_Position = projectionMatrix * viewMatrix * wp;
 }`;
 const TILE_FS = `
-uniform vec3 uMint; uniform vec3 uCoral; uniform float uOpacity;
+${MASK_U} uniform vec3 uMint; uniform vec3 uCoral; uniform float uOpacity;
 varying vec2 vUv; varying float vAct; varying float vRnd;
 void main(){
+  ${MASK_F}
   vec2 e = min(vUv, 1.0 - vUv);
   float edge = 1.0 - smoothstep(0.0, 0.07, min(e.x, e.y));
   vec3 col = mix(uMint * 0.55, uMint, vAct);
   col = mix(col, uCoral * (0.65 + 0.35 * vAct), step(0.93, vRnd));
-  float a = (0.035 + edge * 0.22 + vAct * (0.5 + edge * 0.5)) * uOpacity;
+  float a = (0.035 + edge * 0.22 + vAct * (0.5 + edge * 0.5)) * uOpacity * mk;
   gl_FragColor = vec4(col, a);
 }`;
 const FLOOR_VS = `varying vec3 vW; void main(){ vW = (modelMatrix * vec4(position, 1.0)).xyz; gl_Position = projectionMatrix * viewMatrix * vec4(vW, 1.0); }`;
 const FLOOR_FS = `
-uniform vec3 uMint; uniform float uOpacity; uniform vec2 uOrigin;
+${MASK_U} uniform vec3 uMint; uniform float uOpacity; uniform vec2 uOrigin;
 varying vec3 vW;
 void main(){
+  ${MASK_F}
   vec2 q = (vW.xz - uOrigin) / ${PITCH.toFixed(2)} + 0.5;
   vec2 g = abs(fract(q) - 0.5) / fwidth(q);
   float line = 1.0 - min(min(g.x, g.y), 1.0);
   float fade = exp(-length(vW.xz - uOrigin) * 0.085);
-  gl_FragColor = vec4(uMint, line * 0.11 * fade * uOpacity);
+  gl_FragColor = vec4(uMint, line * 0.11 * fade * uOpacity * mk);
 }`;
 const PART_VS = `
 attribute float aW; attribute float aTr;
@@ -80,12 +84,13 @@ void main(){
   vCol = col;
 }`;
 const PART_FS = `
-varying vec3 vCol; varying float vA;
+${MASK_U} varying vec3 vCol; varying float vA;
 void main(){
+  ${MASK_F}
   float d = length(gl_PointCoord - 0.5);
   float a = smoothstep(0.5, 0.0, d); a = a * a * 1.25;
-  if (a * vA < 0.004) discard;
-  gl_FragColor = vec4(vCol, a * vA);
+  if (a * vA * mk < 0.004) discard;
+  gl_FragColor = vec4(vCol, a * vA * mk);
 }`;
 const ARC_VS = `
 attribute float aT; attribute float aOff; attribute float aC;
@@ -97,9 +102,9 @@ void main(){
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }`;
 const ARC_FS = `
-uniform vec3 uMint; uniform vec3 uCoral;
+${MASK_U} uniform vec3 uMint; uniform vec3 uCoral;
 varying float vI; varying float vC;
-void main(){ gl_FragColor = vec4(mix(uMint, uCoral, vC), vI * 0.85); }`;
+void main(){ ${MASK_F} gl_FragColor = vec4(mix(uMint, uCoral, vC), vI * 0.85 * mk); }`;
 
 function mat(vs, fs, uniforms) {
   return new ShaderMaterial({ vertexShader: vs, fragmentShader: fs, uniforms, transparent: true, depthWrite: false, blending: AdditiveBlending });
@@ -115,7 +120,7 @@ export function start(canvas, host) {
   const r = rng(27721);
   const U = {
     uTime: { value: 0 }, uMint: { value: MINT }, uCoral: { value: CORAL }, uOpacity: { value: 1 },
-    uMouse: { value: [99, 99] }, uPR: { value: pr }, uScale: { value: 1 }, uDieW: { value: DIE_W }, uOrigin: { value: [0, 0] }
+    uMouse: { value: [99, 99] }, uRes: { value: [1, 1] }, uMask: { value: [0, 0, 1] }, uPR: { value: pr }, uScale: { value: 1 }, uDieW: { value: DIE_W }, uOrigin: { value: [0, 0] }
   };
 
   /* griglia degli SM: un solo InstancedMesh, il bordo e la luce sono nello shader */
@@ -160,15 +165,21 @@ export function start(canvas, host) {
   const pts = new Points(pg, mat(PART_VS, PART_FS, U)); pts.frustumCulled = false; world.add(pts);
 
   /* inquadratura: larga con il testo a sinistra, stretta con la scena sotto il testo */
-  let W = 1, H = 1, wide = true;
+  let W = 1, H = 1, HH = 1, wide = true;
+  /* testo a sinistra, scena a destra: sotto il testo le celle restano spente (maschera sullo schermo), il denso comincia dopo la colonna */
   function size() {
-    W = host.clientWidth; H = host.clientHeight; wide = W / H > 1.15;
-    renderer.setSize(W, H, false); camera.aspect = W / H; camera.fov = wide ? 42 : 68;
-    if (wide) camera.clearViewOffset(); else camera.setViewOffset(W, H, 0, H * 0.2, W, H);
-    camera.updateProjectionMatrix();
-    U.uScale.value = H * 0.0125 * (wide ? 1 : 0.85);
-    world.position.set(wide ? Math.min(3.8, W / 380) : 0, -0.2, wide ? 0 : -1);
+    W = canvas.clientWidth; H = canvas.clientHeight; HH = host.clientHeight;
+    const HW = host.clientWidth; wide = HW >= 760;
+    renderer.setSize(W, H, false); camera.aspect = W / H; camera.fov = wide ? 42 : 44; camera.updateProjectionMatrix();
+    U.uScale.value = wide ? H * 0.0125 : 8;
+    world.position.set(wide ? Math.min(4.2, HW / 340) : 0, -0.2, 0);
     U.uOrigin.value = [world.position.x, world.position.z];
+    U.uRes.value = [W * pr, H * pr];
+    if (wide) {
+      const hb = host.getBoundingClientRect(); let r = 0;
+      host.querySelectorAll('.role,.abs').forEach(e => { r = Math.max(r, e.getBoundingClientRect().right - hb.left); });
+      const s0 = Math.max(0.3, r / HW - 0.02); U.uMask.value = [1, s0, s0 + 0.14];
+    } else U.uMask.value = [0, 0, 1];
   }
   new ResizeObserver(size).observe(host); size();
 
@@ -180,10 +191,10 @@ export function start(canvas, host) {
   let running = false, raf = 0, t0 = 0, acc = 0, fr = 0, last = 0, tier = 0;
   function frame(now) {
     raf = 0; if (!running) return;
-    const t = (now - t0) / 1000, sc = Math.min(1, Math.max(0, scrollY / (H || 1)));
+    const t = (now - t0) / 1000, sc = Math.min(1, Math.max(0, scrollY / (HH || 1)));
     cx += (mx - cx) * 0.045; cy += (my - cy) * 0.045;
-    camera.position.set(cx * 1.4 + Math.sin(t * 0.07) * 0.5, (wide ? 6.6 : 7.4) + cy * 0.8 + sc * 1.8, (wide ? 13.6 : 17) + sc * 3);
-    camera.lookAt(tgt.x + cx * 0.3, tgt.y + sc * 0.6, tgt.z); camera.updateMatrixWorld();
+    camera.position.set(cx * 1.4 + Math.sin(t * 0.07) * 0.5, (wide ? 6.6 : 9.6) + cy * 0.8 + sc * 1.8, (wide ? 13.6 : 11.5) + sc * 3);
+    camera.lookAt(tgt.x + cx * 0.3, tgt.y + sc * 0.6, wide ? tgt.z : 0.8); camera.updateMatrixWorld();
     if (hasPtr && wide) {
       ray.set(mx, my, 0.5).unproject(camera).sub(camera.position).normalize();
       const k = -camera.position.y / ray.y; U.uMouse.value = k > 0 ? [camera.position.x + ray.x * k, camera.position.z + ray.z * k] : [99, 99];
