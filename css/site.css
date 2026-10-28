@@ -50,7 +50,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font:400 var(--s0)/1.55 v
   transition:background-color .5s var(--ease-out),color .5s var(--ease-out)}
 ::selection{background:var(--hl);color:var(--ink)}
 p{margin:0 0 1rem;text-wrap:pretty}
-h1,h2,h3,h4{font-weight:400;margin:0;hyphens:manual;font-family:var(--display)}
+h1,h2,h3,h4{font-weight:400;margin:0;hyphens:manual;font-family:var(--display);font-variant-numeric:lining-nums}
 b{font-weight:600}
 img,svg,canvas{display:block}
 
@@ -119,15 +119,10 @@ sup.n{font:400 .66em/1 var(--mono);color:var(--fig);vertical-align:.55em;padding
 .role b{font-weight:600}
 .folio{grid-column:10/-1;margin:0;align-self:baseline;text-align:right;font-size:var(--s-1);color:var(--ink-3)}
 h1{grid-column:1/-1;margin:.2em 0 0;padding-bottom:.06em;border-bottom:1px solid var(--ink);white-space:nowrap;
-  font:400 min(13rem,15cqi)/.8 var(--display);letter-spacing:-.035em;font-variant-numeric:lining-nums}
-.abstract{grid-column:1/5;grid-row:3;padding-top:1.5rem}
+  font:400 min(14rem,9.5cqi)/.8 var(--display);letter-spacing:-.035em;font-variant-numeric:lining-nums}
+.abstract{grid-column:1/6;grid-row:3;padding-top:1.5rem}
 .abs{font-size:var(--s1);line-height:1.34;letter-spacing:-.005em}
-.fig1{grid-column:5/-1;grid-row:3/6;margin:1.5rem 0 0;padding-left:var(--gap);border-left:1px solid var(--rule)}
-.rbox{position:relative;height:clamp(250px,31vw,420px)}
-.rbox canvas{position:absolute;inset:0;width:100%;height:100%}
-.readout{font:var(--s-2)/1.4 var(--mono);color:var(--ink-3);margin:.5rem 0 0;min-height:1.4em;font-variant-numeric:lining-nums tabular-nums}
-.more{grid-column:1/5;grid-row:4;padding-top:1.4rem}
-.kw{font-size:.94rem;line-height:1.5;color:var(--ink-2);hyphens:auto}
+.kw{font-size:.94rem;line-height:1.5;color:var(--ink-2);hyphens:auto;margin:1.4rem 0 0}
 .go{display:flex;flex-wrap:wrap;gap:.3rem 1.6rem;margin:1.1rem 0}
 .go a::before{content:"\2192\00a0";color:var(--fig)}
 .contacts{margin:1.2rem 0 0;font-size:var(--lead)}
@@ -136,22 +131,41 @@ h1{grid-column:1/-1;margin:.2em 0 0;padding-bottom:.06em;border-bottom:1px solid
 .legend .lg-f{fill:var(--fig)}.legend .lg-i{fill:var(--ink)}.legend .lg-r{fill:var(--inh)}
 .legend .lg-b{stroke:var(--ink-3);stroke-width:1}.legend .lg-c{fill:none;stroke:var(--fig);stroke-width:1.3}
 
-/* tabella booktabs */
+/* tabelle booktabs: Tab. 1 (hero), Tab. 2 (contributi), Tab. 3 (ricerca) */
 table{border-collapse:collapse;width:100%}
 caption{caption-side:top;text-align:left;font-size:var(--s-1);color:var(--ink-2);padding-bottom:.5rem;line-height:1.5}
 caption b{color:var(--ink)}
-.tab1{grid-column:1/5;grid-row:5;align-self:end;margin-top:2rem;font-size:.9rem;table-layout:fixed}
-.tab1 thead th{border-top:1.5px solid var(--ink);border-bottom:.75px solid var(--ink);font-weight:600;font-size:var(--s-1);color:var(--ink-2);text-align:left;padding:.3rem .5rem .3rem 0}
-.tab1 th:first-child{width:36%}.tab1 th:nth-child(2){width:36%}
-.tab1 td{padding:.45rem .5rem .45rem 0;border-bottom:1px solid var(--rule-2);vertical-align:baseline;line-height:1.3}
-.tab1 tr:last-child td{border-bottom:1.5px solid var(--ink)}
+:is(.tab1,.ptab){font-size:.9rem;table-layout:fixed}
+:is(.tab1,.ptab) thead th{border-top:1.5px solid var(--ink);border-bottom:.75px solid var(--ink);font-weight:600;font-size:var(--s-1);color:var(--ink-2);text-align:left;padding:.3rem .5rem .3rem 0}
+:is(.tab1,.ptab) td{padding:.45rem .5rem .45rem 0;border-bottom:1px solid var(--rule-2);vertical-align:baseline;line-height:1.35}
+:is(.tab1,.ptab) tr:last-child td{border-bottom:1.5px solid var(--ink)}
+.tab1{grid-column:7/-1;grid-row:3;align-self:start;margin-top:1.5rem}
+.tab1 th:first-child{width:34%}.tab1 th:nth-child(2){width:34%}
 .tab1 .v{font:var(--s-1)/1.45 var(--mono);font-variant-numeric:lining-nums tabular-nums}
 .tab1 .v span{display:block}
 .tab1 .src{font-size:var(--s-1);color:var(--ink-3);line-height:1.4}
+.ptab{grid-column:4/-1;margin-top:var(--f-top)}
+.prs th:first-child{width:28%}.prs th:last-child{width:20%}
+.prs .pj{font:var(--s-1)/1.4 var(--mono);overflow-wrap:anywhere}
+.prs .st{font-size:var(--s-1);color:var(--ink-3)}
+.coh th:nth-child(n+2){width:5.6rem;text-align:right}
+.coh td:nth-child(n+2){text-align:right;font-variant-numeric:lining-nums tabular-nums}
+
+/* modelli su Hugging Face: colonna a sinistra, fissa su desktop; sotto l'hero su schermi piccoli */
+.hf{margin-top:3rem;padding-top:.9rem;border-top:1px solid var(--ink);max-width:32rem}
+.hf .kicker a{text-decoration-color:var(--rule)}
+.hft{margin-top:.9rem;font-size:var(--s-1)}
+.hft th{font:600 var(--s-2)/1.4 var(--serif);color:var(--ink-3);text-align:left;padding:0 0 .35rem;border-bottom:1.5px solid var(--ink)}
+.hft td,.hft tfoot th{padding:.5rem 0;border-bottom:1px solid var(--rule-2);vertical-align:baseline;line-height:1.3}
+.hft th:last-child,.hft td:last-child{text-align:right;padding-left:.8rem}
+.hft .lk{display:block;color:var(--ink-3);font-size:var(--s-2)}
+.hft tfoot th{font:600 var(--s-1)/1.3 var(--serif);color:var(--ink);border-bottom:1.5px solid var(--ink)}
+.hft tfoot td{border-bottom:1.5px solid var(--ink);font-weight:600}
+.hfd{font-size:var(--s-2);line-height:1.4;color:var(--ink-3);margin:.6rem 0 0}
 
 /* ---------- sezioni ---------- */
 .sec{padding-top:var(--open);padding-bottom:0}
-.sec-rl{--open:5rem}
+.sec-rl,.sec-sub{--open:5rem}
 .sec-idx{--open:9rem}
 .sec-note{--open:6rem}
 .sec-aut{--open:3rem}
@@ -176,6 +190,11 @@ h2 .nw{white-space:nowrap}
 figcaption{font-size:var(--s-1);line-height:1.5;color:var(--ink-2);max-width:66ch;margin-top:.8rem;hyphens:auto}
 figcaption b{color:var(--ink)}
 .fig2{margin-top:2.5rem}
+.figr>:is(.rbox,.readout,.legend){grid-column:4/-1}
+.figr>figcaption{grid-column:4/10}
+.rbox{position:relative;height:clamp(250px,31vw,420px)}
+.rbox canvas{position:absolute;inset:0;width:100%;height:100%}
+.readout{font:var(--s-2)/1.4 var(--mono);color:var(--ink-3);margin:.5rem 0 0;min-height:1.4em;font-variant-numeric:lining-nums tabular-nums}
 .fig2>svg{grid-column:1/-1;max-height:min(92svh,860px)}
 .fig2.portrait>svg{grid-column:4/9;max-width:470px;max-height:none}
 .fig2.portrait>figcaption{grid-column:9/-1;align-self:end}
@@ -184,12 +203,14 @@ figcaption b{color:var(--ink)}
 .fig+.proj{margin-top:var(--f-proj)}
 h3{font-size:var(--s3);line-height:1.05;letter-spacing:-.02em;margin:0 0 .45rem}
 h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
-.h3m{font:400 var(--s2)/1.1 var(--mono);letter-spacing:-.02em;overflow-wrap:anywhere;margin-bottom:1.1rem}
+.h3m{font:400 var(--s1)/1.15 var(--mono);letter-spacing:-.02em;overflow-wrap:anywhere;margin-bottom:1.1rem}
 .dateline{font-size:var(--s-1);letter-spacing:.02em;color:var(--ink-3);margin:0 0 1.2rem}
 .proj p{max-width:64ch;hyphens:auto}
 .proj>.go{margin-bottom:.9rem}
 .meth{font-size:var(--s-1);color:var(--ink-3);line-height:1.6}
 .proj+.notes{margin-top:var(--f-proj);padding-top:.35rem}
+.cmd{display:flex;flex-direction:column;align-items:flex-start;gap:.2rem;margin:0 0 1rem}
+.cmd code{font:var(--s-1)/1.5 var(--mono);color:var(--ink-2);background:var(--wash);padding:.15rem .5rem;overflow-wrap:anywhere}
 .withmeta{grid-column:1/10;display:grid;grid-template-columns:subgrid;align-content:start}
 .withmeta>*{grid-column:4/-1}
 .withmeta>.meta{grid-column:1/4;grid-row:1/span 4;align-self:start;margin-top:.5rem}
@@ -205,6 +226,9 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 .bt{font-family:var(--display);font-size:var(--s2);letter-spacing:-.015em;line-height:1.1}
 .brief p{max-width:64ch;hyphens:auto}
 .bf{margin:0}
+.sub{grid-column:4/10;margin:var(--p-brief) 0 0;font:400 var(--s2)/1.1 var(--display);letter-spacing:-.015em}
+.sub+.briefs{margin-top:1.2rem}
+.hfm .bn{font-size:var(--s0)}
 .stk{font-size:var(--s-1);color:var(--ink-3)}
 .dateline.soon{margin-bottom:.8rem}
 
@@ -288,36 +312,35 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 
 /* ---------- nota, autore, piede ---------- */
 .notetext{max-width:64ch;hyphens:auto}
-.author{display:flex;gap:1.2rem;align-items:flex-start}
+.author{display:flex;gap:1.2rem;align-items:flex-start;grid-column:4/-1}
 .author img{width:96px;height:96px;flex:none;filter:none}
 .aname{font:400 var(--s1)/1.2 var(--display);margin:0}
+.arole{margin:.2rem 0 0;font-size:var(--s-1);color:var(--ink-2)}
 .author .go{margin:.6rem 0 0}
 .foot{margin-top:5rem;padding-bottom:3rem}
 .foot p{display:flex;flex-wrap:wrap;gap:.4rem 2rem;margin:0;padding-top:1rem;border-top:1px solid var(--ink);font-size:var(--s-1);color:var(--ink-3)}
-.foot button{margin-left:auto;color:var(--ink-3);text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.2em;padding:.2rem 0}
-.foot button:hover,.foot button:focus-visible{text-decoration-color:var(--ink)}
 
-/* mostra la griglia: colonne della pagina sopra tutto, senza intercettare il puntatore */
-.show-grid body::after{content:"";position:fixed;top:0;bottom:0;left:50%;z-index:30;pointer-events:none;width:100%;max-width:1440px;transform:translateX(-50%);
-  padding:0 var(--gut);background-origin:content-box;background-clip:content-box;
-  --cw:calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
-  background-image:repeating-linear-gradient(90deg,var(--grid) 0 var(--cw),transparent var(--cw) calc(var(--cw) + var(--gap)))}
-
-.no-js .rbox,.no-js .readout,.no-js #cns{display:none}
+.no-js :is(.rbox,.readout,.figr .legend),.no-js #cns{display:none}
 /* senza JS le figure 3-6 restano la copia disegnata per 1440 px: sotto i 1200 px il testo scende sotto i 10 px, resta la didascalia */
 @media (max-width:1199px){.no-js :is(.fig3,.fig4,.fig5,.fig6)>svg{display:none}}
+
+/* colonna dei modelli: fissa a sinistra dal desktop in su (il contenuto resta su 12 colonne nello spazio che avanza) */
+@media (min-width:80em){
+  .body{display:grid;grid-template-columns:15rem minmax(0,1fr);column-gap:var(--gap);align-items:start}
+  .hf{position:sticky;top:64px;margin-top:var(--open);padding-top:1.6rem;max-width:none}
+}
 
 /* ---------- M: 900-1199 ---------- */
 @media (max-width:1199px){
   :root{--open:6rem;--p-brief:3.5rem}
-  .abstract,.more,.tab1{grid-column:1/6}
-  .fig1{grid-column:6/-1}
-  .sec-main,.proj,.briefs{grid-column:4/-1}
+  .abstract{grid-column:1/9}
+  .tab1{grid-column:1/-1;grid-row:auto}
+  .sec-main,.proj,.briefs,.ptab,.sub{grid-column:4/-1}
   .withmeta{grid-column:1/-1}
   .notes{grid-column:4/-1;columns:2;column-gap:var(--gap);margin-top:1.4rem}
   .notes p{break-inside:avoid}
   .proj+.notes{margin-top:1.2rem}
-  .fig>figcaption{grid-column:4/-1}
+  .fig>figcaption,.figr>figcaption{grid-column:4/-1}
   .nav{display:none}
   .toc{display:block}
 }
@@ -328,24 +351,21 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 /* ---------- S: 600-899 ---------- */
 @media (max-width:899px){
   :root{--cols:6;--open:5rem;--f-top:2rem;--f-proj:2.5rem;--p-brief:3rem;--brief:1.6rem}
-  .sec-rl{--open:4rem}.sec-idx{--open:6rem}.sec-note{--open:4.5rem}
+  .sec-rl,.sec-sub{--open:4rem}.sec-idx{--open:6rem}.sec-note{--open:4.5rem}
   .rule i:nth-child(n+7){display:none}
   .hero{padding-top:1.8rem}
   .role{grid-column:1/-1}.folio{grid-column:1/-1;text-align:left;margin-top:.25rem}
-  .abstract,.fig1,.more,.tab1{grid-column:1/-1;grid-row:auto}
-  .fig1{padding-left:0;border-left:0;margin-bottom:.5rem}
+  .abstract,.tab1{grid-column:1/-1;grid-row:auto}
   .rbox{height:clamp(250px,40vw,360px)}
-  .more{margin-top:1rem}
-  .runhead,.sec-main,.proj,.briefs,.notes,.idx,.withmeta{grid-column:1/-1}
+  .runhead,.sec-main,.proj,.briefs,.notes,.idx,.withmeta,.ptab,.sub{grid-column:1/-1}
   .runhead{margin-bottom:1rem}
   .sec-idx .runhead{position:static;grid-row:auto}
   .notes{columns:1;margin-top:1.2rem}
-  .h3m{font-size:var(--s1)}
   h2{font-size:var(--s3)}
   .withmeta{display:block}
   .withmeta .meta{display:flex;flex-wrap:wrap;gap:0 1.4rem;margin:0 0 1.2rem}
   .withmeta .meta div{display:flex;gap:.4rem;border:0;padding:0}
-  .fig>svg{grid-column:1/-1}
+  .fig>svg,.figr>:is(.rbox,.readout,.legend){grid-column:1/-1}
   .fig>figcaption{grid-column:1/-1}
   .fig2.portrait>svg{grid-column:1/5}
   .fig2.portrait>figcaption{grid-column:5/-1}
@@ -354,7 +374,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 /* ---------- XS: < 600 ---------- */
 @media (max-width:599px){
   :root{--cols:1;--open:4.5rem;--f-top:1.6rem;--f-proj:2rem;--p-brief:2.5rem;--brief:1.4rem}
-  .sec-rl{--open:3.5rem}.sec-idx{--open:5rem}.sec-note{--open:4rem}
+  .sec-rl,.sec-sub{--open:3.5rem}.sec-idx{--open:5rem}.sec-note{--open:4rem}
   .rule i:nth-child(n+2){display:none}
   .mast-in{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:.2rem 1rem}
   .mast-name{grid-column:1;grid-row:1}
@@ -368,7 +388,7 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
   .toc ol{left:auto;right:auto}
   .mast.stuck .toc ol{right:0;left:auto}
   .hero{padding-top:1.4rem}
-  h1{font-size:29.5cqi;letter-spacing:-.03em;white-space:normal;line-height:.88}
+  h1{font-size:26.5cqi;letter-spacing:-.03em;white-space:normal;line-height:.88}
   h1 span{display:block}
   .abs{font-size:1.24rem}
 
@@ -380,12 +400,21 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
   .tab1 td:first-child{grid-column:1/-1;font-size:var(--s-1);color:var(--ink-2)}
   .tab1 .src{text-align:right}
   .tab1 caption{border-bottom:1.5px solid var(--ink)}
+  .prs{table-layout:auto}
+  .prs thead{display:none}
+  .prs tr{display:grid;grid-template-columns:1fr;gap:.15rem;padding:.55rem 0;border-bottom:1px solid var(--rule-2)}
+  .prs tr:last-child{border-bottom:1.5px solid var(--ink)}
+  .prs td,.prs tr:last-child td{border:0;padding:0}
+  .prs caption{border-bottom:1.5px solid var(--ink)}
+  .coh{table-layout:auto}
+  .coh th:nth-child(n+2){width:4.3rem}
+  .hf{margin-top:2.5rem}
   .epi{font-size:var(--s3);margin-top:.6rem}
   .withmeta .meta{display:block}
   .withmeta .meta div{display:grid;grid-template-columns:5em 1fr;gap:.5rem;padding:.3rem 0;border-top:1px solid var(--rule-2)}
   .withmeta .meta div:last-child{border-bottom:1px solid var(--rule-2)}
   h2 .nw{white-space:normal}
-  .h3m{font-size:1.2rem}
+  .h3m{font-size:1.05rem}
   .bn{font-size:var(--s0)}
   .bt{font-size:var(--s1)}
   .fig2.portrait>svg,.fig2.portrait>figcaption{grid-column:1/-1;max-width:none}
@@ -396,11 +425,17 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
   .idx td{border:0;padding:0}
   .idx .nm{padding-left:0}
   .idx .sk{grid-column:1;grid-row:2;width:auto;font-size:var(--s-1);color:var(--ink-3)}
-  .idx .nt{grid-column:2;grid-row:1}
+  .idx .nt{grid-column:2;grid-row:1;white-space:normal;text-align:right}
   .idx caption{display:block}
   .author img{width:72px;height:72px}
   .foot p{flex-direction:column;gap:.2rem}
-  .foot button{display:none}
+}
+
+/* 320-359 px: testata su due righe che non sforano (nome piu' piccolo, selettore del tema senza barre) */
+@media (max-width:359px){
+  .mast-name{font-size:.9rem}
+  .mast-in{gap:.2rem .6rem}
+  .theme{gap:.1rem}.theme span{display:none}
 }
 
 /* ---------- preferenze ---------- */
@@ -413,10 +448,10 @@ h3 a{text-decoration-thickness:1px;text-underline-offset:.12em}
 @media (forced-colors:active){
   .rule,.rule i,.mast-in::after,.mast-in::before,h1{border-color:CanvasText}
   .fig svg .ax,.cns .ld,.cns .olc,.f5 .fen,.lots .qmx{stroke:CanvasText}
-  .fig1 .rbox{display:none}
+  .figr .rbox{display:none}
 }
 @media print{
-  .mast .nav,.toc,.lang,.theme,.skip,.foot button,.readout{display:none}
+  .mast .nav,.toc,.lang,.theme,.skip,.readout{display:none}
   .mast.stuck{position:static}
   body{background:#fff;color:#000}
   .proj .go a::after,.brief .go a::after{content:" (" attr(href) ")";font-size:.8em}

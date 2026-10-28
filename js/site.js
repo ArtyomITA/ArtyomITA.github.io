@@ -30,8 +30,7 @@ var L = {
     k: ['MoE · un lancio per kernel', 'MoE · CUDA graph', 'denso · un lancio per kernel', 'denso · CUDA graph'], kax: 'tempo per token, relativo',
     pad: 'padding · cos 0,76', padv: '1 − cos = 0,24', fix: 'fix · cos 0,999956', fixv: '1 − cos = 4,4·10', ratio: '≈ 5.500 volte più vicino', cosax: '1 − coseno', ts: 'tok/s su GTX 1080', dec: 'decodifica', dr: 'con drafter', turns: 'turni con cifre non supportate', fence: 'GTX 1080 · nessuna chiamata esterna',
     two: '2 salti', ham: 'martelletti rigiocati contro il server · una cella ciascuno', ok: 'senza errori, in entrambi gli ordini dei ruoli', rt: 'tempo di risposta a ogni martelletto',
-    ord: ['ordine 1', 'ordine 2'], mean: 'media', ms: 'millisecondi', bridge: 'ponte FantaAsta Live · assegnazioni identiche',
-    grid: ['mostra la griglia', 'nascondi la griglia'] },
+    ord: ['ordine 1', 'ordine 2'], mean: 'media', ms: 'millisecondi', bridge: 'ponte FantaAsta Live · assegnazioni identiche' },
   en: { sens: 'sensory', cen: 'central', desc: 'descending', rate: 'rate', ro: ['t', 'input ×', 'spikes/ms'],
     tok: 'token · BPE 4096', in1: 'input: 17,937', in2: 'sensory neurons', core: 'recurrent LIF core', c2: '166,700 neurons · 2.75 M synapses (≥ 10)', c3: '4+4 substeps per token',
     o1: 'readout: 2,241 descending', o2: 'and motor neurons', o3: '→ next-token logits', att: 'external causal attention · 4 heads · cache 128 · re-enters through the same ports', attS: 'external attention · 4 heads · cache 128',
@@ -39,8 +38,7 @@ var L = {
     k: ['MoE · one launch per kernel', 'MoE · CUDA graph', 'dense · one launch per kernel', 'dense · CUDA graph'], kax: 'time per token, relative',
     pad: 'padding · cos 0.76', padv: '1 − cos = 0.24', fix: 'fix · cos 0.999956', fixv: '1 − cos = 4.4·10', ratio: '≈ 5,500 times closer', cosax: '1 − cosine', ts: 'tok/s on GTX 1080', dec: 'decoding', dr: 'with drafter', turns: 'turns with unsupported numbers', fence: 'GTX 1080 · no external calls',
     two: '2 hops', ham: 'hammer calls replayed against the server · one cell each', ok: 'with no errors, in both role orders', rt: 'response time of each hammer call',
-    ord: ['order 1', 'order 2'], mean: 'mean', ms: 'milliseconds', bridge: 'FantaAsta Live bridge · identical assignments',
-    grid: ['show the grid', 'hide the grid'] }
+    ord: ['order 1', 'order 2'], mean: 'mean', ms: 'milliseconds', bridge: 'FantaAsta Live bridge · identical assignments' }
 }[lang];
 
 /* pianificatore: scroll passivo, un rAF per fotogramma */
@@ -298,7 +296,7 @@ var Ras = (function () {
   }
   function build() {
     if (!P) gen();
-    var w = fig.getBoundingClientRect().width; portrait = w < 1100; fig.classList.toggle('portrait', portrait);
+    var w = fig.getBoundingClientRect().width; portrait = w < 1040; fig.classList.toggle('portrait', portrait);
     /* sotto i 600 px la figura verticale e' scalata a ~0,75: testo piu' grande in unita' del viewBox (classe xs), interlinee piu' larghe */
     var xs = portrait && w < 600, e = xs ? 1.2 : 1; svg.classList.toggle('xs', xs);
     var sc = portrait ? 1 : 1.25, VW = portrait ? 440 : 1200, VH = portrait ? 880 : 808, ox = portrait ? 10 : 350, oy = portrait ? 206 : 18;
@@ -360,7 +358,7 @@ var Ras = (function () {
   function go() { if (built) return; built = true; lastW = fig.getBoundingClientRect().width; build(); scrubNow(sc); }
   /* con movimento ridotto e in stampa la figura si genera subito: le catture a pagina intera e la carta non passano dall'observer */
   near(fig, go); printable(go, sc); if (rm) setTimeout(go, 0);
-  function bucket(w) { return w < 600 ? 0 : w < 1100 ? 1 : 2; }
+  function bucket(w) { return w < 600 ? 0 : w < 1040 ? 1 : 2; }
   new ResizeObserver(function () { var w = fig.getBoundingClientRect().width; if (built && bucket(w) !== bucket(lastW)) { build(); scrubNow(sc); } lastW = w; }).observe(fig);
 })();
 
@@ -628,7 +626,7 @@ RMq.addEventListener('change', function () {
     es.forEach(function (e) {
       if (!e.isIntersecting) return;
       cur.textContent = e.target.getAttribute('data-k');
-      var id = '#' + e.target.id;
+      var id = e.target.getAttribute('data-nav') || '#' + e.target.id;
       links.forEach(function (a) { if (a.getAttribute('href') === id) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
     });
   }, { rootMargin: '-45% 0px -54% 0px' });
@@ -664,10 +662,6 @@ syncTheme();
 
 /* lingua: conserva l'ancora */
 $$('.lang a').forEach(function (a) { a.addEventListener('click', function () { if (location.hash) a.href = a.getAttribute('href').split('#')[0] + location.hash; }); });
-
-/* mostra la griglia */
-var gb = $('#gridbtn');
-if (gb) gb.addEventListener('click', function () { var on = root.classList.toggle('show-grid'); gb.setAttribute('aria-pressed', String(on)); gb.textContent = L.grid[on ? 1 : 0]; });
 
 if (D.fonts && D.fonts.ready) D.fonts.ready.then(function () { Ras.redraw(); });
 dirty = 1; need();
