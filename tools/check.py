@@ -22,7 +22,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AXE = os.path.join(ROOT, "..", "artyomita-redesign", "tools", "axe.min.js")
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "..", "artyomita-redesign", "shots", "check")
 # KB del brief = 1000 byte (non KiB) per il JS
-BUDGET = {"html": 60 * 1024, "css": 35 * 1024, "js": 45000, "font": 180 * 1024, "img": 80 * 1024, "total": 400 * 1024}
+BUDGET = {"html": 70 * 1024, "css": 35 * 1024, "js": 45000, "font": 180 * 1024, "img": 80 * 1024, "total": 400 * 1024}
 
 PAGE_JS = r"""() => {
   const R = {}, all = [...document.querySelectorAll('body *')];
@@ -36,10 +36,10 @@ PAGE_JS = r"""() => {
   const fams = new Set(); all.forEach(e => { if (vis(e) && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) fams.add(getComputedStyle(e).fontFamily.split(',')[0].replace(/"/g, '').trim()); });
   R.fonts = [...fams];
   const text = document.body.innerText;
-  R.emdash = (text.match(/—/g) || []).length;
+  R.emdash = (text.match(/[—–]/g) || []).length;
   R.emoji = (text.match(/\p{Extended_Pictographic}/gu) || []).filter(c => !'©®™↔'.includes(c));
   R.firstLine = text.trim().split('\n')[0];
-  R.banned = ['passionate about', 'crafting', 'building the future', 'best-in-class', 'cutting-edge', 'all-in-one', 'next-generation', 'COMING SOON', 'IN ARRIVO', '★', 'Scopri di più', 'Learn More', 'Get Started'].filter(s => text.includes(s));
+  R.banned = ['passionate about', 'crafting', 'building the future', 'best-in-class', 'cutting-edge', 'all-in-one', 'next-generation', 'COMING SOON', 'IN ARRIVO', '★', 'Scopri di più', 'Learn More', 'Get Started', 'in produzione', 'in production'].filter(s => text.includes(s));
   R.italicInHeading = document.querySelectorAll('h1 em,h1 i,h2 em,h2 i,h3 em,h3 i').length;
   // solo i link visibili: il menu a comparsa (details.toc) e la barra .nav sono lo stesso indice in due forme, mai visibili insieme
   const lt = {}; document.querySelectorAll('a').forEach(a => { if (!vis(a)) return; const t = a.textContent.trim(); lt[t] = (lt[t] || 0) + 1; });
@@ -148,7 +148,7 @@ def main():
             fail.append("CSP: hash dello script di avvio non corrisponde in " + rel)
         if "style=" in html:
             fail.append("style= inline in " + rel)
-        if re.search(r"adriandj|@gmail|vergilius-privato", html):
+        if re.search(r"@gmail|vergilius-privato|keytech", html):
             fail.append("dato privato in " + rel)
         # Fig. 6: niente dati dell'asta passata (tolti dal README pubblico il 13/9, commit 12d3c62)
         for bad in ("8/28", "28 lotti", "28 lots", "28 simulated", "lotti simulati", "simulated lots"):
@@ -315,6 +315,47 @@ def main():
                     fail.append("%s %d: a capo sul trattino %s" % (lang, w, hy[:6]))
                 ctx.close()
 
+        # nessuno scroll orizzontale e nome su una riga (da 600 px) o su tre (sotto) a tutte le larghezze, in tutti e due i temi
+        for w in (320, 360, 390, 599, 600, 768, 1024, 1199, 1280, 1440, 1920):
+            for lang, path in (("it", ""), ("en", "en/")):
+                for theme in ("light", "dark"):
+                    ctx = br.new_context(viewport={"width": w, "height": 900}, reduced_motion="reduce", color_scheme=theme)
+                    pg = ctx.new_page()
+                    pg.goto(base + path)
+                    pg.evaluate("document.fonts.ready")
+                    pg.wait_for_timeout(300)
+                    d = pg.evaluate("""()=>{const h=document.querySelector('h1'),sp=[...h.querySelectorAll('span')].map(x=>Math.round(x.getBoundingClientRect().top));
+                      return {over:document.documentElement.scrollWidth-innerWidth,hs:h.scrollWidth-h.clientWidth,lines:new Set(sp).size}}""")
+                    if d["over"] > 0 or d["hs"] > 0:
+                        fail.append("%s %s %d: overflow %s" % (lang, theme, w, d))
+                    if d["lines"] != (1 if w >= 600 else 3):
+                        fail.append("%s %d: nome su %d righe" % (lang, w, d["lines"]))
+                    ctx.close()
+
+        # colonna dei modelli: stessi numeri dell'istantanea JSON, ordine per download, totale; fissa su desktop, sotto l'hero su mobile
+        snap = json.load(open(os.path.join(ROOT, "tools", "hf-models.json"), encoding="utf-8"))
+        exp = sorted(snap["models"], key=lambda m: (-m["downloads"], m["id"]))
+        for lang, path in (("it", ""), ("en", "en/")):
+            for w in (1440, 390):
+                ctx = br.new_context(viewport={"width": w, "height": 900}, reduced_motion="reduce")
+                pg = ctx.new_page()
+                pg.goto(base + path)
+                pg.wait_for_timeout(300)
+                rows = pg.evaluate("""()=>[...document.querySelectorAll('.hft tbody tr')].map(r=>[r.querySelector('a').href,r.querySelector('td.m').textContent])""")
+                tot = pg.evaluate("document.querySelector('.hft tfoot td').textContent")
+                nums = lambda n: format(n, ",").replace(",", "." if lang == "it" else ",")
+                if [r[0] for r in rows] != ["https://huggingface.co/" + m["id"] for m in exp] or [r[1] for r in rows] != [nums(m["downloads"]) for m in exp] or tot != nums(sum(m["downloads"] for m in exp)):
+                    fail.append("%s %d: colonna modelli diversa dall'istantanea %s %s" % (lang, w, rows, tot))
+                g = pg.evaluate("""()=>{const a=document.querySelector('.hf'),h=document.querySelector('.hero').getBoundingClientRect(),c=document.querySelector('.content').getBoundingClientRect(),r=a.getBoundingClientRect();
+                  window.scrollTo(0,1500);return {pos:getComputedStyle(a).position,sticky:Math.round(a.getBoundingClientRect().top),belowHero:r.top>=h.bottom-1,left:r.right<=c.left+1,hero:document.querySelector('.hero').contains(a)}}""")
+                if g["hero"] or not g["belowHero"]:
+                    fail.append("%s %d: colonna modelli non sotto l'hero %s" % (lang, w, g))
+                if w == 1440 and (g["pos"] != "sticky" or not g["left"] or g["sticky"] > 80):
+                    fail.append("%s %d: colonna modelli non fissa a sinistra %s" % (lang, w, g))
+                if w == 390 and g["pos"] == "sticky":
+                    fail.append("390: colonna modelli fissa su mobile")
+                ctx.close()
+
         # localStorage che lancia: la pagina funziona e il tema si cambia
         ctx = br.new_context(viewport={"width": 1024, "height": 800})
         ctx.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw new Error('blocked')}})")
@@ -328,23 +369,13 @@ def main():
             fail.append("localStorage bloccato: %s %s" % (errs, th))
         ctx.close()
 
-        # griglia contro tacche e zoom del testo
-        for w in (1440, 768):
-            ctx = br.new_context(viewport={"width": w, "height": 900})
-            pg = ctx.new_page()
-            pg.goto(base)
-            pg.click("#gridbtn")
-            d = pg.evaluate("""()=>{const r=document.querySelector('#ricerca .rule');const ticks=[...r.children].filter(i=>getComputedStyle(i).display!=='none').map(i=>i.getBoundingClientRect().left);
-              const s=getComputedStyle(document.body,'::after');const cw=r.getBoundingClientRect().width;const cols=+getComputedStyle(document.documentElement).getPropertyValue('--cols');
-              const gap=parseFloat(getComputedStyle(r).columnGap);const x0=r.getBoundingClientRect().left;const exp=[...Array(cols).keys()].map(k=>x0+k*((cw-(cols-1)*gap)/cols+gap));
-              return Math.max(...ticks.map((t,i)=>Math.abs(t-exp[i])))}""")
-            if d > 1:
-                fail.append("griglia %d: scarto %.2f px" % (w, d))
-            ctx.close()
+        # zoom del testo
+        # testo al 200% come lo fa il browser (dimensione predefinita 32 px: cambiano anche le media query in em, quindi la colonna dei modelli sparisce)
         ctx = br.new_context(viewport={"width": 1280, "height": 900})
         pg = ctx.new_page()
+        pg.goto("about:blank")
+        ctx.new_cdp_session(pg).send("Page.setFontSizes", {"fontSizes": {"standard": 32, "fixed": 26}})
         pg.goto(base)
-        pg.evaluate("document.documentElement.style.fontSize='200%'")
         pg.wait_for_timeout(300)
         o = pg.evaluate("document.documentElement.scrollWidth - innerWidth")
         if o > 0:

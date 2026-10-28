@@ -59,29 +59,29 @@ OG_HTML = """<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8"><lin
 html,body{{margin:0;width:1200px;height:630px;overflow:hidden;background:#EEF0EC;color:#15181C}}
 .card{{position:absolute;inset:0;padding:40px 64px 0;box-sizing:border-box}}
 .top{{display:flex;justify-content:space-between;align-items:baseline;border-top:3px solid #15181C;padding-top:12px;font:400 22px/1.3 "Tavola Mono",monospace;color:#5F6770}}
-.nm{{font:400 150px/.9 "Besley",Georgia,serif;letter-spacing:-.035em;margin:34px 0 0;padding-bottom:8px;border-bottom:1px solid #15181C;white-space:nowrap}}
+.nm{{font:400 100px/.9 "Besley",Georgia,serif;letter-spacing:-.035em;margin:34px 0 0;padding-bottom:8px;border-bottom:1px solid #15181C;white-space:nowrap}}
 .role{{font:400 29px/1.35 "Newsreader",Georgia,serif;margin:18px 0 0;max-width:1060px}}
 .role b{{font-weight:600}}
 .ras{{position:absolute;left:64px;right:64px;bottom:36px;height:{rh}px;background:url({img}) left bottom/100% auto no-repeat}}
 .cap{{position:absolute;right:64px;bottom:{cb}px;font:400 17px/1 "Newsreader",Georgia,serif;color:#4B535C;background:#EEF0EC;padding:4px 0 4px 10px}}
 </style></head><body><div class="card"><div class="top"><span>artyomita.github.io</span><span>{folio}</span></div>
-<div class="nm">Adrian Iancu</div><p class="role">{role}</p></div><div class="ras"></div><p class="cap">{cap}</p></body></html>"""
-OG_TXT = {"it": ("aggiornata settembre 2026", "Fig. 1 · raster di neuroni leaky integrate-and-fire simulati nella pagina"),
-          "en": ("updated September 2026", "Fig. 1 · raster of leaky integrate-and-fire neurons simulated in the page")}
+<div class="nm">Adrian Ciprian Iancu</div><p class="role">{role}</p></div><div class="ras"></div><p class="cap">{cap}</p></body></html>"""
+OG_TXT = {"it": ("aggiornata ottobre 2026", "Fig. 1 · CUDA Graphs su sm_61: un lancio per kernel contro un solo lancio del grafo"),
+          "en": ("updated October 2026", "Fig. 1 · CUDA Graphs on sm_61: one launch per kernel against a single graph launch")}
 
 
-def role():
+def role(lang):
     import importlib.util
     sys.dont_write_bytecode = True  # niente __pycache__ nel repository del sito
     spec = importlib.util.spec_from_file_location("bp", os.path.join(ROOT, "tools", "build-pages.py"))
     bp = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bp)
-    return bp.ROLE_H
+    return bp.T[lang]["role"]
 
 
 def og():
     """Card Open Graph composta (non uno screenshot dell'interfaccia): nome in Besley, riga di ruolo,
-    una fetta del raster di Fig. 1 presa dalla pagina vera (movimento ridotto, tema carta)."""
+    la linea del tempo dei CUDA Graphs (Fig. 1) presa dalla pagina vera (movimento ridotto, tema carta)."""
     import base64
     import io
     from playwright.sync_api import sync_playwright
@@ -101,23 +101,22 @@ def og():
         with sync_playwright() as p:
             b = p.chromium.launch(channel="chrome")
             for lang, path in (("it", "/"), ("en", "/en/")):
-                # 1. fetta del raster dalla pagina vera
+                # 1. linea del tempo dei kernel dalla pagina vera
                 pg = b.new_page(viewport={"width": 1440, "height": 900}, device_scale_factor=2, reduced_motion="reduce", color_scheme="light")
                 pg.goto("http://127.0.0.1:%d%s" % (port, path))
                 pg.evaluate("document.fonts.ready")
                 pg.wait_for_timeout(400)
-                shot = Image.open(io.BytesIO(pg.locator("#raster").screenshot())).convert("RGB")
+                shot = Image.open(io.BytesIO(pg.locator("#kt").screenshot())).convert("RGB")
                 pg.close()
                 w, h = shot.size
-                # via le etichette di riga a sinistra e la barra dei 100 ms in basso: resta il raster con il tasso,
-                # base del tasso compresa (sta 22 px CSS sopra il fondo del canvas, qui a dpr 2: si taglia 18 px sotto)
-                sl = shot.crop((int(w * 0.13), int(h * 0.22), w, h - 36))
-                # a 2144 px (1072 CSS a dpr 2): nella card a dpr 2 un pixel del raster = un pixel dello schermo
+                # via l'asse dei tempi in basso: restano le quattro righe con le loro etichette
+                sl = shot.crop((0, 0, w, int(h * 0.74)))
+                # a 2144 px (1072 CSS a dpr 2): nella card a dpr 2 un pixel della figura = un pixel dello schermo
                 sl = sl.resize((2144, int(2144 * sl.size[1] / sl.size[0])), Image.LANCZOS)
                 buf = io.BytesIO()
                 sl.save(buf, "PNG")
                 rh = min(210, sl.size[1] // 2)
-                html = OG_HTML.format(lang=lang, folio=OG_TXT[lang][0], cap=OG_TXT[lang][1], role=role(), rh=rh, cb=rh + 36 + 6,
+                html = OG_HTML.format(lang=lang, folio=OG_TXT[lang][0], cap=OG_TXT[lang][1], role=role(lang), rh=rh, cb=rh + 36 + 6,
                                       img="data:image/png;base64," + base64.b64encode(buf.getvalue()).decode())
                 with open(tmp, "w", encoding="utf-8") as f:
                     f.write(html)
