@@ -10,6 +10,7 @@ import base64
 import hashlib
 import importlib.util
 import os
+import math
 import re
 import sys
 
@@ -320,6 +321,28 @@ NEW["en"] = dict(
     fly_cap='An illustration generated in this page inside the outline of the central nervous system (brain, optic lobes, ventral nerve cord): each dot stands for about <span class="pd">' + PD["en"] + '</span> neurons. The larger coral dots are the input ports, on the rim of the optic lobes and along the top of the brain; from there a wave advances one hop at a time and the light follows the distance in hops. The small squares are the readout: in the real connectome it sits 2 hops from the ports, which is why 4+4 depth is enough.',
     note="The charts are drawn in this page with HTML, CSS and canvas, with no images. The 3D scene at the top, built with three.js, is an illustration of tokens flowing through the compute units of a GPU: it is not a measurement, and it does not start when reduced motion is on. The FlyToLLM figure is an illustration too: the dots come from a fixed seed (166700, the neuron count), so every reader sees the same drawing. The CUDA Graphs chart is a schematic; the ones on LLM2Vec, Vergilius and FantaOracle plot measured numbers. The numbers in the text come from the repositories and the PR pages.",
 )
+NEW["it"].update(dict(
+    ov_k="In questa pagina", ov_pin="In evidenza", ov_idx="Indice e contatti",
+    ov_l=("Assistente OSINT locale · 64 tok/s su GTX 1080", "4 PR in 4 progetti · 2 integrate", "%d progetti, dalla GTX 1080 alla RTX PRO 6000",
+          "Replica del test Cohere · %d modelli su Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, ML applicato, ambienti RL", "%d repository · %d aree · contatti"),
+    pin_b=("In evidenza", "OSINT", "locale"), pin_s="Assistente OSINT locale",
+    pin_p1="Un assistente locale che mette insieme un modello linguistico sulla scheda video, fonti aperte per capire cosa succede nel mondo e un'interfaccia che le tiene insieme. Interroga da solo le fonti quando la domanda lo richiede: notizie per soggetto e luogo, mercati, contratti militari, movimenti degli insider, mappe, archivio storico degli eventi. Lavora sul computer (file, terminale, browser, documenti) e ricorda: memorie, documenti indicizzati, procedure che impara e riusa.",
+    pin_p2="Nessuna chiave API verso fornitori di AI e nessuna conversazione che esce dal computer. Pensato per macchine modeste: modello predefinito LFM2.5-2.6B con drafter speculativo DSpark su una GTX&nbsp;1080, 64&nbsp;tok/s in decodifica e 78-100 con il drafter attivo; basta una scheda con 8&nbsp;GB di memoria video. Un controllo contro le invenzioni verifica che numeri e nomi della risposta compaiano nei risultati degli strumenti: le cifre non supportate sono scese da 3 turni su 35 a 1 su 36. Integra Odysseus (assistente) e ShadowBroker (fonti).<sup class=\"n\">1</sup>",
+    pin_st=(('<span class="cn">64</span>', "tok/s in decodifica su GTX&nbsp;1080"), ("78-100", "tok/s con il drafter"), ('<span class="cn">8</span>&nbsp;GB', "di memoria video bastano"), ("1/36", "turni con cifre non supportate, prima 3/35")),
+    pin_go="Repository su GitHub",
+    vref="Assistente OSINT locale, in evidenza in cima alla pagina.",
+))
+NEW["en"].update(dict(
+    ov_k="On this page", ov_pin="Pinned", ov_idx="Index and contacts",
+    ov_l=("Local OSINT assistant · 64 tok/s on a GTX 1080", "4 PRs in 4 projects · 2 merged", "%d projects, from the GTX 1080 to the RTX PRO 6000",
+          "Cohere test replication · %d models on Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, applied ML, RL environments", "%d repositories · %d areas · contacts"),
+    pin_b=("Pinned", "OSINT", "local"), pin_s="Local OSINT assistant",
+    pin_p1="A local assistant that combines a language model on the graphics card, open sources to see what is going on in the world, and an interface that ties them together. It queries the sources by itself when a question needs them: news by subject and place, markets, military contracts, insider moves, maps, a historical archive of events. It works on the computer (files, terminal, browser, documents) and remembers: memories, indexed documents, procedures it learns and reuses.",
+    pin_p2="No API keys for AI providers and no conversation leaves the computer. Built for modest machines: default model LFM2.5-2.6B with the DSpark speculative drafter on a GTX&nbsp;1080, 64&nbsp;tok/s in decoding and 78-100 with the drafter on; a card with 8&nbsp;GB of video memory is enough. A check against made-up answers verifies that the numbers and names in a reply appear in the tool results: unsupported figures dropped from 3 turns out of 35 to 1 out of 36. It integrates Odysseus (assistant) and ShadowBroker (sources).<sup class=\"n\">1</sup>",
+    pin_st=(('<span class="cn">64</span>', "tok/s decoding on a GTX&nbsp;1080"), ("78-100", "tok/s with the drafter"), ('<span class="cn">8</span>&nbsp;GB', "of video memory is enough"), ("1/36", "turns with unsupported numbers, down from 3/35")),
+    pin_go="Repository on GitHub",
+    vref="Local OSINT assistant, pinned at the top of the page.",
+))
 for _l, _t in T.items():
     _t.update(NEW[_l])
     _t["n4"] = _t["n4"].replace(": @@F@@", "")
@@ -482,6 +505,26 @@ def page(t):
     idxm = ("%d voci · %d aree" if L == "it" else "%d entries · %d areas") % (nrows, len(groups))
     kw = "".join('<span class="chip">%s</span>' % k.strip() for k in re.split(r"[;,](?![^(]*\))", t["kw"].rstrip(".")) if k.strip())
 
+    # panoramica: un riquadro per sezione (il primo e' Vergilius, fissato in alto)
+    na = len(groups[1][2]) 
+    lines = t["ov_l"]
+    ov_t = [("vergilius", t["ov_pin"], "Vergilius", lines[0]), ("contributi", "01", t["kc"], lines[1]), ("implementazioni", "02", t["ki"], lines[2] % na),
+            ("ricerca", "03", t["kr"], lines[3] % len(t["hfm"])), ("strumenti", "04", t["ks"], lines[4]), ("sperimentali", "05", t["kx"], lines[5]),
+            ("indice", "06", t["ov_idx"], lines[6] % (nrows, len(groups)))]
+    bento = "".join('<li class="rv" style="--d:%d"><a class="tile card tilt%s" href="#%s"><span class="tn">%s</span><h3>%s</h3><p>%s</p></a></li>'
+                    % (i * 60, " tile-pin" if i == 0 else "", h, n, ti, ln) for i, (h, n, ti, ln) in enumerate(ov_t))
+    # Vergilius fissato: radar sobrio, i punti si accendono al passaggio del raggio (7 s, come la rotazione)
+    blips = ""
+    for ang, rad, c in ((25, .55, 0), (70, .8, 0), (118, .35, 0), (160, .7, 0), (205, .5, 1), (250, .85, 0), (310, .6, 0)):
+        x, y = 50 + 50 * rad * math.sin(math.radians(ang)), 50 - 50 * rad * math.cos(math.radians(ang))
+        blips += '<span class="bl%s" style="--x:%.1f%%;--y:%.1f%%;--d:%.2fs"></span>' % (" c" if c else "", x, y, ang / 360 * 7)
+    pst = "".join('<li><span class="pn">%s</span><span class="pl">%s</span></li>' % (n, lb) for n, lb in t["pin_st"])
+    pin = ('<section class="pin wrap" id="vergilius" aria-labelledby="h-vergilius"><article class="pin-c card rv"><div class="pin-t">'
+           '<p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span><span class="badge">%s</span></p>'
+           '<h2 id="h-vergilius">Vergilius</h2><p class="pin-s">%s</p><p>%s</p><p>%s</p><ul class="pin-st">%s</ul>%s%s</div>'
+           '<div class="radar" aria-hidden="true">%s</div></article></section>'
+           % (*t["pin_b"], t["pin_s"], t["pin_p1"], t["pin_p2"], pst, go((GH + "vergilius", t["pin_go"])), note(1, t["n1"]), blips))
+
     head_html = """<!DOCTYPE html>
 <html lang="{L}" class="no-js">
 <head>
@@ -551,6 +594,13 @@ def page(t):
 </div>
 </section>
 
+<section class="ov wrap" id="panoramica" aria-labelledby="h-panoramica">
+<h2 class="kick rv" id="h-panoramica"><i></i>{t['ov_k']}</h2>
+<ul class="bento">{bento}</ul>
+</section>
+
+{pin}
+
 <div class="body wrap">
 <aside class="hf rv" aria-labelledby="h-hf">
 <h2 class="kick" id="h-hf"><a href="{HF}">{t['hfh']}</a></h2>
@@ -608,14 +658,9 @@ def page(t):
 {go((ORG + 'claude-plugins#chatroom-harness-point-by-point', t['gocp']))}
 <p class="meth">{t['cps']}</p>
 </article>
-<article class="feat card tilt rv">
-<h3><a href="{GH}vergilius">Vergilius</a></h3>
-<p class="dateline">{t['dlv']}</p>
-<p>{t['verg']}</p>
-{note(1, t['n1'])}
-</article>
 {fence}
 <div class="grid3">
+{brief('Vergilius', t['vref'], 'Python · llama.cpp', '#vergilius')}
 {brief('stt-whisper-pad', t['stt'], t['stts'], GH + 'stt-whisper-pad')}
 </div>
 </section>

@@ -212,6 +212,24 @@ def main():
                     pg.wait_for_timeout(300)
                     tf = pg.evaluate("document.querySelector('#implementazioni .feat').style.transform")
                     ck("tilt delle schede al passaggio del mouse %s" % lang, "perspective" in tf, tf)
+                    # panoramica e Vergilius fissato
+                    ov = pg.evaluate(r"""()=>({n:document.querySelectorAll('#panoramica .tile').length,
+                      ok:[...document.querySelectorAll('#panoramica .tile')].every(a=>a.querySelector('.tn')&&a.querySelector('h3')&&a.querySelector('p')&&document.querySelector(a.getAttribute('href'))),
+                      first:document.querySelector('#panoramica .tile').getAttribute('href'),
+                      order:!!(document.getElementById('vergilius').compareDocumentPosition(document.getElementById('contributi'))&4)&&!!(document.getElementById('panoramica').compareDocumentPosition(document.getElementById('vergilius'))&4),
+                      stats:[...document.querySelectorAll('#vergilius .pn')].map(e=>e.textContent.replace(/\s+/g,' ')),
+                      h2:document.querySelectorAll('#vergilius h2').length,dup:document.querySelectorAll('#strumenti a[href$="/vergilius"]').length,
+                      anims:document.getAnimations().length})""")
+                    ck("panoramica: 7 riquadri con numero, titolo e riga, Vergilius per primo %s" % lang, ov["n"] == 7 and ov["ok"] and ov["first"] == "#vergilius", ov)
+                    ck("Vergilius fissato prima di Contributi, numeri in evidenza, nessun doppione in Strumenti %s" % lang,
+                       ov["order"] and ov["stats"] == ["64", "78-100", "8 GB", "1/36"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
+                    ck("animazioni attive (radar, scena) %s" % lang, ov["anims"] > 0, ov["anims"])
+                    pg.evaluate("window.scrollTo(0,0)")
+                    pg.wait_for_timeout(300)
+                    pg.click('#panoramica a[href="#ricerca"]')
+                    pg.wait_for_timeout(2200)
+                    top = pg.evaluate("document.getElementById('ricerca').getBoundingClientRect().top")
+                    ck("click sulla panoramica: scroll morbido alla sezione %s" % lang, abs(top) < 140, top)
                     # comparsa allo scroll
                     pg.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")
                     pg.wait_for_timeout(1500)
