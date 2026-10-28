@@ -2,13 +2,16 @@
 
   python tools/make-images.py        avatar + favicon (Pillow)
   python tools/make-images.py og     og-it.png / og-en.png (Playwright, server locale): card composta,
-                                     da rifare dopo ogni build (check.py confronta le date)
+                                     da rifare dopo una modifica ai numeri o ai testi della hero
 
 Sorgente dell'avatar: https://github.com/ArtyomITA.png?size=460, scaricato una volta
 in ../artyomita-redesign/font-src/avatar-github.png. A runtime la pagina non chiama github.com.
 """
 import http.server
+import importlib.util
 import os
+import random
+import re
 import socketserver
 import sys
 import threading
@@ -20,13 +23,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IMG = os.path.join(ROOT, "img")
 SRC = os.path.join(ROOT, "..", "artyomita-redesign", "font-src", "avatar-github.png")
 
-# favicon: cinque tratti di spike irregolari, come una colonna del raster di Fig. 1 (x, y, altezza su 32 px)
-TICKS = ((4, 9, 10), (9.5, 15, 12), (15, 5, 9), (20.5, 12, 15), (26, 8, 9))
-FAVICON = ("""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-<style>.b{fill:#EEF0EC}.s{fill:#1B3E9A}@media (prefers-color-scheme:dark){.b{fill:#0C2136}.s{fill:#8FC6F4}}</style>
-<rect class="b" width="32" height="32"/>
-"""
-           + "".join('<rect class="s" x="%g" y="%g" width="2.5" height="%g"/>' % t for t in TICKS) + "\n</svg>\n")
+# favicon: una griglia 3x3 di "SM" su fondo grafite, alcune accese di menta, una corallo (come la scena della hero)
+TILES = ((0, 0, "d"), (1, 0, "m"), (2, 0, "d"), (0, 1, "m"), (1, 1, "m"), (2, 1, "c"), (0, 2, "d"), (1, 2, "d"), (2, 2, "m"))
+COL = {"d": "#1D4B3F", "m": "#2EF2B0", "c": "#FF6A57"}
+FAVICON = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">\n<rect width="32" height="32" rx="7" fill="#0D0F13"/>\n'
+           + "".join('<rect x="%g" y="%g" width="6.4" height="6.4" rx="1.2" fill="%s"/>\n' % (5 + x * 8.4, 5 + y * 8.4, COL[k]) for x, y, k in TILES) + "</svg>\n")
 
 
 def avatar():
@@ -46,44 +47,52 @@ def icons():
         f.write(FAVICON)
     for size, name in ((32, "favicon-32.png"), (180, "apple-touch-icon.png")):
         k = 8  # supercampionamento
-        im = Image.new("RGB", (32 * k, 32 * k), "#EEF0EC")
+        im = Image.new("RGB", (32 * k, 32 * k), "#0D0F13")
         d = ImageDraw.Draw(im)
-        for x, y, h in TICKS:
-            d.rectangle([x * k, y * k, (x + 2.5) * k - 1, (y + h) * k - 1], fill="#1B3E9A")
+        for x, y, kind in TILES:
+            x0, y0 = (5 + x * 8.4) * k, (5 + y * 8.4) * k
+            d.rounded_rectangle([x0, y0, x0 + 6.4 * k, y0 + 6.4 * k], radius=1.2 * k, fill=COL[kind])
         im = im.resize((size, size), Image.LANCZOS)
         im.save(os.path.join(IMG, name), optimize=True)
         print(name, os.path.getsize(os.path.join(IMG, name)), "B")
 
 
-OG_HTML = """<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8"><link rel="stylesheet" href="css/site.css"><style>
-html,body{{margin:0;width:1200px;height:630px;overflow:hidden;background:#EEF0EC;color:#15181C}}
-.card{{position:absolute;inset:0;padding:40px 64px 0;box-sizing:border-box}}
-.top{{display:flex;justify-content:space-between;align-items:baseline;border-top:3px solid #15181C;padding-top:12px;font:400 22px/1.3 "Tavola Mono",monospace;color:#5F6770}}
-.nm{{font:400 100px/.9 "Besley",Georgia,serif;letter-spacing:-.035em;margin:34px 0 0;padding-bottom:8px;border-bottom:1px solid #15181C;white-space:nowrap}}
-.role{{font:400 29px/1.35 "Newsreader",Georgia,serif;margin:18px 0 0;max-width:1060px}}
-.role b{{font-weight:600}}
-.ras{{position:absolute;left:64px;right:64px;bottom:36px;height:{rh}px;background:url({img}) left bottom/100% auto no-repeat}}
-.cap{{position:absolute;right:64px;bottom:{cb}px;font:400 17px/1 "Newsreader",Georgia,serif;color:#4B535C;background:#EEF0EC;padding:4px 0 4px 10px}}
-</style></head><body><div class="card"><div class="top"><span>artyomita.github.io</span><span>{folio}</span></div>
-<div class="nm">Adrian Ciprian Iancu</div><p class="role">{role}</p></div><div class="ras"></div><p class="cap">{cap}</p></body></html>"""
-OG_TXT = {"it": ("aggiornata ottobre 2026", "Fig. 1 · CUDA Graphs su sm_61: un lancio per kernel contro un solo lancio del grafo"),
-          "en": ("updated October 2026", "Fig. 1 · CUDA Graphs on sm_61: one launch per kernel against a single graph launch")}
+OG_HTML = """<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8"><style>
+@font-face{{font-family:Geist;font-weight:400 700;src:url(fonts/geist-latin.woff2) format("woff2")}}
+@font-face{{font-family:"JetBrains Mono";font-weight:400 600;src:url(fonts/jetbrains-mono-latin.woff2) format("woff2")}}
+html,body{{margin:0;width:1200px;height:630px;overflow:hidden;background:#0d0f13;color:#eceff4;font-family:Geist,sans-serif;font-feature-settings:"ss05"}}
+.bg{{position:absolute;inset:0;background:radial-gradient(55% 60% at 80% 62%,rgba(46,242,176,.2),transparent 70%),radial-gradient(35% 40% at 96% 18%,rgba(255,106,87,.14),transparent 70%)}}
+.die{{position:absolute;right:-170px;top:70px;width:760px;height:560px;transform:perspective(760px) rotateX(58deg) rotateZ(-14deg);transform-origin:50% 55%;display:grid;grid-template-columns:repeat(11,1fr);gap:16px;
+  -webkit-mask-image:radial-gradient(closest-side,#000 40%,transparent 100%);mask-image:radial-gradient(closest-side,#000 40%,transparent 100%)}}
+.die i{{background:rgba(46,242,176,.08);border:1.5px solid rgba(46,242,176,.38);border-radius:4px}}
+.die i.on{{background:rgba(46,242,176,.5);box-shadow:0 0 30px rgba(46,242,176,.7)}}
+.die i.cr{{background:rgba(255,106,87,.55);border-color:#ff6a57;box-shadow:0 0 30px rgba(255,106,87,.6)}}
+.dot{{position:absolute;width:5px;height:5px;border-radius:50%;background:#2ef2b0;box-shadow:0 0 12px #2ef2b0}}
+.card{{position:absolute;inset:0;padding:56px 72px;box-sizing:border-box}}
+.pill{{display:inline-block;padding:9px 18px;border-radius:99px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);font:500 20px/1 "JetBrains Mono",monospace;color:#aeb7c4}}
+.nm{{margin:34px 0 0;font-weight:640;font-size:106px;line-height:.95;letter-spacing:-.05em}}
+.nm span{{display:block;background:linear-gradient(100deg,#2ef2b0 10%,#b8ffe6 90%);-webkit-background-clip:text;color:transparent}}
+.role{{margin:24px 0 0;font-size:29px;line-height:1.35;max-width:760px;color:#eceff4}}
+.role b{{color:#2ef2b0;font-weight:600}}
+.st{{position:absolute;left:72px;bottom:44px;display:flex;gap:44px}}
+.st div{{font:500 46px/1 "JetBrains Mono",monospace;letter-spacing:-.05em}}
+.st small{{display:block;margin-top:10px;font:400 17px/1.3 Geist,sans-serif;letter-spacing:0;color:#8b95a5;max-width:210px}}
+</style></head><body><div class="bg"></div><div class="die">{cells}</div>{dots}
+<div class="card"><span class="pill">artyomita.github.io</span><div class="nm">Adrian Ciprian<span>Iancu</span></div><p class="role">{role}</p></div>
+<div class="st">{stats}</div></body></html>"""
 
 
-def role(lang):
-    import importlib.util
+def pages_module():
     sys.dont_write_bytecode = True  # niente __pycache__ nel repository del sito
     spec = importlib.util.spec_from_file_location("bp", os.path.join(ROOT, "tools", "build-pages.py"))
     bp = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bp)
-    return bp.T[lang]["role"]
+    return bp
 
 
 def og():
-    """Card Open Graph composta (non uno screenshot dell'interfaccia): nome in Besley, riga di ruolo,
-    la linea del tempo dei CUDA Graphs (Fig. 1) presa dalla pagina vera (movimento ridotto, tema carta)."""
-    import base64
-    import io
+    """Card Open Graph composta (non uno screenshot dell'interfaccia): nome, ruolo, tre numeri e la griglia di SM della hero,
+    con gli stessi font e colori del sito."""
     from playwright.sync_api import sync_playwright
 
     class Q(http.server.SimpleHTTPRequestHandler):
@@ -97,40 +106,28 @@ def og():
     port = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     tmp = os.path.join(ROOT, "_og.html")
+    r = random.Random(27721)
+    cells = "".join('<i class="%s"></i>' % ("cr" if r.random() > 0.96 else "on" if r.random() > 0.78 else "") for _ in range(11 * 8))
+    dots = "".join('<span class="dot" style="left:%dpx;top:%dpx;opacity:%.2f"></span>' % (r.randint(520, 1180), r.randint(120, 560), r.uniform(.3, 1)) for _ in range(40))
+    bp = pages_module()
+    plain = lambda x: re.sub(r"<[^>]+>", "", x).replace("&nbsp;", " ")
     try:
         with sync_playwright() as p:
             b = p.chromium.launch(channel="chrome")
-            for lang, path in (("it", "/"), ("en", "/en/")):
-                # 1. linea del tempo dei kernel dalla pagina vera
-                pg = b.new_page(viewport={"width": 1440, "height": 900}, device_scale_factor=2, reduced_motion="reduce", color_scheme="light")
-                pg.goto("http://127.0.0.1:%d%s" % (port, path))
-                pg.evaluate("document.fonts.ready")
-                pg.wait_for_timeout(400)
-                shot = Image.open(io.BytesIO(pg.locator("#kt").screenshot())).convert("RGB")
-                pg.close()
-                w, h = shot.size
-                # via l'asse dei tempi in basso: restano le quattro righe con le loro etichette
-                sl = shot.crop((0, 0, w, int(h * 0.74)))
-                # a 2144 px (1072 CSS a dpr 2): nella card a dpr 2 un pixel della figura = un pixel dello schermo
-                sl = sl.resize((2144, int(2144 * sl.size[1] / sl.size[0])), Image.LANCZOS)
-                buf = io.BytesIO()
-                sl.save(buf, "PNG")
-                rh = min(210, sl.size[1] // 2)
-                html = OG_HTML.format(lang=lang, folio=OG_TXT[lang][0], cap=OG_TXT[lang][1], role=role(lang), rh=rh, cb=rh + 36 + 6,
-                                      img="data:image/png;base64," + base64.b64encode(buf.getvalue()).decode())
+            for lang in ("it", "en"):
+                t = bp.T[lang]
+                st = "".join("<div>%s<small>%s</small></div>" % (plain(n), plain(lb)) for n, lb, _, _ in (t["stats"][0], t["stats"][2], t["stats"][3]))
                 with open(tmp, "w", encoding="utf-8") as f:
-                    f.write(html)
-                # 2. la card, resa a dpr 2 e ridotta a 1200 x 630: raster e testo senza pixel ingranditi
+                    f.write(OG_HTML.format(lang=lang, role=t["role"], cells=cells, dots=dots, stats=st))
                 pg = b.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=2)
                 pg.goto("http://127.0.0.1:%d/_og.html" % port)
                 pg.evaluate("document.fonts.ready")
-                pg.wait_for_timeout(300)
+                pg.wait_for_timeout(400)
                 raw = os.path.join(IMG, "og-%s.raw.png" % lang)
                 pg.screenshot(path=raw)
                 pg.close()
-                im = Image.open(raw).convert("RGB").resize((1200, 630), Image.LANCZOS).quantize(colors=64, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
                 dst = os.path.join(IMG, "og-%s.png" % lang)
-                im.save(dst, optimize=True)
+                Image.open(raw).convert("RGB").resize((1200, 630), Image.LANCZOS).save(dst, optimize=True)
                 os.remove(raw)
                 print(os.path.basename(dst), os.path.getsize(dst), "B")
             b.close()

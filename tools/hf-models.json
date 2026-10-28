@@ -3,28 +3,23 @@
  "models": [
   {
    "id": "adriandj3/LFM2.5-to-Llama8B-LLM2Vec-Kimodo",
-   "downloads": 0,
-   "likes": 1
+   "downloads": 0
   },
   {
    "id": "adriandj3/Swift-1.5-Qwen3.8-Flash-Next-MTP-for-GGUF-and-NVFP4",
-   "downloads": 1589,
-   "likes": 2
+   "downloads": 1589
   },
   {
    "id": "adriandj3/MiniCPM5-2B-pjev-LoRA",
-   "downloads": 114,
-   "likes": 2
+   "downloads": 114
   },
   {
    "id": "adriandj3/MiniCPM5-2B-DSpark-FRSpec32k-GGUF",
-   "downloads": 122,
-   "likes": 2
+   "downloads": 122
   },
   {
    "id": "adriandj3/TernaryPilot-v1-Computer-Browser-Use-LoRA",
-   "downloads": 37,
-   "likes": 0
+   "downloads": 37
   }
  ]
 }

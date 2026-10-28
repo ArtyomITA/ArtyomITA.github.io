@@ -26,26 +26,22 @@ SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "..", "artyomita-
 RAW = "https://raw.githubusercontent.com/google/fonts/{commit}/ofl/{fam}/{file}"
 # commit fissati (ultimi che toccano le cartelle al momento della build)
 SOURCES = {
-    "newsreader": ("8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5",
-                   ["Newsreader[opsz,wght].ttf", "OFL.txt"]),
-    "cascadiamono": ("3dd78844021e948ceb633d1dcee3f7885561b5d9",
-                     ["CascadiaMono[wght].ttf", "OFL.txt"]),
-    "besley": ("c13390277dfb1fcc7415d84ef7ef9cfc1e52f8c1",
-               ["Besley[wght].ttf", "OFL.txt"]),
+    "geist": ("718e1db4deb9e4d9d85a0ead1b9f5fde2761ccfd",
+              ["Geist[wght].ttf", "OFL.txt"]),
+    "jetbrainsmono": ("6e4b84c976cadb3c49a40fd9a1c203e4f7fcf2da",
+                      ["JetBrainsMono[wght].ttf", "OFL.txt"]),
 }
 
 LATIN = ("U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,"
          "U+2070-209F,U+20AC,U+2122,U+2190-2193,U+2212,U+2215,U+2248,U+2264-2265,U+FEFF,U+FFFD")
 LATIN_EXT = ("U+0100-024F,U+0259,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,"
              "U+2C60-2C7F,U+A720-A7FF")
-FEATURES = "kern,liga,onum,lnum,tnum,pnum,sups,frac,ss01"
+FEATURES = "kern,liga,onum,lnum,tnum,pnum,sups,frac,ss01,ss05"
 
-# (file di uscita, sorgente, limiti degli assi, nuovo nome di famiglia o None)
+# (file di uscita, sorgente, limiti degli assi)
 BUILDS = [
-    ("newsreader-roman", "newsreader/Newsreader[opsz,wght].ttf", {"opsz": (6, 72), "wght": (400, 600)}),
-    ("tavola-mono", "cascadiamono/CascadiaMono[wght].ttf", {"wght": 400}),
-    # titoli: un Clarendon (istanza statica 400) accanto al Newsreader del testo corrente
-    ("besley", "besley/Besley[wght].ttf", {"wght": 400}),
+    ("geist", "geist/Geist[wght].ttf", {"wght": (400, 700)}),
+    ("jetbrains-mono", "jetbrainsmono/JetBrainsMono[wght].ttf", {"wght": (400, 600)}),
 ]
 
 
@@ -101,13 +97,10 @@ def build(log):
         font = TTFont(os.path.join(SRC, src))
         font = instancer.instantiateVariableFont(font, axes)
         if rfn[fam]:
-            if fam == "cascadiamono":
-                rename(font, "Tavola Mono", "TavolaMono-Regular")
-            else:
-                raise SystemExit("RFN inatteso in " + fam + ": scegliere un nome")
+            raise SystemExit("RFN in " + fam + ": scegliere un nome e usare rename()")
         buf = io.BytesIO()
         font.save(buf)
-        for block, uni in (("latin", LATIN), ("latin-ext", LATIN_EXT)):
+        for block, uni in (("latin", LATIN),):
             dst = os.path.join(OUT, "%s-%s.woff2" % (out, block))
             opts = subset.Options()
             opts.layout_features = FEATURES.split(",")
@@ -125,35 +118,28 @@ def build(log):
             f2.save(dst)
             made.append((os.path.basename(dst), os.path.getsize(dst), axes))
             print("%-40s %7d B" % (os.path.basename(dst), os.path.getsize(dst)))
-    shutil.copy(os.path.join(SRC, "newsreader", "OFL.txt"), os.path.join(OUT, "OFL-newsreader.txt"))
-    shutil.copy(os.path.join(SRC, "cascadiamono", "OFL.txt"), os.path.join(OUT, "OFL-cascadia.txt"))
-    shutil.copy(os.path.join(SRC, "besley", "OFL.txt"), os.path.join(OUT, "OFL-besley.txt"))
+    shutil.copy(os.path.join(SRC, "geist", "OFL.txt"), os.path.join(OUT, "OFL-geist.txt"))
+    shutil.copy(os.path.join(SRC, "jetbrainsmono", "OFL.txt"), os.path.join(OUT, "OFL-jetbrains-mono.txt"))
     return made, rfn
 
 
 def readme(log, made, rfn):
-    sysf = r"C:\Windows\Fonts\CascadiaMono.ttf"
-    sysh = sha256(sysf) if os.path.exists(sysf) else "(file non presente su questa macchina)"
     L = ["# Font del sito", "",
-         "Tutti i font sono sotto SIL Open Font License 1.1 (testi in `OFL-newsreader.txt`, `OFL-cascadia.txt` e `OFL-besley.txt`).",
+         "Tutti i font sono sotto SIL Open Font License 1.1 (testi in `OFL-geist.txt` e `OFL-jetbrains-mono.txt`).",
          "Sorgente: repository ufficiale google/fonts su GitHub, a commit fissati. Nessun file di sistema.",
          "Generati il %s con `python tools/build-fonts.py`." % datetime.date.today().isoformat(), "",
          "## Sorgenti", "", "| famiglia | file | URL | SHA-256 |", "|---|---|---|---|"]
     for fam, fn, url, h in log:
         L.append("| %s | %s | %s | `%s` |" % (fam, fn, url, h))
-    L += ["", "Controllo: SHA-256 di `%s` = `%s` (diverso dai sorgenti sopra: il file di sistema non è usato)." % (sysf, sysh), "",
-          "## Reserved Font Name", "",
-          "- Newsreader: RFN nel file di licenza = %s." % ("sì" if rfn["newsreader"] else "no, il nome resta Newsreader"),
-          "- Besley: RFN nel file di licenza = %s." % ("sì" if rfn["besley"] else "no, il nome resta Besley"),
-          "- Cascadia Mono: RFN nel file di licenza = %s. Il sottoinsieme modificato è quindi rinominato **Tavola Mono**"
-          " (nameID 1 \"Tavola Mono\", 4 \"Tavola Mono Regular\", 6 \"TavolaMono-Regular\"; nameID 16, 17, 21, 22, 25 rimossi)."
-          " Copyright e licenza restano quelli originali." % ("sì" if rfn["cascadiamono"] else "no"), "",
+    L += ["", "## Reserved Font Name", "",
+          "- Geist: RFN nel file di licenza = %s." % ("sì" if rfn["geist"] else "no, il nome resta Geist"),
+          "- JetBrains Mono: RFN nel file di licenza = %s." % ("sì" if rfn["jetbrainsmono"] else "no, il nome resta JetBrains Mono"), "",
           "## File prodotti", "", "| file | byte | istanza |", "|---|---|---|"]
     for fn, sz, axes in made:
         L.append("| %s | %d | %s |" % (fn, sz, ", ".join("%s %s" % (k, v) for k, v in axes.items())))
     L += ["", "## Procedura", "",
-          "1. `fontTools.varLib.instancer.instantiateVariableFont` con i limiti d'asse della tabella.",
-          "2. `fontTools.subset` con unicode-range latin e latin-ext (vedi `tools/build-fonts.py`),",
+          "1. `fontTools.varLib.instancer.instantiateVariableFont` con i limiti d'asse della tabella (l'asse wght resta variabile).",
+          "2. `fontTools.subset` con unicode-range latin (gli accenti italiani sono in Latin-1; vedi `tools/build-fonts.py`),",
           "   feature `%s`, `--flavor=woff2 --desubroutinize --no-hinting`." % FEATURES,
           "3. Rinomina dei nameID se la licenza dichiara un Reserved Font Name.", ""]
     with open(os.path.join(OUT, "README.md"), "w", encoding="utf-8", newline="\n") as f:
