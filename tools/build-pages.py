@@ -17,6 +17,8 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://artyomita.github.io/"
 GH = "https://github.com/ArtyomITA/"
+GUIDE = GH + "nvidia-gtx1080-sm61-ai-full-guide"
+GUIDE_H3 = GUIDE + "/blob/main/docs/06-diffusion-image-and-motion.md#64-video-and-image-generation-minimax-h3-on-8-gb"
 ORG = "https://github.com/Partido-De-What/"
 PR = "https://github.com/ggml-org/llama.cpp/pull/27721"
 PR_SD = "https://github.com/leejet/stable-diffusion.cpp/pull/2202"
@@ -323,25 +325,59 @@ NEW["en"] = dict(
 )
 NEW["it"].update(dict(
     ov_k="In questa pagina", ov_pin="In evidenza", ov_idx="Indice e contatti",
-    ov_l=("Assistente OSINT locale · 64 tok/s su GTX 1080", "4 PR in 4 progetti · 2 integrate", "%d progetti, dalla GTX 1080 alla RTX PRO 6000",
-          "Replica del test Cohere · %d modelli su Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, ML applicato, ambienti RL", "%d repository · %d aree · contatti"),
+    ov_l=("Assistente OSINT locale · 64 tok/s su GTX 1080", "Tutto quello che gira veloce su una GTX 1080, misurato e con le fonti", "4 PR in 4 progetti · 2 integrate",
+          "%d progetti, dalla GTX 1080 alla RTX PRO 6000", "Replica del test Cohere · %d modelli su Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, ML applicato, ambienti RL",
+          "%d repository · %d aree · contatti"),
     pin_b=("In evidenza", "OSINT", "locale"), pin_s="Assistente OSINT locale",
     pin_p1="Un assistente locale che mette insieme un modello linguistico sulla scheda video, fonti aperte per capire cosa succede nel mondo e un'interfaccia che le tiene insieme. Interroga da solo le fonti quando la domanda lo richiede: notizie per soggetto e luogo, mercati, contratti militari, movimenti degli insider, mappe, archivio storico degli eventi. Lavora sul computer (file, terminale, browser, documenti) e ricorda: memorie, documenti indicizzati, procedure che impara e riusa.",
-    pin_p2="Nessuna chiave API verso fornitori di AI e nessuna conversazione che esce dal computer. Pensato per macchine modeste: modello predefinito LFM2.5-2.6B con drafter speculativo DSpark su una GTX&nbsp;1080, 64&nbsp;tok/s in decodifica e 78-100 con il drafter attivo; basta una scheda con 8&nbsp;GB di memoria video. Un controllo contro le invenzioni verifica che numeri e nomi della risposta compaiano nei risultati degli strumenti: le cifre non supportate sono scese da 3 turni su 35 a 1 su 36. Integra Odysseus (assistente) e ShadowBroker (fonti).<sup class=\"n\">1</sup>",
-    pin_st=(('<span class="cn">64</span>', "tok/s in decodifica su GTX&nbsp;1080"), ("78-100", "tok/s con il drafter"), ('<span class="cn">8</span>&nbsp;GB', "di memoria video bastano"), ("1/36", "turni con cifre non supportate, prima 3/35")),
+    pin_p2="Nessuna chiave API verso fornitori di AI e nessuna conversazione che esce dal computer. Pensato per macchine modeste: modello predefinito LFM2.5-2.6B con drafter speculativo DSpark su una GTX&nbsp;1080 con 8&nbsp;GB. Un controllo contro le invenzioni verifica che numeri e nomi della risposta compaiano nei risultati degli strumenti. Integra Odysseus (assistente) e ShadowBroker (fonti).<sup class=\"n\">1</sup>",
+    pin_lab="Ottimizzazione custom per la GTX 1080",
+    pin_st=(('<span class="cn">64</span>', "tok/s in decodifica"), ("78-100", "tok/s con il drafter"), ('<span class="cn">8</span>&nbsp;GB', "di memoria video bastano"), ("1/36", "turni con cifre non supportate, prima 3/35")),
     pin_go="Repository su GitHub",
     vref="Assistente OSINT locale, in evidenza in cima alla pagina.",
+    gd_b=("In evidenza", "Guida"), gd_t="NVIDIA GTX 1080 (sm_61) AI Full Guide",
+    gd_s="Tutto quello che ho fatto girare veloce su una GPU del 2016 con 8&nbsp;GB, misurato e con le fonti.",
+    gd_rows=("LoRA ternario, addestramento per esempio", "MiniMax-H3, clip di prova", "MiniCPM5-2B, decodifica", "Attention int8, kernel di H3", "Ternary Bonsai 2 9B, decodifica", "CUDA graphs, MoE Ling-3.0-tiny"),
+    gd_ax="la lunghezza della barra è il rapporto tra prima e dopo",
+    gd_chips=("kernel llama.cpp", "decoding speculativo", "quantizzazione", "8 GB", "LoRA", "video diffusion", "speech"),
+    gd_go="Apri la guida su GitHub",
+    h3_t="MiniMax H3 su GTX&nbsp;1080", h3_dl="video e audio generativi su 8&nbsp;GB · codice in uscita",
+    h3_meta=("GPU", "GTX 1080, 8&nbsp;GB", "Stack", "stable-diffusion.cpp · CUDA", "Clip di prova", "320x576, 39 fotogrammi"),
+    h3_p1="MiniMax-H3 è un transformer a diffusione che genera video con audio sincronizzato. Qui solo testo e numeri: nessun fotogramma generato. Sulla clip di prova da 39 fotogrammi il tempo scende da <span class=\"m\">674,5</span> a <span class=\"m\">175,5&nbsp;s</span> (<span class=\"m\">−74%</span>): pesi letti dal disco in sovrapposizione al calcolo, VAE a gruppi di tile, ricetta Q3 con turbo.",
+    h3_p2="Il kernel di attention int8 con DP4A passa da <span class=\"m\">1875</span> a <span class=\"m\">944&nbsp;ms</span> (<span class=\"m\">2,0x</span>), senza differenze visibili da f32 su più seed.",
+    h3_sp="L'attention sparsa a blocchi ha due misure distinte:",
+    h3_sp1=("su una clip da 15 s, senza il prefisso: <span class=\"m\">1,65x</span> sui passi turbo (da 397-404 a 240-245 s per passo);",
+            "il prefisso di condizionamento, sempre visibile, conserva il parlato. Misurato a parte su clip più corte (56 fotogrammi): errore sulle parole <span class=\"m\">0</span> a 544x960 e <span class=\"m\">0,2</span> a 384x672, contro <span class=\"m\">1,0</span> con la sola attention sparsa."),
+    h3_p3="Il fix LoRA <code>baked_scale</code> è integrato (<a href=\"" + PR_SD + "\">PR #2202</a> di stable-diffusion.cpp). Il resto del codice è in uscita.",
+    h3_go="Sezione della guida su H3",
 ))
 NEW["en"].update(dict(
     ov_k="On this page", ov_pin="Pinned", ov_idx="Index and contacts",
-    ov_l=("Local OSINT assistant · 64 tok/s on a GTX 1080", "4 PRs in 4 projects · 2 merged", "%d projects, from the GTX 1080 to the RTX PRO 6000",
-          "Cohere test replication · %d models on Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, applied ML, RL environments", "%d repositories · %d areas · contacts"),
+    ov_l=("Local OSINT assistant · 64 tok/s on a GTX 1080", "Everything that runs fast on a GTX 1080, measured and sourced", "4 PRs in 4 projects · 2 merged",
+          "%d projects, from the GTX 1080 to the RTX PRO 6000", "Cohere test replication · %d models on Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, applied ML, RL environments",
+          "%d repositories · %d areas · contacts"),
     pin_b=("Pinned", "OSINT", "local"), pin_s="Local OSINT assistant",
     pin_p1="A local assistant that combines a language model on the graphics card, open sources to see what is going on in the world, and an interface that ties them together. It queries the sources by itself when a question needs them: news by subject and place, markets, military contracts, insider moves, maps, a historical archive of events. It works on the computer (files, terminal, browser, documents) and remembers: memories, indexed documents, procedures it learns and reuses.",
-    pin_p2="No API keys for AI providers and no conversation leaves the computer. Built for modest machines: default model LFM2.5-2.6B with the DSpark speculative drafter on a GTX&nbsp;1080, 64&nbsp;tok/s in decoding and 78-100 with the drafter on; a card with 8&nbsp;GB of video memory is enough. A check against made-up answers verifies that the numbers and names in a reply appear in the tool results: unsupported figures dropped from 3 turns out of 35 to 1 out of 36. It integrates Odysseus (assistant) and ShadowBroker (sources).<sup class=\"n\">1</sup>",
-    pin_st=(('<span class="cn">64</span>', "tok/s decoding on a GTX&nbsp;1080"), ("78-100", "tok/s with the drafter"), ('<span class="cn">8</span>&nbsp;GB', "of video memory is enough"), ("1/36", "turns with unsupported numbers, down from 3/35")),
+    pin_p2="No API keys for AI providers and no conversation leaves the computer. Built for modest machines: default model LFM2.5-2.6B with the DSpark speculative drafter on a GTX&nbsp;1080 with 8&nbsp;GB. A check against made-up answers verifies that the numbers and names in a reply appear in the tool results. It integrates Odysseus (assistant) and ShadowBroker (sources).<sup class=\"n\">1</sup>",
+    pin_lab="Custom optimization for the GTX 1080",
+    pin_st=(('<span class="cn">64</span>', "tok/s decoding"), ("78-100", "tok/s with the drafter"), ('<span class="cn">8</span>&nbsp;GB', "of video memory is enough"), ("1/36", "turns with unsupported numbers, down from 3/35")),
     pin_go="Repository on GitHub",
     vref="Local OSINT assistant, pinned at the top of the page.",
+    gd_b=("Pinned", "Guide"), gd_t="NVIDIA GTX 1080 (sm_61) AI Full Guide",
+    gd_s="Everything I made run fast on a 2016 GPU with 8&nbsp;GB, measured and sourced.",
+    gd_rows=("Ternary LoRA, training per example", "MiniMax-H3, test clip", "MiniCPM5-2B, decoding", "Int8 attention, H3 kernel", "Ternary Bonsai 2 9B, decoding", "CUDA graphs, MoE Ling-3.0-tiny"),
+    gd_ax="bar length is the before/after ratio",
+    gd_chips=("llama.cpp kernels", "speculative decoding", "quantization", "8 GB", "LoRA", "video diffusion", "speech"),
+    gd_go="Open the guide on GitHub",
+    h3_t="MiniMax H3 on a GTX&nbsp;1080", h3_dl="generative video and audio on 8&nbsp;GB · code release pending",
+    h3_meta=("GPU", "GTX 1080, 8&nbsp;GB", "Stack", "stable-diffusion.cpp · CUDA", "Test clip", "320x576, 39 frames"),
+    h3_p1="MiniMax-H3 is a diffusion transformer that generates video with synchronised audio. Text and numbers only here: no generated frames. On the 39-frame test clip the time drops from <span class=\"m\">674.5</span> to <span class=\"m\">175.5&nbsp;s</span> (<span class=\"m\">−74%</span>): weights read from disk overlapped with the compute, VAE in tile groups, Q3 recipe with turbo.",
+    h3_p2="The int8 DP4A attention kernel goes from <span class=\"m\">1875</span> to <span class=\"m\">944&nbsp;ms</span> (<span class=\"m\">2.0x</span>), with no visible difference from f32 on several seeds.",
+    h3_sp="Block-sparse attention has two separate measurements:",
+    h3_sp1=("on a 15 s clip, without the prefix: <span class=\"m\">1.65x</span> on the turbo steps (397-404 down to 240-245 s per step);",
+            "the always-visible conditioning prefix keeps the speech. Measured separately on shorter clips (56 frames): word error rate <span class=\"m\">0</span> at 544x960 and <span class=\"m\">0.2</span> at 384x672, against <span class=\"m\">1.0</span> with pure sparse attention."),
+    h3_p3="The LoRA <code>baked_scale</code> fix is merged (<a href=\"" + PR_SD + "\">PR #2202</a> in stable-diffusion.cpp). The rest of the code is on its way.",
+    h3_go="Guide section on H3",
 ))
 for _l, _t in T.items():
     _t.update(NEW[_l])
@@ -505,26 +541,40 @@ def page(t):
     idxm = ("%d voci · %d aree" if L == "it" else "%d entries · %d areas") % (nrows, len(groups))
     kw = "".join('<span class="chip">%s</span>' % k.strip() for k in re.split(r"[;,](?![^(]*\))", t["kw"].rstrip(".")) if k.strip())
 
-    # panoramica: un riquadro per sezione (il primo e' Vergilius, fissato in alto)
-    na = len(groups[1][2]) 
+    # panoramica: un riquadro per sezione (i primi due sono i progetti fissati in alto)
+    na = len(groups[1][2]) + 1  # i sette repository dell'indice piu' H3, che non ha ancora un repository
     lines = t["ov_l"]
-    ov_t = [("vergilius", t["ov_pin"], "Vergilius", lines[0]), ("contributi", "01", t["kc"], lines[1]), ("implementazioni", "02", t["ki"], lines[2] % na),
-            ("ricerca", "03", t["kr"], lines[3] % len(t["hfm"])), ("strumenti", "04", t["ks"], lines[4]), ("sperimentali", "05", t["kx"], lines[5]),
-            ("indice", "06", t["ov_idx"], lines[6] % (nrows, len(groups)))]
+    ov_t = [("vergilius", t["ov_pin"], "Vergilius", lines[0]), ("guida", t["ov_pin"], t["gd_t"], lines[1]), ("contributi", "01", t["kc"], lines[2]),
+            ("implementazioni", "02", t["ki"], lines[3] % na), ("ricerca", "03", t["kr"], lines[4] % len(t["hfm"])), ("strumenti", "04", t["ks"], lines[5]),
+            ("sperimentali", "05", t["kx"], lines[6]), ("indice", "06", t["ov_idx"], lines[7] % (nrows, len(groups)))]
     bento = "".join('<li class="rv" style="--d:%d"><a class="tile card tilt%s" href="#%s"><span class="tn">%s</span><h3>%s</h3><p>%s</p></a></li>'
-                    % (i * 60, " tile-pin" if i == 0 else "", h, n, ti, ln) for i, (h, n, ti, ln) in enumerate(ov_t))
+                    % (i * 60, " tile-pin" if i < 2 else "", h, n, ti, ln) for i, (h, n, ti, ln) in enumerate(ov_t))
     # Vergilius fissato: radar sobrio, i punti si accendono al passaggio del raggio (7 s, come la rotazione)
     blips = ""
     for ang, rad, c in ((25, .55, 0), (70, .8, 0), (118, .35, 0), (160, .7, 0), (205, .5, 1), (250, .85, 0), (310, .6, 0)):
         x, y = 50 + 50 * rad * math.sin(math.radians(ang)), 50 - 50 * rad * math.cos(math.radians(ang))
         blips += '<span class="bl%s" style="--x:%.1f%%;--y:%.1f%%;--d:%.2fs"></span>' % (" c" if c else "", x, y, ang / 360 * 7)
     pst = "".join('<li><span class="pn">%s</span><span class="pl">%s</span></li>' % (n, lb) for n, lb in t["pin_st"])
-    pin = ('<section class="pin wrap" id="vergilius" aria-labelledby="h-vergilius"><article class="pin-c card rv"><div class="pin-t">'
-           '<p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span><span class="badge">%s</span></p>'
-           '<h2 id="h-vergilius">Vergilius</h2><p class="pin-s">%s</p><p>%s</p><p>%s</p><ul class="pin-st">%s</ul>%s%s</div>'
-           '<div class="radar" aria-hidden="true">%s</div></article></section>'
-           % (*t["pin_b"], t["pin_s"], t["pin_p1"], t["pin_p2"], pst, go((GH + "vergilius", t["pin_go"])), note(1, t["n1"]), blips))
+    pin_v = ('<section class="pin" id="vergilius" aria-labelledby="h-vergilius"><article class="pin-c card rv"><div class="radar" aria-hidden="true">%s</div>'
+             '<p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span><span class="badge">%s</span></p>'
+             '<h2 id="h-vergilius">Vergilius</h2><p class="pin-s">%s</p><p>%s</p><p>%s</p>%s%s'
+             '<p class="pin-lab">%s</p><ul class="pin-st">%s</ul></article></section>'
+             % (blips, *t["pin_b"], t["pin_s"], t["pin_p1"], t["pin_p2"], note(1, t["n1"]), go((GH + "vergilius", t["pin_go"])), t["pin_lab"], pst))
+    # guida GTX 1080 fissata: classifica a barre (lunghezza = rapporto prima/dopo), riempita all'ingresso in vista
+    fmt = lambda v: ("%g" % v).replace(".", dec)
+    rows = ((20.2, 2.7, "s", 20.2 / 2.7, "7.5x"), (674.5, 175.5, "s", 674.5 / 175.5, "\u221274%"), (33, 83.5, "tok/s", 83.5 / 33, "2.5x"),
+            (1875, 944, "ms", 1875 / 944, "2.0x"), (55.9, 84.4, "tok/s", 84.4 / 55.9, "+51%"), (41.2, 57.6, "tok/s", 57.6 / 41.2, "+40%"))
+    top = max(r[3] for r in rows)
+    lb = "".join('<li class="lb"><p class="lb-h"><span class="lb-l">%s</span><span class="lb-v">%s \u2192 %s %s <b>%s</b></span></p><span class="hb-t"><i style="--w:%.3f;--d:%d"></i></span></li>'
+                 % (t["gd_rows"][i], fmt(b), fmt(a), u, d.replace(".", dec), r / top, i * 110) for i, (b, a, u, r, d) in enumerate(rows))
+    gchips = "".join('<span class="chip">%s</span>' % c for c in t["gd_chips"])
+    pin_g = ('<section class="pin" id="guida" aria-labelledby="h-guida"><article class="pin-c card rv"><p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span></p>'
+             '<h2 id="h-guida">%s</h2><p class="pin-s">%s</p><ol class="lbs">%s</ol><p class="lb-ax">%s</p><p class="bf">%s</p>%s</article></section>'
+             % (*t["gd_b"], t["gd_t"], t["gd_s"], lb, t["gd_ax"], gchips, go((GUIDE, t["gd_go"]))))
+    pin = '<div class="pins wrap">' + pin_v + pin_g + '</div>'
 
+    h3m = t["h3_meta"]
+    h3meta = "".join("<div><dt>%s</dt><dd>%s</dd></div>" % (h3m[i], h3m[i + 1]) for i in (0, 2, 4))
     head_html = """<!DOCTYPE html>
 <html lang="{L}" class="no-js">
 <head>
@@ -621,6 +671,17 @@ def page(t):
 <p class="dateline">{t['dlbw']}</p>
 {meta}
 <p>{t['bw']}</p>
+</article>
+<article class="feat card tilt rv" id="h3">
+<h3><a href="{GUIDE_H3}">{t['h3_t']}</a></h3>
+<p class="dateline">{t['h3_dl']}</p>
+<dl class="meta">{h3meta}</dl>
+<p>{t['h3_p1']}</p>
+<p>{t['h3_p2']}</p>
+<p>{t['h3_sp']}</p>
+<ul class="pts"><li>{t['h3_sp1'][0]}</li><li>{t['h3_sp1'][1]}</li></ul>
+<p>{t['h3_p3']}</p>
+{go((GUIDE_H3, t['h3_go']))}
 </article>
 <div class="grid3">
 {brief('minicpm5-kernel-pascal', t['mc'], t['mcs'], GH + 'minicpm5-kernel-pascal')}

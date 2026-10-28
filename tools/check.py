@@ -215,14 +215,22 @@ def main():
                     # panoramica e Vergilius fissato
                     ov = pg.evaluate(r"""()=>({n:document.querySelectorAll('#panoramica .tile').length,
                       ok:[...document.querySelectorAll('#panoramica .tile')].every(a=>a.querySelector('.tn')&&a.querySelector('h3')&&a.querySelector('p')&&document.querySelector(a.getAttribute('href'))),
-                      first:document.querySelector('#panoramica .tile').getAttribute('href'),
-                      order:!!(document.getElementById('vergilius').compareDocumentPosition(document.getElementById('contributi'))&4)&&!!(document.getElementById('panoramica').compareDocumentPosition(document.getElementById('vergilius'))&4),
+                      first:[...document.querySelectorAll('#panoramica .tile')].slice(0,2).map(a=>a.getAttribute('href')),
+                      order:!!(document.getElementById('vergilius').compareDocumentPosition(document.getElementById('guida'))&4)&&!!(document.getElementById('guida').compareDocumentPosition(document.getElementById('contributi'))&4)&&!!(document.getElementById('panoramica').compareDocumentPosition(document.getElementById('vergilius'))&4),
+                      lb:document.querySelectorAll('#guida .lb').length,chips:document.querySelectorAll('#guida .bf .chip').length,
+                      bars:[...document.querySelectorAll('#guida .hb-t>i')].map(i=>Math.round(i.getBoundingClientRect().width)>8).every(Boolean),
+                      imgs:[...document.querySelectorAll('main img')].map(i=>i.getAttribute('src').split('/').pop()),
+                      h3:(document.querySelector('#h3')||{innerText:''}).innerText,
                       stats:[...document.querySelectorAll('#vergilius .pn')].map(e=>e.textContent.replace(/\s+/g,' ')),
                       h2:document.querySelectorAll('#vergilius h2').length,dup:document.querySelectorAll('#strumenti a[href$="/vergilius"]').length,
                       anims:document.getAnimations().length})""")
-                    ck("panoramica: 7 riquadri con numero, titolo e riga, Vergilius per primo %s" % lang, ov["n"] == 7 and ov["ok"] and ov["first"] == "#vergilius", ov)
+                    ck("panoramica: 8 riquadri con numero, titolo e riga, Vergilius e guida per primi %s" % lang, ov["n"] == 8 and ov["ok"] and ov["first"] == ["#vergilius", "#guida"], ov)
                     ck("Vergilius fissato prima di Contributi, numeri in evidenza, nessun doppione in Strumenti %s" % lang,
                        ov["order"] and ov["stats"] == ["64", "78-100", "8 GB", "1/36"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
+                    ck("guida fissata: 6 voci con barra piena, 7 categorie, nessuna immagine nel sito tranne l'avatar %s" % lang,
+                       ov["lb"] == 6 and ov["chips"] == 7 and ov["bars"] and ov["imgs"] == ["avatar-192.webp"], [ov["lb"], ov["chips"], ov["bars"], ov["imgs"]])
+                    ck("riquadro H3 in Implementazioni con i numeri misurati %s" % lang,
+                       all(x in ov["h3"].replace(",", ".") for x in ("674.5", "175.5", "1875", "944", "1.65x", "2202")) and "1.65x" in ov["h3"].replace(",", "."), ov["h3"][:80])
                     ck("animazioni attive (radar, scena) %s" % lang, ov["anims"] > 0, ov["anims"])
                     pg.evaluate("window.scrollTo(0,0)")
                     pg.wait_for_timeout(300)
