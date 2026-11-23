@@ -576,7 +576,7 @@ def page(t):
     # panoramica: un riquadro per sezione (i primi due sono i progetti fissati in alto)
     na = len(groups[1][2]) + 1  # i sette repository dell'indice piu' H3, che non ha ancora un repository
     lines = t["ov_l"]
-    ov_t = [("voce", t["ov_pin"], t["vo_t"], lines[0]), ("chatroom", t["ov_pin"], "chatroom", lines[1]), ("vergilius", t["ov_pin"], "Vergilius", lines[2]),
+    ov_t = [("vergilius", t["ov_pin"], "Vergilius", lines[2]), ("chatroom", t["ov_pin"], "chatroom", lines[1]), ("voce", t["ov_pin"], t["vo_t"], lines[0]),
             ("guida", t["ov_pin"], t["gd_t"], lines[3])]
     bento = "".join('<li class="rv" style="--d:%d"><a class="tile card tilt%s" href="#%s"><span class="tn">%s</span><h3>%s</h3><p>%s</p></a></li>'
                     % (i * 60, " tile-pin" if i < 4 else "", h, n, ti, ln) for i, (h, n, ti, ln) in enumerate(ov_t))
@@ -617,7 +617,7 @@ def page(t):
               '<p class="cmd"><code>/plugin marketplace add Partido-De-What/claude-plugins</code><code>/plugin install chatroom@artyomita-plugins</code></p>%s'
               '<p class="pin-lab">%s</p><ul class="pin-st">%s</ul></article></section>'
               % (*t["cr_b"], t["cr_t"], t["cr_s"], t["cr_p1"], t["cr_p2"], go((ORG + "claude-plugins", t["cr_go"])), t["cr_lab"], stats(t["cr_st"])))
-    pin = '<div class="pins wrap">' + pin_vo + pin_cr + pin_v + pin_g + '</div>'
+    pin = '<div class="pins wrap">' + pin_v + pin_cr + pin_vo + pin_g + '</div>'
 
     h3m = t["h3_meta"]
     h3meta = "".join("<div><dt>%s</dt><dd>%s</dd></div>" % (h3m[i], h3m[i + 1]) for i in (0, 2, 4))

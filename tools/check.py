@@ -224,7 +224,7 @@ def main():
                       stats:[...document.querySelectorAll('#vergilius .pn')].map(e=>e.textContent.replace(/\s+/g,' ')),
                       h2:document.querySelectorAll('#vergilius h2').length,dup:document.querySelectorAll('#strumenti a[href$="/vergilius"]').length,
                       anims:document.getAnimations().length})""")
-                    ck("panoramica: solo i 4 fissati, con titolo e riga %s" % lang, ov["n"] == 4 and ov["ok"] and ov["first"] == ["#voce", "#chatroom", "#vergilius", "#guida"], ov)
+                    ck("panoramica: solo i 4 fissati, con titolo e riga %s" % lang, ov["n"] == 4 and ov["ok"] and ov["first"] == ["#vergilius", "#chatroom", "#voce", "#guida"], ov)
                     ck("Vergilius fissato prima di Contributi, numeri in evidenza, nessun doppione in Strumenti %s" % lang,
                        ov["order"] and ov["stats"] == ["81", "2-4 s", "1", "8 GB"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
                     ck("guida fissata: 6 voci con barra piena, 7 categorie, nessuna immagine nel sito tranne l'avatar %s" % lang,
