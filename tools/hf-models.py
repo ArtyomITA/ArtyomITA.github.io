@@ -24,6 +24,8 @@ SHORT = {
     "MiniCPM5-2B-DSpark-FRSpec32k-GGUF": "MiniCPM5-2B DSpark FR-Spec 32k",
     "MiniCPM5-2B-pjev-LoRA": "MiniCPM5-2B pjev LoRA",
     "TernaryPilot-v1-Computer-Browser-Use-LoRA": "TernaryPilot v1 LoRA",
+    "TernaryPilot-v2-Computer-Browser-Use-LoRA": "TernaryPilot v2 LoRA",
+    "TernaryDecider-v1-Decision-LoRA": "TernaryDecider v1 LoRA",
     "LFM2.5-to-Llama8B-LLM2Vec-Kimodo": "LFM2.5 to LLM2Vec Kimodo",
 }
 TXT = {
@@ -35,7 +37,17 @@ TXT = {
 def fetch():
     with urllib.request.urlopen(API, timeout=30) as r:
         data = json.load(r)
-    return [{"id": m["id"], "downloads": int(m.get("downloads") or 0)} for m in data]
+    out = {m["id"]: int(m.get("downloads") or 0) for m in data}
+    # the author listing sometimes leaves models out (Nov 2026): ask for each known one directly
+    for key in SHORT:
+        mid = AUTHOR + "/" + key
+        if mid not in out:
+            try:
+                with urllib.request.urlopen("https://huggingface.co/api/models/" + mid, timeout=30) as r:
+                    out[mid] = int(json.load(r).get("downloads") or 0)
+            except Exception as e:
+                print("avviso:", mid, e, file=sys.stderr)
+    return [{"id": k, "downloads": v} for k, v in out.items()]
 
 
 def render(lang, snap):

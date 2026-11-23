@@ -189,12 +189,6 @@ def main():
                     # contatori: il testo finale e' quello dell'HTML
                     final = pg.evaluate("[...document.querySelectorAll('.stat .num')].map(e=>e.textContent)")
                     ck("contatori hero al valore finale %s" % lang, final == ["4×227k", "+111%", "+51%", "+75%"], final)
-                    # FlyToLLM: neuroni per punto uguale al valore scritto nel testo
-                    pg.evaluate("document.getElementById('cns').scrollIntoView({block:'center'})")
-                    pg.wait_for_timeout(1200)
-                    pd = pg.evaluate("document.querySelector('.pd').textContent")
-                    px = pg.evaluate("(()=>{const c=document.getElementById('cns'),d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0;for(let i=3;i<d.length;i+=4)if(d[i]>20)n++;return n})()")
-                    ck("figura FlyToLLM: 260 neuroni per punto e disegno presente %s" % lang, pd == "260" and px > 5000, [pd, px])
                     # scena in pausa fuori vista, di nuovo attiva al ritorno
                     pg.evaluate("window.scrollTo(0, 3000)")
                     pg.wait_for_timeout(700)

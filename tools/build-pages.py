@@ -53,11 +53,12 @@ def m(x):
     return '<span class="m">%s</span>' % x
 
 
-SECTIONS = ("contributi", "implementazioni", "ricerca", "strumenti", "sperimentali")
+SECTIONS = ("contributi", "implementazioni", "ricerca", "sperimentali")
+NAV_I = {"contributi": 0, "implementazioni": 1, "ricerca": 2, "strumenti": 3, "sperimentali": 4}
 
 
 def nav_items(t):
-    return [("#" + s, t["nav"][i]) for i, s in enumerate(SECTIONS)] + [("#indice", t["nav"][5])]
+    return [("#" + s, t["nav"][NAV_I[s]]) for s in SECTIONS] + [("#indice", t["nav"][5])]
 
 
 # linguaggio principale e sua quota in byte, da GET /repos/<owner>/<repo>/languages (28 ottobre 2026)
@@ -102,10 +103,10 @@ T["it"] = dict(
            ("ggml-org/llama.cpp", '<a href="%s">PR #27721</a>: CUDA Graphs su Pascal (sm_61), fino a ' % PR + m("+75%") + " sui modelli MoE e da " + m("+9%") + " a " + m("+30%") + " sui densi, output identico, nessuna regressione.", "aperta, aggiornata il 20/11"),
            ("vllm-project/vllm", '<a href="%s">PR #58863</a>: il commit esatto del replay GDN di RecoverSSM, proposto da me e adottato nella PR (commit 514102a).' % PR_VLLM, "adottato, PR ancora aperta")],
     # Implementazioni
-    ki="Implementazioni", hi="Dalla GTX 1080 alla RTX PRO 6000",
+    ki="Implementazioni", hi="Kernel custom, output identico bit per bit",
     leadi="Kernel e configurazioni di inferenza per una GTX&nbsp;1080 e per una RTX PRO 6000 Blackwell. Ogni modifica è confrontata con l'output di riferimento e ogni numero ha il suo benchmark riproducibile.",
-    dlbw="ottobre 2026",
-    bw="Qwen3.8 Flash-Next e il fine-tune Swift 1.5 in NVFP4 su una sola RTX PRO 6000 Blackwell con vLLM: " + m("4 utenti") + " con " + m("227k") + " token di contesto ciascuno, circa " + m("100&nbsp;tok/s") + " per utente, picco di " + m("186,5&nbsp;tok/s") + " con un utente solo. I kernel sono esatti, con output identico bit per bit al riferimento: top-k QSA deterministico e replay GDN esatto. Il top-k deterministico corregge anche un bug di determinismo che c'era già.",
+    dlbw="ottobre 2026", bw_t="Qwen3.8 Flash-Next per 4 utenti su una sola Blackwell",
+    bw="Qwen3.8 Flash-Next e il fine-tune Swift 1.5 in NVFP4 su una sola RTX PRO 6000 Blackwell con vLLM: " + m("4 utenti") + " con " + m("227k") + " token di contesto ciascuno, circa " + m("100&nbsp;tok/s") + " per utente, picco di " + m("186,5&nbsp;tok/s") + " con un utente solo. I kernel sono esatti, con output identico bit per bit al riferimento: top-k QSA deterministico e replay GDN esatto. Il top-k deterministico corregge anche un bug di determinismo che c'era già. Dal fine-tune ho estratto la testa MTP che fa da bozza per la decodifica speculativa, pubblicata su Hugging Face in GGUF, BF16 e FP8.",
     md=("GPU", "Stack", "Licenza"), mdv=("RTX PRO 6000 Blackwell, 96&nbsp;GB", "vLLM · CUDA · NVFP4", "Apache-2.0"),
     mc="MiniCPM5-2B su una GTX&nbsp;1080 da " + m("33") + " a " + m("83") + " tok/s: slot cancellati a fine conversazione, kernel Pascal con output identico bit per bit, KV cache in f16 e un drafter FR-Spec con vocabolario da 32k. Ogni passo ha il suo controllo di qualità.",
     mcs="Python · C++ · CUDA; llama.cpp",
@@ -121,7 +122,7 @@ T["it"] = dict(
     hild="Converto un LLM autoregressivo (Qwen3-0.6B) in un modello a diffusione discreta con la ricetta LLaDA 2.1, con un backend di training e inferenza eseguibile su Pascal.",
     hilds="Python · PyTorch; diffusion LM",
     # Ricerca
-    kr="Ricerca", hr="Replica del test Cohere su Qwen3.8",
+    kr="Sicurezza AI", hr="Qwen3.8 ha provato a caricare un file su Alibaba? Ho rifatto il test",
     leadr="Cohere ha segnalato che Qwen3.8-Flash-Next, durante un compito da analista di sicurezza in un sandbox, ha provato a caricare un file su un bucket di storage Alibaba. Ho rifatto il test il 27 e 28 ottobre 2026 su due build servite nello stesso modo su una RTX PRO 6000: la base NVIDIA in NVFP4 e il fine-tune Swift 1.5.",
     crows=[("Con il prefisso https://rout, host routify-file-proxy-sg completo", "247/256", "253/256"),
            ("Comando scritto dal modello, host Alibaba, su 1024 prove", "0,7%", "0,3%"),
@@ -154,12 +155,12 @@ T["it"] = dict(
     
     
     dl1="ricerca · 2026",
-    d1="Ingresso del testo tramite i " + m("17.937") + " neuroni sensoriali reali, lettura dai " + m("2.241") + ' neuroni discendenti e motori, attention causale esterna (4 teste, cache 128) che rientra dalle stesse porte. Risultati riportati con i controlli: a pari dati il grafo rimescolato batte il cablaggio anatomico; il lobo ottico intero è rimovibile senza variazione di cross-entropy; la profondità 4+4 è sufficiente per raggiungibilità misurata (readout a 2 salti dalle porte).<sup class="n">3</sup>',
+    d1="Un language model che gira sul connettoma completo del moscerino della frutta: " + m("166.700") + " neuroni veri e " + m("2,75 M") + " sinapsi, con i pesi presi dalla biologia. Il testo entra dai " + m("17.937") + " neuroni sensoriali ed esce dai " + m("2.241") + " neuroni motori. Domanda: quanto del contesto lo tiene il cervello e quanto l'attention?",
     go1="pipeline animata e numeri",
     m1="PyTorch · CUDA Graphs; LIF · surrogate gradient; TBPTT · Adam; TinyStories · BPE 4096",
     n3="4+4 sottopassi per token, TBPTT 8, CUDA Graph FP32: 0,65 s per update su GTX&nbsp;1080, 0,38 s con il kernel fuso; 5,46 M parametri.",
-    k5="Machine learning applicato", h5s="Predizione, ottimizzazione, serie storiche",
-    lead5="Modelli con intervalli di incertezza, ottimizzazione sotto vincoli in tempo reale, valutazione fuori campione o su simulazione.",
+    k5="Altri progetti", h5s="ML applicato, ambienti RL, strumenti",
+    lead5="Previsioni con intervalli di incertezza, ottimizzazione sotto vincoli in tempo reale, ambienti costruiti da zero per agenti e una trascrizione vocale che resta sul computer.",
     dl5="codice completo",
     fo="Sistema decisionale per l'asta del fantacalcio: modello di prezzo con forchetta d'incertezza, ottimizzazione della rosa al tavolo sotto vincoli di budget e slot, valutazione su campionati simulati (" + m("75-91%") + " vinti contro strategie di riferimento). Con arena interattiva per sfidarlo.<sup class=\"n\">4</sup>",
     m5="Python; predizione · ottimizzazione · Monte Carlo",
@@ -174,7 +175,7 @@ T["it"] = dict(
     sm="Clone del livello 1-1 in Phaser 3 e TypeScript progettato come ambiente di training per reinforcement learning, con osservazioni e ricompense esposte.", sms="TypeScript · Phaser 3; RL",
     idle="Idle RPG nel browser con Phaser 3 e Three.js: loop di progressione, prestigio e rendering 3D.", idles="JavaScript · Three.js",
     # Indice
-    kapp="Appendice", hidx="Indice dei repository",
+    kapp="Appendice", hidx="Indice dei repository", idxopen="Mostra tutti i %d repository",
     idxcap="Repository pubblici raggruppati per area; ogni nome linkato porta al codice. Sotto lo stack, la quota del linguaggio principale nel codice del repository (GitHub, ottobre 2026).",
     fk="(fork)", pra="PR #27721 aperta", prb="PR #2202 integrata", org="Partido-De-What", cdir="cartella di blackwell6000",
     hnote="Nota sulle figure",
@@ -201,10 +202,10 @@ T["en"] = dict(
            ("PrismML-Eng/llama.cpp", '<a href="%s">PR #368</a>: Pascal (sm_61), PQ2_0 mat-vec for 1-4 columns, ' % PR_PRISM + m("+17%") + " on Ternary-Bonsai-2-9B with bit-identical output.", "merged 19 Oct 2026"),
            ("ggml-org/llama.cpp", '<a href="%s">PR #27721</a>: CUDA Graphs on Pascal (sm_61), up to ' % PR + m("+75%") + " on MoE models and " + m("+9%") + " to " + m("+30%") + " on dense ones, identical output, no regression.", "open, updated 20 Nov"),
            ("vllm-project/vllm", '<a href="%s">PR #58863</a>: the exact commit of the RecoverSSM GDN replay, proposed by me and adopted in the PR (commit 514102a).' % PR_VLLM, "adopted, PR still open")],
-    ki="Implementations", hi="From the GTX 1080 to the RTX PRO 6000",
+    ki="Implementations", hi="Custom kernels, bit-identical output",
     leadi="Inference kernels and configurations for a GTX&nbsp;1080 and for an RTX PRO 6000 Blackwell. Every change is compared with the reference output and every number has its reproducible benchmark.",
-    dlbw="October 2026",
-    bw="Qwen3.8 Flash-Next and its Swift 1.5 fine-tune in NVFP4 on a single RTX PRO 6000 Blackwell with vLLM: " + m("4 users") + " with " + m("227k") + " tokens of context each, about " + m("100&nbsp;tok/s") + " per user, a peak of " + m("186.5&nbsp;tok/s") + " with one user. The kernels are exact, with output bit-identical to the reference: deterministic QSA top-k and exact GDN replay. The deterministic top-k also fixes a determinism bug that was already there.",
+    dlbw="October 2026", bw_t="Qwen3.8 Flash-Next for 4 users on a single Blackwell",
+    bw="Qwen3.8 Flash-Next and its Swift 1.5 fine-tune in NVFP4 on a single RTX PRO 6000 Blackwell with vLLM: " + m("4 users") + " with " + m("227k") + " tokens of context each, about " + m("100&nbsp;tok/s") + " per user, a peak of " + m("186.5&nbsp;tok/s") + " with one user. The kernels are exact, with output bit-identical to the reference: deterministic QSA top-k and exact GDN replay. The deterministic top-k also fixes a determinism bug that was already there. From the fine-tune I extracted the MTP head that drafts tokens for speculative decoding, published on Hugging Face in GGUF, BF16 and FP8.",
     md=("GPU", "Stack", "Licence"), mdv=("RTX PRO 6000 Blackwell, 96&nbsp;GB", "vLLM · CUDA · NVFP4", "Apache-2.0"),
     mc="MiniCPM5-2B on a GTX&nbsp;1080 from " + m("33") + " to " + m("83") + " tok/s: slots erased when a conversation ends, Pascal kernels with bit-identical output, f16 KV cache and an FR-Spec drafter with a 32k vocabulary. Every step has its quality check.",
     mcs="Python · C++ · CUDA; llama.cpp",
@@ -219,7 +220,7 @@ T["en"] = dict(
     bonss="JavaScript · WebGPU · WGSL",
     hild="I convert an autoregressive LLM (Qwen3-0.6B) into a discrete diffusion model with the LLaDA 2.1 recipe, with a training and inference backend that runs on Pascal.",
     hilds="Python · PyTorch; diffusion LM",
-    kr="Research", hr="Replicating the Cohere test on Qwen3.8",
+    kr="AI security", hr="Did Qwen3.8 try to upload a file to Alibaba? I re-ran the test",
     leadr="Cohere reported that Qwen3.8-Flash-Next, during a security analyst task in a sandbox, tried to upload a file to an Alibaba storage bucket. I repeated the test on 27 and 28 October 2026 on two builds served the same way on one RTX PRO 6000: the NVIDIA base in NVFP4 and the Swift 1.5 fine-tune.",
     crows=[("With the prefix https://rout, full routify-file-proxy-sg host", "247/256", "253/256"),
            ("Command written by the model, Alibaba host, out of 1024 trials", "0.7%", "0.3%"),
@@ -250,12 +251,12 @@ T["en"] = dict(
     
     
     dl1="research · 2026",
-    d1="Text enters through the " + m("17,937") + " real sensory neurons and is read out from the " + m("2,241") + ' descending and motor neurons; an external causal attention (4 heads, cache 128) re-enters through the same ports. Results are reported with their controls: at equal data the shuffled graph beats the anatomical wiring; the whole optic lobe can be removed with no change in cross-entropy; 4+4 depth is enough for the measured reachability (readout 2 hops from the ports).<sup class="n">3</sup>',
+    d1="A language model that runs on the complete fruit fly connectome: " + m("166,700") + " real neurons and " + m("2.75 M") + " synapses, with weights taken from biology. Text enters through the " + m("17,937") + " sensory neurons and leaves through the " + m("2,241") + " motor neurons. The question: how much of the context does the brain hold, and how much the attention?",
     go1="animated pipeline and numbers",
     m1="PyTorch · CUDA Graphs; LIF · surrogate gradient; TBPTT · Adam; TinyStories · BPE 4096",
     n3="4+4 substeps per token, TBPTT 8, FP32 CUDA Graph: 0.65 s per update on a GTX&nbsp;1080, 0.38 s with the fused kernel; 5.46 M parameters.",
-    k5="Applied machine learning", h5s="<span class=\"nw\">Prediction, optimization,</span> time series",
-    lead5="Models with uncertainty intervals, real-time optimization under constraints, out-of-sample or simulation-based evaluation.",
+    k5="More projects", h5s="Applied ML, RL environments, tools",
+    lead5="Forecasts with uncertainty intervals, real-time optimization under constraints, environments built from scratch for agents, and voice transcription that stays on the computer.",
     dl5="full source code",
     fo="Decision system for fantasy football auctions: a price model with an uncertainty band, squad optimization at the table under budget and slot constraints, evaluation on simulated leagues (" + m("75-91%") + " won against baseline strategies). With an interactive arena to challenge it.<sup class=\"n\">4</sup>",
     m5="Python; prediction · optimization · Monte Carlo",
@@ -269,7 +270,7 @@ T["en"] = dict(
     lead6="Simulated environments built from scratch as test beds for agents.",
     sm="A clone of level 1-1 in Phaser 3 and TypeScript, designed as a training environment for reinforcement learning, with observations and rewards exposed.", sms="TypeScript · Phaser 3; RL",
     idle="Browser idle RPG with Phaser 3 and Three.js: progression loop, prestige and 3D rendering.", idles="JavaScript · Three.js",
-    kapp="Appendix", hidx="Repository index",
+    kapp="Appendix", hidx="Repository index", idxopen="Show all %d repositories",
     idxcap="Public repositories grouped by area; each linked name leads to the code. Under the stack, the share of the main language in the repository's code (GitHub, October 2026).",
     fk="(fork)", pra="PR #27721 open", prb="PR #2202 merged", org="Partido-De-What", cdir="folder of blackwell6000",
     hnote="A note on the figures",
@@ -345,7 +346,7 @@ NEW["it"].update(dict(
     cr_go="Repository su GitHub",
     cref="Orchestratore multi-agente per Claude Code e Codex, in evidenza in cima alla pagina.",
     pin_b=("In evidenza", "OSINT", "LFM3"), pin_s="Assistente OSINT locale, ora con un solo modello",
-    pin_p1="Un assistente locale che mette insieme un modello linguistico sulla scheda video, fonti aperte per capire cosa succede nel mondo e un'interfaccia che le tiene insieme. Interroga da solo le fonti quando la domanda lo richiede: notizie per soggetto e luogo, mercati, contratti militari, movimenti degli insider, mappe, archivio storico degli eventi. Lavora sul computer (file, terminale, browser, documenti) e ricorda: memorie, documenti indicizzati, procedure che impara e riusa.",
+    pin_p1="Un assistente che vive sul tuo computer e legge il mondo da fonti aperte: notizie per soggetto e luogo, mercati, contratti militari, movimenti degli insider, mappe, archivio storico degli eventi. Interroga le fonti da solo quando la domanda lo chiede, lavora su file, terminale e browser, e ricorda: memorie, documenti, procedure che impara e riusa.",
     pin_p2="Nessuna chiave API verso fornitori di AI e nessuna conversazione che esce dal computer. Ora usa un solo modello per tutto: LFM3 1C, un fuso che ho fatto da LFM3-1.7B e LFM3-VL-2B di Liquid AI. Scrive, usa gli strumenti, guarda lo schermo e le immagini e clicca dove serve. Un controllo contro le invenzioni verifica che numeri e nomi della risposta compaiano nei risultati degli strumenti. Integra Odysseus (assistente) e ShadowBroker (fonti).<sup class=\"n\">1</sup>",
     pin_lab="Su una GTX 1080 del 2016",
     pin_st=(('<span class="cn">81</span>', "tok/s in generazione"), ("2-4&nbsp;s", "per trovare dove cliccare"), ('<span class="cn">1</span>', "modello per testo, strumenti e vista"), ('<span class="cn">8</span>&nbsp;GB', "di memoria video bastano")),
@@ -389,7 +390,7 @@ NEW["en"].update(dict(
     cr_go="Repository on GitHub",
     cref="Multi-agent orchestrator for Claude Code and Codex, pinned at the top of the page.",
     pin_b=("Pinned", "OSINT", "LFM3"), pin_s="Local OSINT assistant, now on one model",
-    pin_p1="A local assistant that combines a language model on the graphics card, open sources to see what is going on in the world, and an interface that ties them together. It queries the sources by itself when a question needs them: news by subject and place, markets, military contracts, insider moves, maps, a historical archive of events. It works on the computer (files, terminal, browser, documents) and remembers: memories, indexed documents, procedures it learns and reuses.",
+    pin_p1="An assistant that lives on your computer and reads the world from open sources: news by subject and place, markets, military contracts, insider moves, maps, a historical archive of events. It queries the sources by itself when a question needs them, works on files, terminal and browser, and remembers: memories, documents, procedures it learns and reuses.",
     pin_p2="No API keys for AI providers and no conversation leaves the computer. It now uses one model for everything: LFM3 1C, a merge I made from Liquid AI's LFM3-1.7B and LFM3-VL-2B. It writes, uses the tools, looks at the screen and at images, and clicks where it needs to. A check against made-up answers verifies that the numbers and names in a reply appear in the tool results. It integrates Odysseus (assistant) and ShadowBroker (sources).<sup class=\"n\">1</sup>",
     pin_lab="On a 2016 GTX 1080",
     pin_st=(('<span class="cn">81</span>', "tok/s generation"), ("2-4&nbsp;s", "to find where to click"), ('<span class="cn">1</span>', "model for text, tools and vision"), ('<span class="cn">8</span>&nbsp;GB', "of video memory is enough")),
@@ -561,14 +562,14 @@ def page(t):
                                       idx_row("lfm-to-kimodo", "Python · PyTorch; Kimodo"), idx_row("bonsai-webgpu-tiled-vae-fix", "JavaScript · WebGPU"),
                                       idx_row("hildanext", "Python · PyTorch")]),
         ("ricerca", t["kr"], [idx_row("cohere-probe", "Python · vLLM", t["cdir"], url=BW + "/tree/main/cohere-probe")]),
-        ("strumenti", t["ks"], [idx_row("claude-plugins", "JavaScript · Python; MCP", t["org"], url=ORG + "claude-plugins"), idx_row("vergilius", "Python · llama.cpp"),
+        ("chatroom", t["ks"], [idx_row("claude-plugins", "JavaScript · Python; MCP", t["org"], url=ORG + "claude-plugins"), idx_row("vergilius", "Python · llama.cpp"),
                                 idx_row("stt-whisper-pad", "Python")]),
         ("sperimentali", t["kx"], [idx_row("flytollm", "PyTorch · CUDA")]),
         ("ml", t["k5"], [idx_row("fantaoracle", "Python"), idx_row("fantacalcio-advisor", "React · TypeScript · Python"), idx_row("K-Forecast", "Python"),
                          idx_row("sp500-predictability-lab", "TypeScript · Python"), idx_row("storico", "Python")]),
-        ("rl", t["k6"], [idx_row("supermario-1-1-rl", "TypeScript · Phaser 3"), idx_row("idle-isekai-trials", "JavaScript · Three.js")]),
+        ("ml", t["k6"], [idx_row("supermario-1-1-rl", "TypeScript · Phaser 3"), idx_row("idle-isekai-trials", "JavaScript · Three.js")]),
     ]
-    idx = "".join('<div class="idx-c card rv"><h3><a href="#%s">%s</a></h3><ul>%s</ul></div>' % (i, lb, "".join(rs)) for i, lb, rs in groups)
+    idx = "".join('<div class="idx-c card"><h3><a href="#%s">%s</a></h3><ul>%s</ul></div>' % (i, lb, "".join(rs)) for i, lb, rs in groups)
     nrows = sum(len(rs) for _, _, rs in groups)
     idxm = ("%d voci · %d aree" if L == "it" else "%d entries · %d areas") % (nrows, len(groups))
     kw = "".join('<span class="chip">%s</span>' % k.strip() for k in re.split(r"[;,](?![^(]*\))", t["kw"].rstrip(".")) if k.strip())
@@ -606,7 +607,9 @@ def page(t):
     def stats(rows):
         return "".join('<li><span class="pn">%s</span><span class="pl">%s</span></li>' % (n, lb) for n, lb in rows)
     QUEST = GH + "lfm3-omni-voice-quest3s"
-    pin_vo = ('<section class="pin" id="voce" aria-labelledby="h-voce"><article class="pin-c card rv">'
+    # parete di cubi come nei video: un'onda ambra attraversa i cubi in diagonale (decorativa)
+    cubes = "".join('<i style="--t:%.2fs"></i>' % ((r + c) * 0.11) for r in range(5) for c in range(7))
+    pin_vo = ('<section class="pin" id="voce" aria-labelledby="h-voce"><article class="pin-c card rv"><div class="cubes" aria-hidden="true">' + cubes + '</div>'
               '<p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span><span class="badge">%s</span></p>'
               '<h2 id="h-voce">%s</h2><p class="pin-s">%s</p><p>%s</p><p>%s</p>%s<p class="pin-lab">%s</p><ul class="pin-st">%s</ul></article></section>'
               % (*t["vo_b"], t["vo_t"], t["vo_s"], t["vo_p1"], t["vo_p2"], go((QUEST, t["vo_go"][0]), (QUEST + "/tree/main/samples", t["vo_go"][1])),
@@ -630,7 +633,7 @@ def page(t):
 <meta name="description" content="{desc}">
 <meta http-equiv="Content-Security-Policy" content="{csp}">
 <meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#0d0f13">
+<meta name="theme-color" content="#0a1514">
 <link rel="canonical" href="{canon}">
 <link rel="alternate" hreflang="it" href="{site}it/">
 <link rel="alternate" hreflang="en" href="{site}">
@@ -713,8 +716,8 @@ def page(t):
 <section class="sec" id="implementazioni" aria-labelledby="h-implementazioni">
 {head('02', t['ki'], t['hi'], 'implementazioni', t['leadi'])}
 <article class="feat card tilt rv">
-<h3><a href="{BW}">blackwell6000-qwen3.8-flash-next</a></h3>
-<p class="dateline">{t['dlbw']}</p>
+<h3><a href="{BW}">{t['bw_t']}</a></h3>
+<p class="dateline">blackwell6000-qwen3.8-flash-next · {t['dlbw']}</p>
 {meta}
 <p>{t['bw']}</p>
 </article>
@@ -734,7 +737,6 @@ def page(t):
 {brief('bonsai2-ternary-pascal', t['bo2'], t['bo2s'], GH + 'bonsai2-ternary-pascal')}
 {brief('llm2vec-8gb-offload-lossless-batching', t['l2v'], t['m3'], GH + 'llm2vec-8gb-offload-lossless-batching')}
 </div>
-{err}
 <div class="grid3">
 {brief('lfm-to-kimodo', t['lfm'], t['lfms'], GH + 'lfm-to-kimodo')}
 {brief('bonsai-webgpu-tiled-vae-fix', t['bons'], t['bonss'], GH + 'bonsai-webgpu-tiled-vae-fix')}
@@ -755,25 +757,13 @@ def page(t):
 </div>
 </section>
 
-<section class="sec" id="strumenti" aria-labelledby="h-strumenti">
-{head('04', t['ks'], t['hs'], 'strumenti', t['leads'])}
-<div class="grid3">
-{brief('chatroom', t['cref'], t['cps'], '#chatroom')}
-{brief('Vergilius', t['vref'], 'Python · llama.cpp', '#vergilius')}
-{brief('stt-whisper-pad', t['stt'], t['stts'], GH + 'stt-whisper-pad')}
-</div>
-</section>
-
 <section class="sec" id="sperimentali" aria-labelledby="h-sperimentali">
-{head('05', t['kx'], t['hx'], 'sperimentali', t['lead1'])}
-{note(2, t['n2'])}
-<div class="fly">
-<figure class="stage-w rv"><div class="stage"><canvas id="cns" width="400" height="570" role="img" aria-label="{t['fly_label']}"></canvas></div><ul class="legend">{legend}</ul><figcaption>{t['fly_cap']}</figcaption></figure>
+{head('04', t['kx'], t['hx'], 'sperimentali', '')}
+<div class="fly1">
 <article class="feat card tilt rv">
 <h3><a href="{GH}flytollm">FlyToLLM</a></h3>
 <p class="dateline">{t['dl1']}</p>
 <p>{t['d1']}</p>
-{note(3, t['n3'])}
 {go(('https://artyomita.github.io/flytollm/', t['go1']))}
 <p class="meth">{t['m1']}</p>
 </article>
@@ -781,7 +771,7 @@ def page(t):
 </section>
 
 <section class="sec sec-sub" id="ml" data-nav="#sperimentali" aria-labelledby="h-ml">
-{head('05.1', t['k5'], t['h5s'], 'ml', t['lead5'])}
+{head('04.1', t['k5'], t['h5s'], 'ml', t['lead5'])}
 <article class="feat card tilt rv">
 <h3><a href="{GH}fantaoracle">FantaOracle</a></h3>
 <p class="dateline">{t['dl5']}</p>
@@ -789,26 +779,20 @@ def page(t):
 {note(4, t['n4'])}
 <p class="meth">{t['m5']}</p>
 </article>
-{lots}
 <div class="grid3">
 {brief('fantacalcio-advisor', t['fca'], t['fcas'], GH + 'fantacalcio-advisor')}
 {brief('K-Forecast', t['kf'], t['kfs'], GH + 'K-Forecast')}
 {brief('sp500-predictability-lab', t['sp'], t['sps'], GH + 'sp500-predictability-lab')}
 {brief('storico', t['sto'], t['stos'], GH + 'storico')}
-</div>
-</section>
-
-<section class="sec sec-sub" id="rl" data-nav="#sperimentali" aria-labelledby="h-rl">
-{head('05.2', t['k6'], t['h6s'], 'rl', t['lead6'])}
-<div class="grid3">
 {brief('supermario-1-1-rl', t['sm'], t['sms'], GH + 'supermario-1-1-rl')}
 {brief('idle-isekai-trials', t['idle'], t['idles'], GH + 'idle-isekai-trials')}
+{brief('stt-whisper-pad', t['stt'], t['stts'], GH + 'stt-whisper-pad')}
 </div>
 </section>
 
 <section class="sec" id="indice" aria-labelledby="h-indice">
-{head('06', t['kapp'] + ' · ' + idxm, t['hidx'], 'indice', t['idxcap'])}
-<div class="idx-g">{idx}</div>
+{head('05', t['kapp'] + ' · ' + idxm, t['hidx'], 'indice', '')}
+<details class="idx-d rv"><summary>{t['idxopen'] % nrows}</summary><p class="idx-cap">{t['idxcap']}</p><div class="idx-g">{idx}</div></details>
 </section>
 
 <section class="sec sec-sub" id="note" aria-labelledby="h-note">

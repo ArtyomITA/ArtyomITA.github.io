@@ -140,8 +140,8 @@ if ('IntersectionObserver' in window) {
     bg = D.createElement('canvas'); bg.width = cv.width; bg.height = cv.height;
     var b = bg.getContext('2d'); b.scale(dpr * s, dpr * s);
     b.beginPath(); OUT.forEach(function (p, i) { if (i) b.lineTo(p[0], p[1]); else b.moveTo(p[0], p[1]); }); b.closePath();
-    b.fillStyle = 'rgba(46,242,176,.04)'; b.fill(); b.strokeStyle = 'rgba(46,242,176,.2)'; b.lineWidth = 1 / s; b.stroke();
-    b.strokeStyle = 'rgba(46,242,176,.1)'; b.lineWidth = 0.7 / s; b.beginPath();
+    b.fillStyle = 'rgba(79,214,185,.04)'; b.fill(); b.strokeStyle = 'rgba(79,214,185,.2)'; b.lineWidth = 1 / s; b.stroke();
+    b.strokeStyle = 'rgba(79,214,185,.1)'; b.lineWidth = 0.7 / s; b.beginPath();
     for (var i = 0; i < P.length; i++) A[i].forEach(function (j) { if (j > i) { b.moveTo(P[i].x, P[i].y); b.lineTo(P[j].x, P[j].y); } });
     b.stroke();
   }
@@ -159,11 +159,11 @@ if ('IntersectionObserver' in window) {
       if (rm) act = 0.3 + 0.7 * Math.max(0, 1 - h / 5); else { var d = f - h; act = d >= 0 ? Math.exp(-d * 0.95) : Math.exp(d * 3.2); }
       if (mouse) { var mx = p.x - mouse.x, my = p.y - mouse.y; act = Math.max(act, Math.exp(-(mx * mx + my * my) / 900)); }
       var a = 0.22 + 0.78 * act;
-      if (p.role === 0) { ctx.fillStyle = 'rgba(255,106,87,' + (0.5 + 0.5 * a).toFixed(2) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, 3.1 + act * 1.2, 0, 6.2832); ctx.fill(); if (act > 0.5) { ctx.fillStyle = 'rgba(255,106,87,.14)'; ctx.beginPath(); ctx.arc(p.x, p.y, 9, 0, 6.2832); ctx.fill(); } }
+      if (p.role === 0) { ctx.fillStyle = 'rgba(242,193,78,' + (0.5 + 0.5 * a).toFixed(2) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, 3.1 + act * 1.2, 0, 6.2832); ctx.fill(); if (act > 0.5) { ctx.fillStyle = 'rgba(242,193,78,.14)'; ctx.beginPath(); ctx.arc(p.x, p.y, 9, 0, 6.2832); ctx.fill(); } }
       else if (p.role === 2) { ctx.fillStyle = 'rgba(217,255,241,' + (0.45 + 0.55 * a).toFixed(2) + ')'; var z = 2.3 + act * 1.1; ctx.fillRect(p.x - z, p.y - z, 2 * z, 2 * z); }
       else {
-        ctx.fillStyle = 'rgba(46,242,176,' + a.toFixed(2) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, 1.6 + act * 1.1, 0, 6.2832); ctx.fill();
-        if (act > 0.6) { ctx.fillStyle = 'rgba(46,242,176,.1)'; ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, 6.2832); ctx.fill(); }
+        ctx.fillStyle = 'rgba(79,214,185,' + a.toFixed(2) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, 1.6 + act * 1.1, 0, 6.2832); ctx.fill();
+        if (act > 0.6) { ctx.fillStyle = 'rgba(79,214,185,.1)'; ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, 6.2832); ctx.fill(); }
       }
     }
     ctx.globalCompositeOperation = 'source-over';

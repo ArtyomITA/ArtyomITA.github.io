@@ -6,10 +6,6 @@
    "downloads": 0
   },
   {
-   "id": "adriandj3/Swift-1.5-Qwen3.8-Flash-Next-MTP-for-GGUF-and-NVFP4",
-   "downloads": 1128
-  },
-  {
    "id": "adriandj3/MiniCPM5-2B-pjev-LoRA",
    "downloads": 134
   },
@@ -20,6 +16,18 @@
   {
    "id": "adriandj3/TernaryPilot-v1-Computer-Browser-Use-LoRA",
    "downloads": 82
+  },
+  {
+   "id": "adriandj3/Swift-1.5-Qwen3.8-Flash-Next-MTP-for-GGUF-and-NVFP4",
+   "downloads": 1128
+  },
+  {
+   "id": "adriandj3/TernaryPilot-v2-Computer-Browser-Use-LoRA",
+   "downloads": 160
+  },
+  {
+   "id": "adriandj3/TernaryDecider-v1-Decision-LoRA",
+   "downloads": 124
   }
  ]
 }
