@@ -84,22 +84,22 @@ T = {}
 
 T["it"] = dict(
     lang="it", ogloc="it_IT", ogalt="en_GB", canon=SITE, P="", og="img/og-it.png",
-    desc="AI engineer: inferenza LLM su GPU consumer e datacenter, kernel CUDA, contributi upstream a llama.cpp, stable-diffusion.cpp e vLLM, ricerca sul comportamento dei modelli open-weight. Tutto open source.",
+    desc="AI engineer: inferenza LLM su GPU consumer, datacenter e visori VR, kernel CUDA e OpenCL più veloci, contributi upstream a llama.cpp, stable-diffusion.cpp e vLLM, ricerca sul comportamento dei modelli open-weight. Tutto open source.",
     ogimgalt="Il nome Adrian Ciprian Iancu in grande, la riga del ruolo e lo schema dei CUDA Graphs su Pascal della figura 1.",
     skip="Vai al contenuto", navlabel="Sezioni", toc="Indice", langlabel="Lingua", themelabel="Tema",
     th=("chiaro", "scuro", "auto"), thtitle=("Tema chiaro (carta)", "Tema scuro (cianotipia)", "Tema auto (come il sistema)"),
     nav=["contributi", "implementazioni", "ricerca", "strumenti e agenti", "progetti sperimentali", "indice"], navnote="nota sulle figure",
-    folio="aggiornata ottobre 2026",
-    role="<b>AI engineer</b>: inferenza LLM su GPU consumer e datacenter, kernel CUDA, contributi open&nbsp;source.",
+    folio="aggiornata novembre 2026",
+    role="<b>AI engineer</b>: inferenza LLM dalla GTX&nbsp;1080 al visore VR, kernel più veloci, agenti che si correggono da soli, contributi open&nbsp;source.",
     abs='<span class="runin">Sommario.</span> Faccio <b>inferenza di LLM</b>: <b>kernel CUDA</b> e patch minime per far girare i modelli su GPU consumer e su una sola Blackwell, con ogni modifica verificata contro l\'output di riferimento. Faccio anche <b>ricerca applicata</b> sul comportamento dei modelli open-weight. Tutto open&nbsp;source: due mie PR sono state integrate, una è aperta in llama.cpp e un mio fix è stato adottato in vLLM.',
-    kw='Inferenza LLM, kernel CUDA, CUDA Graphs; GPU Pascal (sm_61) e Blackwell; decoding speculativo, quantizzazione (NVFP4, pesi ternari); llama.cpp, vLLM, GGML; sicurezza dei modelli open-weight; sistemi multi-agente; ML applicato.',
+    kw='Inferenza LLM, kernel CUDA e OpenCL, CUDA Graphs; AI su dispositivi edge (Meta Quest 3S, Adreno); GPU Pascal (sm_61) e Blackwell; decoding speculativo, quantizzazione (NVFP4, pesi ternari); llama.cpp, vLLM, GGML; sicurezza dei modelli open-weight; sistemi multi-agente; ML applicato.',
     
     # Contributi upstream
     kc="Contributi upstream", hc="Quattro patch in quattro progetti",
     leadc="Patch piccole inviate ai repository originali. Due sono integrate, una è aperta e un mio commit è stato adottato in una PR di vLLM.",
     prows=[("leejet/stable-diffusion.cpp", '<a href="%s">PR #2202</a>: fix, ignora l\'alpha dei metadati nei LoRA con baked_scale.' % PR_SD, "integrata il 24/10/2026"),
            ("PrismML-Eng/llama.cpp", '<a href="%s">PR #368</a>: Pascal (sm_61), mat-vec PQ2_0 per 1-4 colonne, ' % PR_PRISM + m("+17%") + " su Ternary-Bonsai-2-9B con output identico bit per bit.", "integrata il 19/10/2026"),
-           ("ggml-org/llama.cpp", '<a href="%s">PR #27721</a>: CUDA Graphs su Pascal (sm_61), ' % PR + m("+40%") + " sui modelli MoE, " + m("+7%") + " sui modelli densi, nessuna regressione.", "aperta dal 25/08/2026"),
+           ("ggml-org/llama.cpp", '<a href="%s">PR #27721</a>: CUDA Graphs su Pascal (sm_61), fino a ' % PR + m("+75%") + " sui modelli MoE e da " + m("+9%") + " a " + m("+30%") + " sui densi, output identico, nessuna regressione.", "aperta, aggiornata il 20/11"),
            ("vllm-project/vllm", '<a href="%s">PR #58863</a>: il commit esatto del replay GDN di RecoverSSM, proposto da me e adottato nella PR (commit 514102a).' % PR_VLLM, "adottato, PR ancora aperta")],
     # Implementazioni
     ki="Implementazioni", hi="Dalla GTX 1080 alla RTX PRO 6000",
@@ -185,21 +185,21 @@ T["it"] = dict(
 
 T["en"] = dict(
     lang="en", ogloc="en_GB", ogalt="it_IT", canon=SITE + "en/", P="../", og="img/og-en.png",
-    desc="AI engineer: LLM inference on consumer and datacenter GPUs, CUDA kernels, upstream contributions to llama.cpp, stable-diffusion.cpp and vLLM, research on the behaviour of open-weight models. All open source.",
+    desc="AI engineer: LLM inference on consumer GPUs, datacenter GPUs and VR headsets, faster CUDA and OpenCL kernels, upstream contributions to llama.cpp, stable-diffusion.cpp and vLLM, research on the behaviour of open-weight models. All open source.",
     ogimgalt="The name Adrian Ciprian Iancu set large, the role line and the CUDA Graphs on Pascal schematic from figure 1.",
     skip="Skip to content", navlabel="Sections", toc="Contents", langlabel="Language", themelabel="Theme",
     th=("light", "dark", "auto"), thtitle=("Light theme (paper)", "Dark theme (cyanotype)", "Auto theme (follow the system)"),
     nav=["contributions", "implementations", "research", "tools and agents", "experimental projects", "index"], navnote="a note on the figures",
-    folio="updated October 2026",
-    role="<b>AI engineer</b>: LLM inference on consumer and datacenter GPUs, CUDA kernels, open&nbsp;source contributions.",
+    folio="updated November 2026",
+    role="<b>AI engineer</b>: LLM inference from a GTX&nbsp;1080 to a VR headset, faster kernels, agents that correct themselves, open&nbsp;source contributions.",
     abs='<span class="runin">Abstract.</span> I work on <b>LLM inference</b>: <b>CUDA kernels</b> and minimal patches that make models run on consumer GPUs and on a single Blackwell, with every change checked against the reference output. I also do <b>applied research</b> on the behaviour of open-weight models. All open&nbsp;source: two of my PRs are merged, one is open in llama.cpp, and one of my fixes was adopted in vLLM.',
-    kw='LLM inference, CUDA kernels, CUDA Graphs; Pascal (sm_61) and Blackwell GPUs; speculative decoding, quantization (NVFP4, ternary weights); llama.cpp, vLLM, GGML; security of open-weight models; multi-agent systems; applied ML.',
+    kw='LLM inference, CUDA and OpenCL kernels, CUDA Graphs; edge AI (Meta Quest 3S, Adreno); Pascal (sm_61) and Blackwell GPUs; speculative decoding, quantization (NVFP4, ternary weights); llama.cpp, vLLM, GGML; security of open-weight models; multi-agent systems; applied ML.',
     
     kc="Upstream contributions", hc="Four patches in four projects",
     leadc="Small patches sent to the original repositories. Two are merged, one is open and a commit of mine was adopted in a vLLM PR.",
     prows=[("leejet/stable-diffusion.cpp", '<a href="%s">PR #2202</a>: fix, skip the metadata alpha for LoRAs with baked_scale.' % PR_SD, "merged 24 Oct 2026"),
            ("PrismML-Eng/llama.cpp", '<a href="%s">PR #368</a>: Pascal (sm_61), PQ2_0 mat-vec for 1-4 columns, ' % PR_PRISM + m("+17%") + " on Ternary-Bonsai-2-9B with bit-identical output.", "merged 19 Oct 2026"),
-           ("ggml-org/llama.cpp", '<a href="%s">PR #27721</a>: CUDA Graphs on Pascal (sm_61), ' % PR + m("+40%") + " on MoE models, " + m("+7%") + " on dense models, no regression.", "open since 25 Aug 2026"),
+           ("ggml-org/llama.cpp", '<a href="%s">PR #27721</a>: CUDA Graphs on Pascal (sm_61), up to ' % PR + m("+75%") + " on MoE models and " + m("+9%") + " to " + m("+30%") + " on dense ones, identical output, no regression.", "open, updated 20 Nov"),
            ("vllm-project/vllm", '<a href="%s">PR #58863</a>: the exact commit of the RecoverSSM GDN replay, proposed by me and adopted in the PR (commit 514102a).' % PR_VLLM, "adopted, PR still open")],
     ki="Implementations", hi="From the GTX 1080 to the RTX PRO 6000",
     leadi="Inference kernels and configurations for a GTX&nbsp;1080 and for an RTX PRO 6000 Blackwell. Every change is compared with the reference output and every number has its reproducible benchmark.",
@@ -285,9 +285,9 @@ NEW["it"] = dict(
     thtitle=("Tema chiaro", "Tema scuro", "Tema automatico (come il sistema)"),
     ogimgalt="Il nome Adrian Ciprian Iancu in grande su fondo scuro, la riga del ruolo e una griglia luminosa di unità di calcolo di una GPU.",
     stats=[('4×<span class="cn">227</span>k', "token di contesto, 4 utenti su una sola GPU", BW, "repo blackwell6000"),
-           ('~<span class="cn">100</span>', "tok/s per utente, Qwen3.8 Flash-Next su Blackwell", BW, "repo blackwell6000"),
+           ('+<span class="cn">111</span>%', "voce in tempo reale su un Meta Quest 3S, senza cloud", GH + "lfm3-omni-voice-quest3s", "repo lfm3-omni-voice"),
            ('+<span class="cn">51</span>%', "in decode, Ternary Bonsai 2 9B su GTX&nbsp;1080", GH + "bonsai2-ternary-pascal", "repo bonsai2"),
-           ('+<span class="cn">40</span>%', "sui modelli MoE in llama.cpp su Pascal", PR, "PR #27721, aperta")],
+           ('+<span class="cn">75</span>%', "sui modelli MoE in llama.cpp su Pascal", PR, "PR #27721, aperta")],
     kt_t="CUDA Graphs su sm_61 in llama.cpp, PR #27721", kt_ax="tempo per token, relativo", kt_moe="MoE", kt_dense="denso", kt_a="un lancio per kernel", kt_b="CUDA graph",
     kt_cap="Schema, non traccia di profilazione: stessi kernel, un solo lancio del grafo al posto di uno per kernel. Il tempo per token scende a 1/1,40 sui modelli MoE (+40% misurato) e a 1/1,07 sui densi (+7%).",
     er_t="Embedding di LLM2Vec calcolati in batch, distanza dal riferimento", er_ax="1 − coseno, scala logaritmica", er_big="volte più vicino",
@@ -300,15 +300,15 @@ NEW["it"] = dict(
     fly_label="Illustrazione del sistema nervoso centrale di Drosophila: nuvola di punti con un'onda di attività che parte dalle porte d'ingresso e avanza un salto alla volta fino ai quadratini di lettura.",
     fly_leg=("porte d'ingresso (sensoriali)", "neuroni, per salti dalle porte", "lettura (discendenti)"),
     fly_cap='Illustrazione generata in questa pagina dentro la sagoma del sistema nervoso centrale (cervello, lobi ottici, cordone ventrale): ogni punto vale circa <span class="pd">' + PD["it"] + '</span> neuroni. I punti coralli, più grandi, sono le porte d\'ingresso, sul bordo dei lobi ottici e sul dorso del cervello; da lì un\'onda avanza un salto alla volta e la luce segue la distanza in salti. I quadratini sono il readout: nel connettoma vero sta a 2 salti dalle porte, per questo la profondità 4+4 basta.',
-    note="I grafici sono disegnati in questa pagina con HTML, CSS e canvas, senza immagini. La scena 3D in testa, fatta con three.js, è un'illustrazione di token che attraversano le unità di calcolo di una GPU: non è una misura e non parte con la riduzione del movimento attiva. Anche la figura di FlyToLLM è un'illustrazione: i punti nascono da un seme fisso (166700, il numero di neuroni), quindi ogni lettore vede lo stesso disegno. Il grafico dei CUDA Graphs è uno schema; quelli su LLM2Vec, Vergilius e FantaOracle riportano numeri misurati. I numeri nei testi vengono dai repository e dalle pagine delle PR.",
+    note="I grafici sono disegnati in questa pagina con HTML, CSS e canvas, senza immagini. La scena 3D in testa, fatta con three.js, è un'illustrazione di token che attraversano le unità di calcolo di una GPU: non è una misura e non parte con la riduzione del movimento attiva. Anche la figura di FlyToLLM è un'illustrazione: i punti nascono da un seme fisso (166700, il numero di neuroni), quindi ogni lettore vede lo stesso disegno. Il grafico dei CUDA Graphs è uno schema; quelli su LLM2Vec e FantaOracle riportano numeri misurati. I numeri nei testi vengono dai repository e dalle pagine delle PR.",
 )
 NEW["en"] = dict(
     thtitle=("Light theme", "Dark theme", "Auto theme (follow the system)"),
     ogimgalt="The name Adrian Ciprian Iancu set large on a dark background, the role line and a glowing grid of GPU compute units.",
     stats=[('4×<span class="cn">227</span>k', "context tokens, 4 users on a single GPU", BW, "blackwell6000 repo"),
-           ('~<span class="cn">100</span>', "tok/s per user, Qwen3.8 Flash-Next on Blackwell", BW, "blackwell6000 repo"),
+           ('+<span class="cn">111</span>%', "real-time voice on a Meta Quest 3S, no cloud", GH + "lfm3-omni-voice-quest3s", "lfm3-omni-voice repo"),
            ('+<span class="cn">51</span>%', "decode, Ternary Bonsai 2 9B on a GTX&nbsp;1080", GH + "bonsai2-ternary-pascal", "bonsai2 repo"),
-           ('+<span class="cn">40</span>%', "on MoE models in llama.cpp on Pascal", PR, "PR #27721, open")],
+           ('+<span class="cn">75</span>%', "on MoE models in llama.cpp on Pascal", PR, "PR #27721, open")],
     kt_t="CUDA Graphs on sm_61 in llama.cpp, PR #27721", kt_ax="time per token, relative", kt_moe="MoE", kt_dense="dense", kt_a="one launch per kernel", kt_b="CUDA graph",
     kt_cap="A schematic, not a profiling trace: same kernels, one graph launch instead of one per kernel. Time per token drops to 1/1.40 on MoE models (+40% measured) and to 1/1.07 on dense models (+7%).",
     er_t="Batched LLM2Vec embeddings, distance from the reference", er_ax="1 − cosine, logarithmic scale", er_big="times closer",
@@ -321,23 +321,39 @@ NEW["en"] = dict(
     fly_label="Illustration of the Drosophila central nervous system: a cloud of dots with a wave of activity that starts at the input ports and advances one hop at a time to the readout squares.",
     fly_leg=("input ports (sensory)", "neurons, by hops from the ports", "readout (descending)"),
     fly_cap='An illustration generated in this page inside the outline of the central nervous system (brain, optic lobes, ventral nerve cord): each dot stands for about <span class="pd">' + PD["en"] + '</span> neurons. The larger coral dots are the input ports, on the rim of the optic lobes and along the top of the brain; from there a wave advances one hop at a time and the light follows the distance in hops. The small squares are the readout: in the real connectome it sits 2 hops from the ports, which is why 4+4 depth is enough.',
-    note="The charts are drawn in this page with HTML, CSS and canvas, with no images. The 3D scene at the top, built with three.js, is an illustration of tokens flowing through the compute units of a GPU: it is not a measurement, and it does not start when reduced motion is on. The FlyToLLM figure is an illustration too: the dots come from a fixed seed (166700, the neuron count), so every reader sees the same drawing. The CUDA Graphs chart is a schematic; the ones on LLM2Vec, Vergilius and FantaOracle plot measured numbers. The numbers in the text come from the repositories and the PR pages.",
+    note="The charts are drawn in this page with HTML, CSS and canvas, with no images. The 3D scene at the top, built with three.js, is an illustration of tokens flowing through the compute units of a GPU: it is not a measurement, and it does not start when reduced motion is on. The FlyToLLM figure is an illustration too: the dots come from a fixed seed (166700, the neuron count), so every reader sees the same drawing. The CUDA Graphs chart is a schematic; the ones on LLM2Vec and FantaOracle plot measured numbers. The numbers in the text come from the repositories and the PR pages.",
 )
 NEW["it"].update(dict(
     ov_k="In questa pagina", ov_pin="In evidenza", ov_idx="Indice e contatti",
-    ov_l=("Assistente OSINT locale · 64 tok/s su GTX 1080", "Tutto quello che gira veloce su una GTX 1080, misurato e con le fonti", "4 PR in 4 progetti · 2 integrate",
-          "%d progetti, dalla GTX 1080 alla RTX PRO 6000", "Replica del test Cohere · %d modelli su Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, ML applicato, ambienti RL",
+    ov_l=("Un visore da 300 euro che parla in tempo reale · 2,1x", "Gli agenti discutono, portano le prove, imparano", "Assistente OSINT locale · un solo modello LFM3",
+          "Tutto quello che gira veloce su una GTX 1080, misurato e con le fonti", "4 PR in 4 progetti · 2 integrate",
+          "%d progetti, dalla GTX 1080 alla RTX PRO 6000", "Replica del test Cohere · %d modelli su Hugging Face", "chatroom · Vergilius · stt-whisper-pad", "FlyToLLM, ML applicato, ambienti RL",
           "%d repository · %d aree · contatti"),
-    pin_b=("In evidenza", "OSINT", "locale"), pin_s="Assistente OSINT locale",
+    vo_b=("In evidenza", "Edge AI", "Meta Quest 3S"), vo_t="LFM3-Omni parla dentro un Quest 3S",
+    vo_s="Un visore VR da 300 euro che parla più veloce di quanto tu riesca ad ascoltare. Niente cloud, niente PC, niente cavo.",
+    vo_p1="AI vera su un dispositivo edge, senza server dietro. Il modello vocale LFM3-Omni-2B di Liquid AI gira tutto dentro il visore con llama.cpp: la parte principale sulla GPU Adreno con OpenCL, il resto sulla CPU, il codec su un thread a parte mentre la GPU lavora. Con llama.cpp originale servivano 1,8 secondi per dire un secondo di parlato; con le mie patch ne bastano 0,85. Stesso file del modello, stesso visore, stessa voce.",
+    vo_p2="Lungo la strada: una testa da 128 mila voci calcolata e buttata via a ogni frame audio, un kernel OpenCL Q8 che sbagliava i conti in mezza precisione, e i thread fissati sui core veloci che a visore acceso perdono, perché lì vive il compositore VR. Il lavoro è nato in una stanza di ricerca di chatroom, con ogni tentativo misurato allo stesso modo.",
+    vo_lab="Kernel più veloci per llama.cpp su Snapdragon XR2 Gen 2 · Adreno 740",
+    vo_st=(('<span class="cn">1,17</span>x', "tempo reale, prima 0,56x"), ('<span class="cn">1,02</span>x', "a batteria, prima 0,33x"), ("2,1x", "più veloce di llama.cpp originale"), ("−76%", "memoria, da 4174 a 992 MB")),
+    vo_go=("Repository su GitHub", "Ascolta i campioni"),
+    cr_b=("In evidenza", "Plugin", "Claude Code · Codex"), cr_t="chatroom",
+    cr_s="I tuoi agenti discutono, portano le prove e migliorano a ogni stanza.",
+    cr_p1="Tre motori in un plugin. La chat: più agenti in una stanza, e un piano si chiude solo quando tutti hanno votato dicendo cosa hanno controllato; un compito è finito solo con una prova vera. Le regole stanno nel codice, non nel prompt. Il kernel di ricerca: un file, un valutatore sigillato, un numero da battere, e ogni tentativo misurato e registrato per tutta la notte.",
+    cr_p2="L'auto-harness: gli errori che si ripetono diventano lezioni in prova, che restano solo se reggono anche in una seconda stanza. E un consiglio di modelli: <code>spawn council</code> chiede a 10 modelli gratuiti miglioramenti, verifica dei fatti e idee sulla tua situazione. Ogni versione nasce da stanze che girano sulla versione prima.",
+    cr_lab="Numeri da stanze vere",
+    cr_st=(('<span class="cn">28</span>&nbsp;ore', "una stanza di ricerca su un kernel vero"), ("2,1x", "il kernel voce del Quest, in una notte"), ('<span class="cn">37</span>', "paper dietro il codice"), ('<span class="cn">10</span>', "modelli nel consiglio")),
+    cr_go="Repository su GitHub",
+    cref="Il plugin multi-agente, in evidenza in cima alla pagina.",
+    pin_b=("In evidenza", "OSINT", "LFM3"), pin_s="Assistente OSINT locale, ora con un solo modello",
     pin_p1="Un assistente locale che mette insieme un modello linguistico sulla scheda video, fonti aperte per capire cosa succede nel mondo e un'interfaccia che le tiene insieme. Interroga da solo le fonti quando la domanda lo richiede: notizie per soggetto e luogo, mercati, contratti militari, movimenti degli insider, mappe, archivio storico degli eventi. Lavora sul computer (file, terminale, browser, documenti) e ricorda: memorie, documenti indicizzati, procedure che impara e riusa.",
-    pin_p2="Nessuna chiave API verso fornitori di AI e nessuna conversazione che esce dal computer. Pensato per macchine modeste: modello predefinito LFM2.5-2.6B con drafter speculativo DSpark su una GTX&nbsp;1080 con 8&nbsp;GB. Un controllo contro le invenzioni verifica che numeri e nomi della risposta compaiano nei risultati degli strumenti. Integra Odysseus (assistente) e ShadowBroker (fonti).<sup class=\"n\">1</sup>",
-    pin_lab="Ottimizzazione custom per la GTX 1080",
-    pin_st=(('<span class="cn">64</span>', "tok/s in decodifica"), ("78-100", "tok/s con il drafter"), ('<span class="cn">8</span>&nbsp;GB', "di memoria video bastano"), ("1/36", "turni con cifre non supportate, prima 3/35")),
+    pin_p2="Nessuna chiave API verso fornitori di AI e nessuna conversazione che esce dal computer. Ora usa un solo modello per tutto: LFM3 1C, un fuso che ho fatto da LFM3-1.7B e LFM3-VL-2B di Liquid AI. Scrive, usa gli strumenti, guarda lo schermo e le immagini e clicca dove serve. Un controllo contro le invenzioni verifica che numeri e nomi della risposta compaiano nei risultati degli strumenti. Integra Odysseus (assistente) e ShadowBroker (fonti).<sup class=\"n\">1</sup>",
+    pin_lab="Su una GTX 1080 del 2016",
+    pin_st=(('<span class="cn">81</span>', "tok/s in generazione"), ("2-4&nbsp;s", "per trovare dove cliccare"), ('<span class="cn">1</span>', "modello per testo, strumenti e vista"), ('<span class="cn">8</span>&nbsp;GB', "di memoria video bastano")),
     pin_go="Repository su GitHub",
     vref="Assistente OSINT locale, in evidenza in cima alla pagina.",
     gd_b=("In evidenza", "Guida"), gd_t="NVIDIA GTX 1080 (sm_61) AI Full Guide",
     gd_s="Tutto quello che ho fatto girare veloce su una GPU del 2016 con 8&nbsp;GB, misurato e con le fonti.",
-    gd_rows=("LoRA ternario, addestramento per esempio", "MiniMax-H3, clip di prova", "MiniCPM5-2B, decodifica", "Attention int8, kernel di H3", "Ternary Bonsai 2 9B, decodifica", "CUDA graphs, MoE Ling-3.0-tiny"),
+    gd_rows=("LoRA ternario, addestramento per esempio", "MiniMax-H3, clip di prova", "MiniCPM5-2B, decodifica", "Attention int8, kernel di H3", "Ternary Bonsai 2 9B, decodifica", "CUDA graphs, MoE granite-3.1-3b-a800m"),
     gd_ax="la lunghezza della barra è il rapporto tra prima e dopo",
     gd_chips=("kernel llama.cpp", "decoding speculativo", "quantizzazione", "8 GB", "LoRA", "video diffusion", "speech"),
     gd_go="Apri la guida su GitHub",
@@ -353,19 +369,35 @@ NEW["it"].update(dict(
 ))
 NEW["en"].update(dict(
     ov_k="On this page", ov_pin="Pinned", ov_idx="Index and contacts",
-    ov_l=("Local OSINT assistant · 64 tok/s on a GTX 1080", "Everything that runs fast on a GTX 1080, measured and sourced", "4 PRs in 4 projects · 2 merged",
-          "%d projects, from the GTX 1080 to the RTX PRO 6000", "Cohere test replication · %d models on Hugging Face", "claude-plugins · stt-whisper-pad", "FlyToLLM, applied ML, RL environments",
+    ov_l=("A 300 euro headset that speaks in real time · 2.1x", "Agents argue, prove it, and learn", "Local OSINT assistant · one LFM3 model",
+          "Everything that runs fast on a GTX 1080, measured and sourced", "4 PRs in 4 projects · 2 merged",
+          "%d projects, from the GTX 1080 to the RTX PRO 6000", "Cohere test replication · %d models on Hugging Face", "chatroom · Vergilius · stt-whisper-pad", "FlyToLLM, applied ML, RL environments",
           "%d repositories · %d areas · contacts"),
-    pin_b=("Pinned", "OSINT", "local"), pin_s="Local OSINT assistant",
+    vo_b=("Pinned", "Edge AI", "Meta Quest 3S"), vo_t="LFM3-Omni speaks inside a Quest 3S",
+    vo_s="A 300 euro VR headset that talks faster than you can listen. No cloud, no PC, no cable.",
+    vo_p1="Real AI on an edge device, with no server behind it. Liquid AI's LFM3-Omni-2B voice model runs entirely inside the headset with llama.cpp: the main network on the Adreno GPU through OpenCL, the rest on the CPU, the codec on its own thread while the GPU works. Stock llama.cpp needed 1.8 seconds to say one second of speech; with my patches it needs 0.85. Same model file, same headset, same voice.",
+    vo_p2="On the way: a 128K-entry head computed and thrown away on every audio frame, an OpenCL Q8 kernel that got its sums wrong in half precision, and threads pinned to the fast cores that lose on an awake headset, because the VR compositor lives there. The work came out of a chatroom research room, with every attempt measured the same way.",
+    vo_lab="Faster llama.cpp kernels on Snapdragon XR2 Gen 2 · Adreno 740",
+    vo_st=(('<span class="cn">1.17</span>x', "real time, was 0.56x"), ('<span class="cn">1.02</span>x', "on battery, was 0.33x"), ("2.1x", "faster than stock llama.cpp"), ("−76%", "memory, 4174 down to 992 MB")),
+    vo_go=("Repository on GitHub", "Listen to the samples"),
+    cr_b=("Pinned", "Plugin", "Claude Code · Codex"), cr_t="chatroom",
+    cr_s="Your agents argue, prove it, and get better every room.",
+    cr_p1="Three engines in one plugin. The chat: several agents in one room, and a plan closes only when everyone has voted and said what they checked; a task is done only with a real proof. The rules live in code, not in the prompt. The research kernel: one file, a sealed evaluator, a number to beat, and every attempt measured and logged all night.",
+    cr_p2="The auto-harness: mistakes that repeat become lessons on trial, which stay only if they hold in a second room too. And a model council: <code>spawn council</code> asks 10 free models for improvements, a fact-check and ideas on your situation. Each version comes out of rooms that ran on the version before.",
+    cr_lab="Numbers from real rooms",
+    cr_st=(('<span class="cn">28</span>&nbsp;hours', "one research room on a real kernel"), ("2.1x", "the Quest voice kernel, in one night"), ('<span class="cn">37</span>', "papers behind the code"), ('<span class="cn">10</span>', "models in the council")),
+    cr_go="Repository on GitHub",
+    cref="The multi-agent plugin, pinned at the top of the page.",
+    pin_b=("Pinned", "OSINT", "LFM3"), pin_s="Local OSINT assistant, now on one model",
     pin_p1="A local assistant that combines a language model on the graphics card, open sources to see what is going on in the world, and an interface that ties them together. It queries the sources by itself when a question needs them: news by subject and place, markets, military contracts, insider moves, maps, a historical archive of events. It works on the computer (files, terminal, browser, documents) and remembers: memories, indexed documents, procedures it learns and reuses.",
-    pin_p2="No API keys for AI providers and no conversation leaves the computer. Built for modest machines: default model LFM2.5-2.6B with the DSpark speculative drafter on a GTX&nbsp;1080 with 8&nbsp;GB. A check against made-up answers verifies that the numbers and names in a reply appear in the tool results. It integrates Odysseus (assistant) and ShadowBroker (sources).<sup class=\"n\">1</sup>",
-    pin_lab="Custom optimization for the GTX 1080",
-    pin_st=(('<span class="cn">64</span>', "tok/s decoding"), ("78-100", "tok/s with the drafter"), ('<span class="cn">8</span>&nbsp;GB', "of video memory is enough"), ("1/36", "turns with unsupported numbers, down from 3/35")),
+    pin_p2="No API keys for AI providers and no conversation leaves the computer. It now uses one model for everything: LFM3 1C, a merge I made from Liquid AI's LFM3-1.7B and LFM3-VL-2B. It writes, uses the tools, looks at the screen and at images, and clicks where it needs to. A check against made-up answers verifies that the numbers and names in a reply appear in the tool results. It integrates Odysseus (assistant) and ShadowBroker (sources).<sup class=\"n\">1</sup>",
+    pin_lab="On a 2016 GTX 1080",
+    pin_st=(('<span class="cn">81</span>', "tok/s generation"), ("2-4&nbsp;s", "to find where to click"), ('<span class="cn">1</span>', "model for text, tools and vision"), ('<span class="cn">8</span>&nbsp;GB', "of video memory is enough")),
     pin_go="Repository on GitHub",
     vref="Local OSINT assistant, pinned at the top of the page.",
     gd_b=("Pinned", "Guide"), gd_t="NVIDIA GTX 1080 (sm_61) AI Full Guide",
     gd_s="Everything I made run fast on a 2016 GPU with 8&nbsp;GB, measured and sourced.",
-    gd_rows=("Ternary LoRA, training per example", "MiniMax-H3, test clip", "MiniCPM5-2B, decoding", "Int8 attention, H3 kernel", "Ternary Bonsai 2 9B, decoding", "CUDA graphs, MoE Ling-3.0-tiny"),
+    gd_rows=("Ternary LoRA, training per example", "MiniMax-H3, test clip", "MiniCPM5-2B, decoding", "Int8 attention, H3 kernel", "Ternary Bonsai 2 9B, decoding", "CUDA graphs, MoE granite-3.1-3b-a800m"),
     gd_ax="bar length is the before/after ratio",
     gd_chips=("llama.cpp kernels", "speculative decoding", "quantization", "8 GB", "LoRA", "video diffusion", "speech"),
     gd_go="Open the guide on GitHub",
@@ -544,11 +576,12 @@ def page(t):
     # panoramica: un riquadro per sezione (i primi due sono i progetti fissati in alto)
     na = len(groups[1][2]) + 1  # i sette repository dell'indice piu' H3, che non ha ancora un repository
     lines = t["ov_l"]
-    ov_t = [("vergilius", t["ov_pin"], "Vergilius", lines[0]), ("guida", t["ov_pin"], t["gd_t"], lines[1]), ("contributi", "01", t["kc"], lines[2]),
-            ("implementazioni", "02", t["ki"], lines[3] % na), ("ricerca", "03", t["kr"], lines[4] % len(t["hfm"])), ("strumenti", "04", t["ks"], lines[5]),
-            ("sperimentali", "05", t["kx"], lines[6]), ("indice", "06", t["ov_idx"], lines[7] % (nrows, len(groups)))]
+    ov_t = [("voce", t["ov_pin"], t["vo_t"], lines[0]), ("chatroom", t["ov_pin"], "chatroom", lines[1]), ("vergilius", t["ov_pin"], "Vergilius", lines[2]),
+            ("guida", t["ov_pin"], t["gd_t"], lines[3]), ("contributi", "01", t["kc"], lines[4]),
+            ("implementazioni", "02", t["ki"], lines[5] % na), ("ricerca", "03", t["kr"], lines[6] % len(t["hfm"])), ("strumenti", "04", t["ks"], lines[7]),
+            ("sperimentali", "05", t["kx"], lines[8]), ("indice", "06", t["ov_idx"], lines[9] % (nrows, len(groups)))]
     bento = "".join('<li class="rv" style="--d:%d"><a class="tile card tilt%s" href="#%s"><span class="tn">%s</span><h3>%s</h3><p>%s</p></a></li>'
-                    % (i * 60, " tile-pin" if i < 2 else "", h, n, ti, ln) for i, (h, n, ti, ln) in enumerate(ov_t))
+                    % (i * 60, " tile-pin" if i < 4 else "", h, n, ti, ln) for i, (h, n, ti, ln) in enumerate(ov_t))
     # Vergilius fissato: radar sobrio, i punti si accendono al passaggio del raggio (7 s, come la rotazione)
     blips = ""
     for ang, rad, c in ((25, .55, 0), (70, .8, 0), (118, .35, 0), (160, .7, 0), (205, .5, 1), (250, .85, 0), (310, .6, 0)):
@@ -563,7 +596,7 @@ def page(t):
     # guida GTX 1080 fissata: classifica a barre (lunghezza = rapporto prima/dopo), riempita all'ingresso in vista
     fmt = lambda v: ("%g" % v).replace(".", dec)
     rows = ((20.2, 2.7, "s", 20.2 / 2.7, "7.5x"), (674.5, 175.5, "s", 674.5 / 175.5, "\u221274%"), (33, 83.5, "tok/s", 83.5 / 33, "2.5x"),
-            (1875, 944, "ms", 1875 / 944, "2.0x"), (55.9, 84.4, "tok/s", 84.4 / 55.9, "+51%"), (41.2, 57.6, "tok/s", 57.6 / 41.2, "+40%"))
+            (1875, 944, "ms", 1875 / 944, "2.0x"), (55.9, 84.4, "tok/s", 84.4 / 55.9, "+51%"), (71.4, 125.2, "tok/s", 125.2 / 71.4, "+75%"))
     top = max(r[3] for r in rows)
     lb = "".join('<li class="lb"><p class="lb-h"><span class="lb-l">%s</span><span class="lb-v">%s \u2192 %s %s <b>%s</b></span></p><span class="hb-t"><i style="--w:%.3f;--d:%d"></i></span></li>'
                  % (t["gd_rows"][i], fmt(b), fmt(a), u, d.replace(".", dec), r / top, i * 110) for i, (b, a, u, r, d) in enumerate(rows))
@@ -571,7 +604,22 @@ def page(t):
     pin_g = ('<section class="pin" id="guida" aria-labelledby="h-guida"><article class="pin-c card rv"><p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span></p>'
              '<h2 id="h-guida">%s</h2><p class="pin-s">%s</p><ol class="lbs">%s</ol><p class="lb-ax">%s</p><p class="bf">%s</p>%s</article></section>'
              % (*t["gd_b"], t["gd_t"], t["gd_s"], lb, t["gd_ax"], gchips, go((GUIDE, t["gd_go"]))))
-    pin = '<div class="pins wrap">' + pin_v + pin_g + '</div>'
+    # voce sul Quest e chatroom fissati: stessa scheda di Vergilius, numeri in evidenza sotto
+    def stats(rows):
+        return "".join('<li><span class="pn">%s</span><span class="pl">%s</span></li>' % (n, lb) for n, lb in rows)
+    QUEST = GH + "lfm3-omni-voice-quest3s"
+    pin_vo = ('<section class="pin" id="voce" aria-labelledby="h-voce"><article class="pin-c card rv">'
+              '<p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span><span class="badge">%s</span></p>'
+              '<h2 id="h-voce">%s</h2><p class="pin-s">%s</p><p>%s</p><p>%s</p>%s<p class="pin-lab">%s</p><ul class="pin-st">%s</ul></article></section>'
+              % (*t["vo_b"], t["vo_t"], t["vo_s"], t["vo_p1"], t["vo_p2"], go((QUEST, t["vo_go"][0]), (QUEST + "/tree/main/samples", t["vo_go"][1])),
+                 t["vo_lab"], stats(t["vo_st"])))
+    pin_cr = ('<section class="pin" id="chatroom" aria-labelledby="h-chatroom"><article class="pin-c card rv">'
+              '<p class="pin-b"><span class="badge b-pin">%s</span><span class="badge">%s</span><span class="badge">%s</span></p>'
+              '<h2 id="h-chatroom">%s</h2><p class="pin-s">%s</p><p>%s</p><p>%s</p>'
+              '<p class="cmd"><code>/plugin marketplace add Partido-De-What/claude-plugins</code><code>/plugin install chatroom@artyomita-plugins</code></p>%s'
+              '<p class="pin-lab">%s</p><ul class="pin-st">%s</ul></article></section>'
+              % (*t["cr_b"], t["cr_t"], t["cr_s"], t["cr_p1"], t["cr_p2"], go((ORG + "claude-plugins", t["cr_go"])), t["cr_lab"], stats(t["cr_st"])))
+    pin = '<div class="pins wrap">' + pin_vo + pin_cr + pin_v + pin_g + '</div>'
 
     h3m = t["h3_meta"]
     h3meta = "".join("<div><dt>%s</dt><dd>%s</dd></div>" % (h3m[i], h3m[i + 1]) for i in (0, 2, 4))
@@ -711,16 +759,8 @@ def page(t):
 
 <section class="sec" id="strumenti" aria-labelledby="h-strumenti">
 {head('04', t['ks'], t['hs'], 'strumenti', t['leads'])}
-<article class="feat card tilt rv">
-<h3><a href="{ORG}claude-plugins">claude-plugins</a></h3>
-<p class="dateline">{t['dlcp']}</p>
-<p>{t['cp']}</p>
-<p class="cmd"><code>/plugin marketplace add Partido-De-What/claude-plugins</code><code>/plugin install chatroom@artyomita-plugins</code></p>
-{go((ORG + 'claude-plugins#chatroom-harness-point-by-point', t['gocp']))}
-<p class="meth">{t['cps']}</p>
-</article>
-{fence}
 <div class="grid3">
+{brief('chatroom', t['cref'], t['cps'], '#chatroom')}
 {brief('Vergilius', t['vref'], 'Python · llama.cpp', '#vergilius')}
 {brief('stt-whisper-pad', t['stt'], t['stts'], GH + 'stt-whisper-pad')}
 </div>

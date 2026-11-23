@@ -188,7 +188,7 @@ def main():
                     ck("JSON-LD e hreflang %s" % lang, R["hasLd"] == "Adrian Ciprian Iancu" and R["hreflang"] == ["en", "it", "x-default"] and R["lang"] == lang)
                     # contatori: il testo finale e' quello dell'HTML
                     final = pg.evaluate("[...document.querySelectorAll('.stat .num')].map(e=>e.textContent)")
-                    ck("contatori hero al valore finale %s" % lang, final == ["4×227k", "~100", "+51%", "+40%"], final)
+                    ck("contatori hero al valore finale %s" % lang, final == ["4×227k", "+111%", "+51%", "+75%"], final)
                     # FlyToLLM: neuroni per punto uguale al valore scritto nel testo
                     pg.evaluate("document.getElementById('cns').scrollIntoView({block:'center'})")
                     pg.wait_for_timeout(1200)
@@ -215,7 +215,7 @@ def main():
                     # panoramica e Vergilius fissato
                     ov = pg.evaluate(r"""()=>({n:document.querySelectorAll('#panoramica .tile').length,
                       ok:[...document.querySelectorAll('#panoramica .tile')].every(a=>a.querySelector('.tn')&&a.querySelector('h3')&&a.querySelector('p')&&document.querySelector(a.getAttribute('href'))),
-                      first:[...document.querySelectorAll('#panoramica .tile')].slice(0,2).map(a=>a.getAttribute('href')),
+                      first:[...document.querySelectorAll('#panoramica .tile')].slice(0,4).map(a=>a.getAttribute('href')),
                       order:!!(document.getElementById('vergilius').compareDocumentPosition(document.getElementById('guida'))&4)&&!!(document.getElementById('guida').compareDocumentPosition(document.getElementById('contributi'))&4)&&!!(document.getElementById('panoramica').compareDocumentPosition(document.getElementById('vergilius'))&4),
                       lb:document.querySelectorAll('#guida .lb').length,chips:document.querySelectorAll('#guida .bf .chip').length,
                       bars:[...document.querySelectorAll('#guida .hb-t>i')].map(i=>Math.round(i.getBoundingClientRect().width)>8).every(Boolean),
@@ -224,9 +224,9 @@ def main():
                       stats:[...document.querySelectorAll('#vergilius .pn')].map(e=>e.textContent.replace(/\s+/g,' ')),
                       h2:document.querySelectorAll('#vergilius h2').length,dup:document.querySelectorAll('#strumenti a[href$="/vergilius"]').length,
                       anims:document.getAnimations().length})""")
-                    ck("panoramica: 8 riquadri con numero, titolo e riga, Vergilius e guida per primi %s" % lang, ov["n"] == 8 and ov["ok"] and ov["first"] == ["#vergilius", "#guida"], ov)
+                    ck("panoramica: 10 riquadri con numero, titolo e riga, i 4 fissati per primi %s" % lang, ov["n"] == 10 and ov["ok"] and ov["first"] == ["#voce", "#chatroom", "#vergilius", "#guida"], ov)
                     ck("Vergilius fissato prima di Contributi, numeri in evidenza, nessun doppione in Strumenti %s" % lang,
-                       ov["order"] and ov["stats"] == ["64", "78-100", "8 GB", "1/36"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
+                       ov["order"] and ov["stats"] == ["81", "2-4 s", "1", "8 GB"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
                     ck("guida fissata: 6 voci con barra piena, 7 categorie, nessuna immagine nel sito tranne l'avatar %s" % lang,
                        ov["lb"] == 6 and ov["chips"] == 7 and ov["bars"] and ov["imgs"] == ["avatar-192.webp"], [ov["lb"], ov["chips"], ov["bars"], ov["imgs"]])
                     ck("riquadro H3 in Implementazioni con i numeri misurati %s" % lang,
@@ -297,7 +297,7 @@ def main():
             ext = [u for u in pg.reqs if "hero.js" in u]
             ck("reduced-motion: scena non caricata %s" % lang, not st["gl"] and not st["run"] and not ext, [st["gl"], st["run"], ext])
             ck("reduced-motion: nessuna animazione, tutto visibile %s" % lang, st["anims"] == 0 and not st["rv"] and st["hidden"] == 0, st)
-            ck("reduced-motion: contatori finali %s" % lang, st["num"] == ["4×227k", "~100", "+51%", "+40%"], st["num"])
+            ck("reduced-motion: contatori finali %s" % lang, st["num"] == ["4×227k", "+111%", "+51%", "+75%"], st["num"])
             ck("reduced-motion: console %s" % lang, not pg.logs, pg.logs[:3])
             ctx.close()
 
