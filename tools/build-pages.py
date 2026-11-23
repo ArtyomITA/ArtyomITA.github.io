@@ -412,6 +412,45 @@ NEW["en"].update(dict(
     h3_p3="The LoRA <code>baked_scale</code> fix is merged (<a href=\"" + PR_SD + "\">PR #2202</a> in stable-diffusion.cpp). The rest of the code is on its way.",
     h3_go="Guide section on H3",
 ))
+# storia in cima: un pannello per tappa del mondo di cubi (id, numero, etichetta, titolo, frase, testo, numeri, link)
+QUEST = GH + "lfm3-omni-voice-quest3s"
+STORY = {
+    "en": [
+        ("vergilius", "local OSINT assistant", "Vergilius", "One small model reads the world for you. On your own computer, with nothing leaving it.",
+         "News, markets, military contracts, insider moves, maps. It now runs on <b>LFM3 1C</b>, a merge I made from LFM3-1.7B and LFM3-VL-2B: one model that writes, uses tools, looks at the screen and clicks.",
+         (('<span class="cn">81</span>', "tok/s on a GTX 1080"), ("2-4&nbsp;s", "to find where to click"), ('<span class="cn">8</span><u>GB</u>', "of VRAM is enough")),
+         ((GH + "vergilius", "Repository"),)),
+        ("chatroom", "multi-agent orchestrator", "chatroom", "Claude Code and Codex in the same room, arguing until the proof is on the table.",
+         "A plan closes only when every agent has voted and said what it checked. The rules live in code, so no model talks its way past them. <b>Research</b> measures every attempt all night. <b>Auto-harness</b> turns repeated mistakes into lessons on trial. <b>Model council</b> asks 10 free models about your situation. Other harnesses are next.",
+         (('<span class="cn">28</span><u>h</u>', "one research room on a real kernel"), ("2.1x", "the Quest voice kernel, in one night"), ('<span class="cn">37</span>', "papers behind the code")),
+         ((ORG + "claude-plugins", "Repository"),)),
+        ("voce", "edge AI · Meta Quest 3S", "A 300&nbsp;euro headset that talks", "Faster than you can listen. No cloud, no PC, no cable.",
+         "LFM3-Omni-2B runs entirely inside the headset with llama.cpp: backbone on the Adreno GPU through OpenCL, depthformer on the CPU, codec on its own thread. Stock llama.cpp needed 1.8 s to say one second of speech. With my kernels, 0.85 s.",
+         (('<span class="cn">1.17</span><u>x</u>', "real time, was 0.56x"), ('<span class="cn">1.02</span><u>x</u>', "on battery, was 0.33x"), ("−76%", "memory, 4174 to 992 MB")),
+         ((QUEST, "Repository"), (QUEST + "/tree/main/samples", "Listen"))),
+        ("guida", "Blackwell · GTX 1080", "Kernels that read the card", "Training on Blackwell. Inference on a GPU from 2016. Every change bit-identical to the reference.",
+         "Qwen3.8 Flash-Next for 4 users with 227k context each on one RTX PRO 6000. Training kernels for LFM3, built from how the card really works. On the GTX 1080, everything that runs fast is in one guide. Next: other inference engines.",
+         None, ((GUIDE, "The GTX 1080 guide"), (PR, "PR #27721"))),
+    ],
+    "it": [
+        ("vergilius", "assistente OSINT locale", "Vergilius", "Un modello piccolo legge il mondo per te. Sul tuo computer, senza che niente esca.",
+         "Notizie, mercati, contratti militari, movimenti degli insider, mappe. Ora gira su <b>LFM3 1C</b>, un fuso che ho fatto da LFM3-1.7B e LFM3-VL-2B: un modello solo che scrive, usa gli strumenti, guarda lo schermo e clicca.",
+         (('<span class="cn">81</span>', "tok/s su una GTX 1080"), ("2-4&nbsp;s", "per trovare dove cliccare"), ('<span class="cn">8</span><u>GB</u>', "di VRAM bastano")),
+         ((GH + "vergilius", "Repository"),)),
+        ("chatroom", "orchestratore multi-agente", "chatroom", "Claude Code e Codex nella stessa stanza, a discutere finché la prova non è sul tavolo.",
+         "Un piano si chiude solo quando ogni agente ha votato e detto cosa ha controllato. Le regole stanno nel codice, quindi nessun modello le aggira a parole. <b>Research</b> misura ogni tentativo per tutta la notte. <b>Auto-harness</b> trasforma gli errori ripetuti in lezioni in prova. <b>Model council</b> chiede a 10 modelli gratuiti della tua situazione. Il prossimo passo sono altri harness.",
+         (('<span class="cn">28</span><u>h</u>', "una stanza di ricerca su un kernel vero"), ("2,1x", "il kernel voce del Quest, in una notte"), ('<span class="cn">37</span>', "paper dietro il codice")),
+         ((ORG + "claude-plugins", "Repository"),)),
+        ("voce", "edge AI · Meta Quest 3S", "Un visore da 300&nbsp;euro che parla", "Più veloce di quanto riesci ad ascoltare. Niente cloud, niente PC, niente cavo.",
+         "LFM3-Omni-2B gira tutto dentro il visore con llama.cpp: la rete principale sulla GPU Adreno con OpenCL, il depthformer sulla CPU, il codec su un thread a parte. llama.cpp originale impiegava 1,8 s per dire un secondo di parlato. Con i miei kernel, 0,85 s.",
+         (('<span class="cn">1,17</span><u>x</u>', "tempo reale, prima 0,56x"), ('<span class="cn">1,02</span><u>x</u>', "a batteria, prima 0,33x"), ("−76%", "memoria, da 4174 a 992 MB")),
+         ((QUEST, "Repository"), (QUEST + "/tree/main/samples", "Ascolta"))),
+        ("guida", "Blackwell · GTX 1080", "Kernel che leggono la scheda", "Training su Blackwell. Inferenza su una GPU del 2016. Ogni modifica identica bit per bit al riferimento.",
+         "Qwen3.8 Flash-Next per 4 utenti con 227k di contesto ciascuno su una sola RTX PRO 6000. Kernel per il training di LFM3, costruiti su come lavora davvero la scheda. Sulla GTX 1080, tutto quello che gira veloce sta in una guida. Il prossimo passo: altri motori di inferenza.",
+         None, ((GUIDE, "La guida GTX 1080"), (PR, "PR #27721"))),
+    ],
+}
+
 for _l, _t in T.items():
     _t.update(NEW[_l])
     _t["n4"] = _t["n4"].replace(": @@F@@", "")
@@ -621,6 +660,16 @@ def page(t):
               '<p class="pin-lab">%s</p><ul class="pin-st">%s</ul></article></section>'
               % (*t["cr_b"], t["cr_t"], t["cr_s"], t["cr_p1"], t["cr_p2"], go((ORG + "claude-plugins", t["cr_go"])), t["cr_lab"], stats(t["cr_st"])))
     pin = '<div class="pins wrap">' + pin_v + pin_cr + pin_vo + pin_g + '</div>'
+    # storia: un pannello fisso per tappa, il mondo di cubi dietro (hero.js); site.js spezza in parole titolo e frase (.sw)
+    story = ""
+    for n, (sid, kick, title, catch, body, nums, links) in enumerate(STORY[L], 1):
+        if nums:
+            low = '<ul class="nums">%s</ul>' % "".join('<li><b>%s</b><span>%s</span></li>' % (v, lb) for v, lb in nums)
+        else:
+            low = '<ol class="lbs">%s</ol>' % lb
+        story += ('<section class="stg" id="%s" data-stage="%d" aria-labelledby="h-%s"><article class="panel rv">'
+                  '<p class="pk"><span>0%d</span>%s</p><h2 id="h-%s" class="sw">%s</h2><p class="catch sw">%s</p><p class="pb">%s</p>%s%s</article></section>'
+                  % (sid, n, sid, n, kick, sid, title, catch, body, low, go(*links)))
 
     h3m = t["h3_meta"]
     h3meta = "".join("<div><dt>%s</dt><dd>%s</dd></div>" % (h3m[i], h3m[i + 1]) for i in (0, 2, 4))
@@ -680,7 +729,8 @@ def page(t):
 </div></header>
 
 <main id="main">
-<section class="hero" id="top">
+<div class="story">
+<section class="hero" id="top" data-stage="0">
 <div class="hero-bg" aria-hidden="true"></div>
 <canvas class="hero-cv" id="hero-cv" aria-hidden="true"></canvas>
 <div class="hero-in wrap">
@@ -692,13 +742,9 @@ def page(t):
 <ul class="stats" style="--i:5">{stats}</ul>
 </div>
 </section>
-
-<section class="ov wrap" id="panoramica" aria-labelledby="h-panoramica">
-<h2 class="kick rv" id="h-panoramica"><i></i>{t['ov_k']}</h2>
-<ul class="bento">{bento}</ul>
-</section>
-
-{pin}
+{story}
+</div>
+<div class="after">
 
 <div class="body wrap">
 <aside class="hf rv" aria-labelledby="h-hf">
@@ -810,6 +856,7 @@ def page(t):
 </div>
 </section>
 
+</div>
 </div>
 </div>
 </main>

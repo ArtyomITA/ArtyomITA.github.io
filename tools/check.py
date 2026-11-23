@@ -190,7 +190,7 @@ def main():
                     final = pg.evaluate("[...document.querySelectorAll('.stat .num')].map(e=>e.textContent)")
                     ck("contatori hero al valore finale %s" % lang, final == ["4×227k", "+111%", "+51%", "+75%"], final)
                     # scena in pausa fuori vista, di nuovo attiva al ritorno
-                    pg.evaluate("window.scrollTo(0, 3000)")
+                    pg.evaluate("window.scrollTo(0, document.getElementById('implementazioni').getBoundingClientRect().top + scrollY)")
                     pg.wait_for_timeout(700)
                     off = pg.evaluate("document.getElementById('hero-cv').dataset.run")
                     pg.evaluate("window.scrollTo(0, 0)")
@@ -207,31 +207,31 @@ def main():
                     tf = pg.evaluate("document.querySelector('#implementazioni .feat').style.transform")
                     ck("tilt delle schede al passaggio del mouse %s" % lang, "perspective" in tf, tf)
                     # panoramica e Vergilius fissato
-                    ov = pg.evaluate(r"""()=>({n:document.querySelectorAll('#panoramica .tile').length,
-                      ok:[...document.querySelectorAll('#panoramica .tile')].every(a=>a.querySelector('.tn')&&a.querySelector('h3')&&a.querySelector('p')&&document.querySelector(a.getAttribute('href'))),
-                      first:[...document.querySelectorAll('#panoramica .tile')].slice(0,4).map(a=>a.getAttribute('href')),
-                      order:!!(document.getElementById('vergilius').compareDocumentPosition(document.getElementById('guida'))&4)&&!!(document.getElementById('guida').compareDocumentPosition(document.getElementById('contributi'))&4)&&!!(document.getElementById('panoramica').compareDocumentPosition(document.getElementById('vergilius'))&4),
+                    ov = pg.evaluate(r"""()=>({n:document.querySelectorAll('.story [data-stage]').length,
+                      ok:[...document.querySelectorAll('.stg')].every(s=>s.querySelector('.panel h2')&&s.querySelector('.catch')&&s.querySelector('.go a')),
+                      first:[...document.querySelectorAll('.stg')].map(s=>s.id),
+                      order:!!(document.getElementById('vergilius').compareDocumentPosition(document.getElementById('guida'))&4)&&!!(document.getElementById('guida').compareDocumentPosition(document.getElementById('contributi'))&4)&&!!(document.getElementById('top').compareDocumentPosition(document.getElementById('vergilius'))&4),
                       lb:document.querySelectorAll('#guida .lb').length,chips:document.querySelectorAll('#guida .bf .chip').length,
                       bars:[...document.querySelectorAll('#guida .hb-t>i')].map(i=>Math.round(i.getBoundingClientRect().width)>8).every(Boolean),
                       imgs:[...document.querySelectorAll('main img')].map(i=>i.getAttribute('src').split('/').pop()),
                       h3:(document.querySelector('#h3')||{innerText:''}).innerText,
-                      stats:[...document.querySelectorAll('#vergilius .pn')].map(e=>e.textContent.replace(/\s+/g,' ')),
+                      stats:[...document.querySelectorAll('#vergilius .nums b')].map(e=>e.textContent.replace(/\s+/g,' ')),
                       h2:document.querySelectorAll('#vergilius h2').length,dup:document.querySelectorAll('#strumenti a[href$="/vergilius"]').length,
                       anims:document.getAnimations().length})""")
-                    ck("panoramica: solo i 4 fissati, con titolo e riga %s" % lang, ov["n"] == 4 and ov["ok"] and ov["first"] == ["#vergilius", "#chatroom", "#voce", "#guida"], ov)
+                    ck("storia: hero e 4 tappe in ordine, ognuna con titolo, frase e link %s" % lang, ov["n"] == 5 and ov["ok"] and ov["first"] == ["vergilius", "chatroom", "voce", "guida"], ov)
                     ck("Vergilius fissato prima di Contributi, numeri in evidenza, nessun doppione in Strumenti %s" % lang,
-                       ov["order"] and ov["stats"] == ["81", "2-4 s", "1", "8 GB"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
-                    ck("guida fissata: 6 voci con barra piena, 7 categorie, nessuna immagine nel sito tranne l'avatar %s" % lang,
-                       ov["lb"] == 6 and ov["chips"] == 7 and ov["bars"] and ov["imgs"] == ["avatar-192.webp"], [ov["lb"], ov["chips"], ov["bars"], ov["imgs"]])
+                       ov["order"] and ov["stats"] == ["81", "2-4 s", "8GB"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
+                    ck("tappa guida: 6 voci con barra piena, nessuna immagine nel sito tranne l'avatar %s" % lang,
+                       ov["lb"] == 6 and ov["bars"] and ov["imgs"] == ["avatar-192.webp"], [ov["lb"], ov["bars"], ov["imgs"]])
                     ck("riquadro H3 in Implementazioni con i numeri misurati %s" % lang,
                        all(x in ov["h3"].replace(",", ".") for x in ("674.5", "175.5", "1875", "944", "1.65x", "2202")) and "1.65x" in ov["h3"].replace(",", "."), ov["h3"][:80])
                     ck("animazioni attive (radar, scena) %s" % lang, ov["anims"] > 0, ov["anims"])
                     pg.evaluate("window.scrollTo(0,0)")
                     pg.wait_for_timeout(300)
-                    pg.click('#panoramica a[href="#guida"]')
+                    pg.click('.bar .nav a[href="#implementazioni"]')
                     pg.wait_for_timeout(2200)
-                    top = pg.evaluate("document.getElementById('guida').getBoundingClientRect().top")
-                    ck("click sulla panoramica: scroll morbido alla sezione %s" % lang, abs(top) < 140, top)
+                    top = pg.evaluate("document.getElementById('implementazioni').getBoundingClientRect().top")
+                    ck("click sul menu: scroll morbido alla sezione %s" % lang, abs(top) < 140, top)
                     # comparsa allo scroll
                     pg.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")
                     pg.wait_for_timeout(1500)

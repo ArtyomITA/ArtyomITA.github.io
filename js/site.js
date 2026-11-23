@@ -39,6 +39,25 @@ if (toc) {
   addEventListener('keydown', function (e) { if (e.key === 'Escape') toc.removeAttribute('open'); });
 }
 
+/* titoli e frasi dei pannelli in parole, ognuna con il suo ritardo (--i): salgono quando il pannello entra */
+$$('.sw').forEach(function (el) {
+  var i = 0;
+  (function walk(n) {
+    [].slice.call(n.childNodes).forEach(function (c) {
+      if (c.nodeType === 3) {
+        var f = D.createDocumentFragment();
+        c.textContent.split(/([ \t\n]+)/).forEach(function (p) {
+          if (!p) return;
+          if (/^[ \t\n]+$/.test(p)) { f.appendChild(D.createTextNode(' ')); return; }
+          var w = D.createElement('span'), s = D.createElement('span');
+          w.className = 'w'; s.style.setProperty('--i', i++); s.textContent = p; w.appendChild(s); f.appendChild(w);
+        });
+        n.replaceChild(f, c);
+      } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
+    });
+  })(el);
+});
+
 /* comparsa allo scroll */
 if ('IntersectionObserver' in window && !rm) {
   root.classList.add('rv-on');
