@@ -116,24 +116,24 @@ def main():
         else:
             print("ok  ", name, detail if len(str(detail)) < 100 else "")
 
-    PAGES = (("it", ""), ("en", "en/"))
+    PAGES = (("it", "it/"), ("en", ""))
 
     # --- file: pesi, trattini, hash CSP, dipendenze esterne scritte nell'HTML
     sizes = {}
-    for rel in ("index.html", "en/index.html", "css/site.css", "js/site.js", "js/hero.js", "fonts/geist-latin.woff2", "fonts/jetbrains-mono-latin.woff2"):
+    for rel in ("index.html", "it/index.html", "css/site.css", "js/site.js", "js/hero.js", "fonts/geist-latin.woff2", "fonts/jetbrains-mono-latin.woff2"):
         data = open(os.path.join(ROOT, rel), "rb").read()
         sizes[rel] = (len(data), len(gzip.compress(data)))
-    ck("peso html", max(sizes["index.html"][0], sizes["en/index.html"][0]) <= BUDGET["html"], sizes["index.html"][0])
+    ck("peso html", max(sizes["index.html"][0], sizes["it/index.html"][0]) <= BUDGET["html"], sizes["index.html"][0])
     ck("peso css", sizes["css/site.css"][0] <= BUDGET["css"], sizes["css/site.css"][0])
     ck("peso js iniziale", sizes["js/site.js"][0] <= BUDGET["js"], sizes["js/site.js"][0])
     ck("peso font", sizes["fonts/geist-latin.woff2"][0] + sizes["fonts/jetbrains-mono-latin.woff2"][0] <= BUDGET["font"], sizes["fonts/geist-latin.woff2"][0] + sizes["fonts/jetbrains-mono-latin.woff2"][0])
     init = sizes["index.html"][1] + sizes["css/site.css"][1] + sizes["js/site.js"][1] + 2 * 0 + sizes["fonts/geist-latin.woff2"][0] + sizes["fonts/jetbrains-mono-latin.woff2"][0] + 17000
     ck("peso iniziale (gzip + font + avatar)", init <= BUDGET["initial"], init)
     ck("peso hero.js (a pagina finita)", sizes["js/hero.js"][0] <= BUDGET["hero"], "%d B, gzip %d B" % sizes["js/hero.js"])
-    for rel in ("index.html", "en/index.html", "css/site.css", "js/site.js", "tools/hero.src.js"):
+    for rel in ("index.html", "it/index.html", "css/site.css", "js/site.js", "tools/hero.src.js"):
         t = open(os.path.join(ROOT, rel), encoding="utf-8").read()
         ck("trattini U+2014/U+2013 in " + rel, not re.search("[%s]" % DASH, t), len(re.findall("[%s]" % DASH, t)))
-    for rel in ("index.html", "en/index.html"):
+    for rel in ("index.html", "it/index.html"):
         t = open(os.path.join(ROOT, rel), encoding="utf-8").read()
         h = re.findall(r'<(?:script|link|img|source)\b[^>]*?(?:src|href)="(https?://[^"]+)"', t)
         h = [u for u in h if not re.search(r'rel="(canonical|alternate)"', t[max(0, t.find(u) - 80):t.find(u)])]
@@ -224,7 +224,7 @@ def main():
                       stats:[...document.querySelectorAll('#vergilius .pn')].map(e=>e.textContent.replace(/\s+/g,' ')),
                       h2:document.querySelectorAll('#vergilius h2').length,dup:document.querySelectorAll('#strumenti a[href$="/vergilius"]').length,
                       anims:document.getAnimations().length})""")
-                    ck("panoramica: 10 riquadri con numero, titolo e riga, i 4 fissati per primi %s" % lang, ov["n"] == 10 and ov["ok"] and ov["first"] == ["#voce", "#chatroom", "#vergilius", "#guida"], ov)
+                    ck("panoramica: solo i 4 fissati, con titolo e riga %s" % lang, ov["n"] == 4 and ov["ok"] and ov["first"] == ["#voce", "#chatroom", "#vergilius", "#guida"], ov)
                     ck("Vergilius fissato prima di Contributi, numeri in evidenza, nessun doppione in Strumenti %s" % lang,
                        ov["order"] and ov["stats"] == ["81", "2-4 s", "1", "8 GB"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
                     ck("guida fissata: 6 voci con barra piena, 7 categorie, nessuna immagine nel sito tranne l'avatar %s" % lang,
@@ -234,9 +234,9 @@ def main():
                     ck("animazioni attive (radar, scena) %s" % lang, ov["anims"] > 0, ov["anims"])
                     pg.evaluate("window.scrollTo(0,0)")
                     pg.wait_for_timeout(300)
-                    pg.click('#panoramica a[href="#ricerca"]')
+                    pg.click('#panoramica a[href="#guida"]')
                     pg.wait_for_timeout(2200)
-                    top = pg.evaluate("document.getElementById('ricerca').getBoundingClientRect().top")
+                    top = pg.evaluate("document.getElementById('guida').getBoundingClientRect().top")
                     ck("click sulla panoramica: scroll morbido alla sezione %s" % lang, abs(top) < 140, top)
                     # comparsa allo scroll
                     pg.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")

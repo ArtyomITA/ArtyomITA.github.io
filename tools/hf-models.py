@@ -1,6 +1,6 @@
 """Numeri dei modelli Hugging Face per la colonna a sinistra (IT ed EN).
 
-  python tools/hf-models.py            legge l'API, aggiorna tools/hf-models.json e riscrive il blocco in index.html e en/index.html
+  python tools/hf-models.py            legge l'API, aggiorna tools/hf-models.json e riscrive il blocco in index.html e it/index.html
   python tools/hf-models.py --dry      stampa i numeri senza scrivere niente
 
 La pagina non chiama Hugging Face: i numeri sono scritti nell'HTML, tra i commenti <!--hf--> e <!--/hf-->.
@@ -82,5 +82,5 @@ if __name__ == "__main__":
         with open(SNAP, "w", encoding="utf-8", newline="\n") as f:
             json.dump(snap, f, indent=1)
             f.write("\n")
-        for lang, rel in (("it", "index.html"), ("en", os.path.join("en", "index.html"))):
+        for lang, rel in (("it", os.path.join("it", "index.html")), ("en", "index.html")):
             print(rel, "aggiornato" if patch(os.path.join(ROOT, rel), render(lang, snap)) else "invariato")

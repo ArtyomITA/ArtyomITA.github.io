@@ -1,4 +1,4 @@
-"""Genera index.html (italiano) e en/index.html (inglese) dallo stesso modello.
+"""Genera index.html (inglese, pagina principale) e it/index.html (italiano) dallo stesso modello; en/ rimanda alla radice.
 
 Stessa struttura e stessi id nelle due pagine; cambiano solo i testi. Le visualizzazioni (barre, celle, scala logaritmica)
 sono HTML e CSS scritti qui, senza immagini. I numeri dei modelli Hugging Face (colonna a sinistra) vengono da
@@ -83,7 +83,7 @@ PD = {"it": "260", "en": "260"}
 T = {}
 
 T["it"] = dict(
-    lang="it", ogloc="it_IT", ogalt="en_GB", canon=SITE, P="", og="img/og-it.png",
+    lang="it", ogloc="it_IT", ogalt="en_GB", canon=SITE + "it/", P="../", og="img/og-it.png",
     desc="AI engineer: inferenza LLM su GPU consumer, datacenter e visori VR, kernel CUDA e OpenCL più veloci, contributi upstream a llama.cpp, stable-diffusion.cpp e vLLM, ricerca sul comportamento dei modelli open-weight. Tutto open source.",
     ogimgalt="Il nome Adrian Ciprian Iancu in grande, la riga del ruolo e lo schema dei CUDA Graphs su Pascal della figura 1.",
     skip="Vai al contenuto", navlabel="Sezioni", toc="Indice", langlabel="Lingua", themelabel="Tema",
@@ -184,7 +184,7 @@ T["it"] = dict(
 )
 
 T["en"] = dict(
-    lang="en", ogloc="en_GB", ogalt="it_IT", canon=SITE + "en/", P="../", og="img/og-en.png",
+    lang="en", ogloc="en_GB", ogalt="it_IT", canon=SITE, P="", og="img/og-en.png",
     desc="AI engineer: LLM inference on consumer GPUs, datacenter GPUs and VR headsets, faster CUDA and OpenCL kernels, upstream contributions to llama.cpp, stable-diffusion.cpp and vLLM, research on the behaviour of open-weight models. All open source.",
     ogimgalt="The name Adrian Ciprian Iancu set large, the role line and the CUDA Graphs on Pascal schematic from figure 1.",
     skip="Skip to content", navlabel="Sections", toc="Contents", langlabel="Language", themelabel="Theme",
@@ -481,7 +481,7 @@ def page(t):
     num = lambda v, k=2: fx(v, k).replace(".", dec)
     nav = "".join('<a href="%s">%s</a>' % (h, s) for h, s in nav_items(t))
     toc = "".join('<li><a href="%s">%s</a></li>' % (h, s) for h, s in nav_items(t) + [("#note", t["navnote"])])
-    it_href, en_href = ("./", "en/") if L == "it" else ("../", "./")
+    it_href, en_href = ("./", "../") if L == "it" else ("it/", "./")
     # Versione inglese: per toglierla cancellare la cartella en/, il blocco .lang e i tre <link rel="alternate"> nel head.
     lang_nav = ('<nav class="lang" aria-label="%s"><a href="%s" hreflang="it" lang="it"%s>IT</a><span aria-hidden="true">/</span><a href="%s" hreflang="en" lang="en"%s>EN</a></nav>'
                 % (t["langlabel"], it_href, ' aria-current="page"' if L == "it" else "", en_href, ' aria-current="page"' if L == "en" else ""))
@@ -577,9 +577,7 @@ def page(t):
     na = len(groups[1][2]) + 1  # i sette repository dell'indice piu' H3, che non ha ancora un repository
     lines = t["ov_l"]
     ov_t = [("voce", t["ov_pin"], t["vo_t"], lines[0]), ("chatroom", t["ov_pin"], "chatroom", lines[1]), ("vergilius", t["ov_pin"], "Vergilius", lines[2]),
-            ("guida", t["ov_pin"], t["gd_t"], lines[3]), ("contributi", "01", t["kc"], lines[4]),
-            ("implementazioni", "02", t["ki"], lines[5] % na), ("ricerca", "03", t["kr"], lines[6] % len(t["hfm"])), ("strumenti", "04", t["ks"], lines[7]),
-            ("sperimentali", "05", t["kx"], lines[8]), ("indice", "06", t["ov_idx"], lines[9] % (nrows, len(groups)))]
+            ("guida", t["ov_pin"], t["gd_t"], lines[3])]
     bento = "".join('<li class="rv" style="--d:%d"><a class="tile card tilt%s" href="#%s"><span class="tn">%s</span><h3>%s</h3><p>%s</p></a></li>'
                     % (i * 60, " tile-pin" if i < 4 else "", h, n, ti, ln) for i, (h, n, ti, ln) in enumerate(ov_t))
     # Vergilius fissato: radar sobrio, i punti si accendono al passaggio del raggio (7 s, come la rotazione)
@@ -634,8 +632,8 @@ def page(t):
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0d0f13">
 <link rel="canonical" href="{canon}">
-<link rel="alternate" hreflang="it" href="{site}">
-<link rel="alternate" hreflang="en" href="{site}en/">
+<link rel="alternate" hreflang="it" href="{site}it/">
+<link rel="alternate" hreflang="en" href="{site}">
 <link rel="alternate" hreflang="x-default" href="{site}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{name} · AI Engineer">
@@ -842,7 +840,7 @@ def page(t):
 
 
 def write(lang, html):
-    path = os.path.join(ROOT, "index.html") if lang == "it" else os.path.join(ROOT, "en", "index.html")
+    path = os.path.join(ROOT, "it", "index.html") if lang == "it" else os.path.join(ROOT, "index.html")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write(html)
@@ -853,5 +851,10 @@ if __name__ == "__main__":
     for lang in ("it", "en"):
         html = page(T[lang])
         print(write(lang, html), len(html.encode("utf-8")))
+    # /en/ was the English page until Nov 2026: keep old links working
+    with open(os.path.join(ROOT, "en", "index.html"), "w", encoding="utf-8", newline="\n") as f:
+        f.write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Adrian Ciprian Iancu</title>'
+                '<link rel="canonical" href="%s"><meta http-equiv="refresh" content="0; url=../"></head>'
+                '<body><a href="../">Adrian Ciprian Iancu</a></body></html>\n' % SITE)
     open(os.path.join(ROOT, ".nojekyll"), "w").close()
     print("CSP hash sha256-" + BOOT_HASH)
