@@ -85,14 +85,14 @@ T = {}
 
 T["it"] = dict(
     lang="it", ogloc="it_IT", ogalt="en_GB", canon=SITE + "it/", P="../", og="img/og-it.png",
-    desc="AI engineer: inferenza LLM su GPU consumer, datacenter e visori VR, kernel CUDA e OpenCL più veloci, contributi upstream a llama.cpp, stable-diffusion.cpp e vLLM, ricerca sul comportamento dei modelli open-weight. Tutto open source.",
+    desc="AI engineer: training e kernel su GPU Blackwell, inferenza locale su GTX 1080 e visori VR, kernel CUDA e OpenCL più veloci, contributi upstream a llama.cpp, stable-diffusion.cpp e vLLM, ricerca sul comportamento dei modelli open-weight. Tutto open source.",
     ogimgalt="Il nome Adrian Ciprian Iancu in grande, la riga del ruolo e lo schema dei CUDA Graphs su Pascal della figura 1.",
     skip="Vai al contenuto", navlabel="Sezioni", toc="Indice", langlabel="Lingua", themelabel="Tema",
     th=("chiaro", "scuro", "auto"), thtitle=("Tema chiaro (carta)", "Tema scuro (cianotipia)", "Tema auto (come il sistema)"),
     nav=["contributi", "implementazioni", "ricerca", "strumenti e agenti", "progetti sperimentali", "indice"], navnote="nota sulle figure",
     folio="aggiornata novembre 2026",
-    role="<b>AI engineer</b>: inferenza LLM dalla GTX&nbsp;1080 al visore VR, kernel più veloci, agenti che si correggono da soli, contributi open&nbsp;source.",
-    abs='<span class="runin">Sommario.</span> Faccio <b>inferenza di LLM</b>: <b>kernel CUDA</b> e patch minime per far girare i modelli su GPU consumer e su una sola Blackwell, con ogni modifica verificata contro l\'output di riferimento. Faccio anche <b>ricerca applicata</b> sul comportamento dei modelli open-weight. Tutto open&nbsp;source: due mie PR sono state integrate, una è aperta in llama.cpp e un mio fix è stato adottato in vLLM.',
+    role="<b>AI engineer</b>: training e kernel su GPU Blackwell, inferenza locale veloce su una GTX&nbsp;1080 e su un visore VR, agenti che si correggono da soli. Tutto open&nbsp;source.",
+    abs='<span class="runin">Sommario.</span> Su <b>Blackwell</b> addestro modelli e scrivo kernel per il training, per esempio su LFM3, partendo da come lavora davvero la scheda. In <b>locale</b> faccio girare modelli veloci su una GTX&nbsp;1080 e dentro un Meta Quest 3S, con ogni modifica verificata contro l\'output di riferimento. Il prossimo passo è ottimizzare altri motori di inferenza per queste schede. Faccio anche <b>ricerca applicata</b> sul comportamento dei modelli open-weight. Tutto open&nbsp;source: due mie PR sono integrate, una è aperta in llama.cpp e un mio fix è stato adottato in vLLM.',
     kw='Inferenza LLM, kernel CUDA e OpenCL, CUDA Graphs; AI su dispositivi edge (Meta Quest 3S, Adreno); GPU Pascal (sm_61) e Blackwell; decoding speculativo, quantizzazione (NVFP4, pesi ternari); llama.cpp, vLLM, GGML; sicurezza dei modelli open-weight; sistemi multi-agente; ML applicato.',
     
     # Contributi upstream
@@ -186,14 +186,14 @@ T["it"] = dict(
 
 T["en"] = dict(
     lang="en", ogloc="en_GB", ogalt="it_IT", canon=SITE, P="", og="img/og-en.png",
-    desc="AI engineer: LLM inference on consumer GPUs, datacenter GPUs and VR headsets, faster CUDA and OpenCL kernels, upstream contributions to llama.cpp, stable-diffusion.cpp and vLLM, research on the behaviour of open-weight models. All open source.",
+    desc="AI engineer: training and kernels on Blackwell GPUs, local inference on a GTX 1080 and VR headsets, faster CUDA and OpenCL kernels, upstream contributions to llama.cpp, stable-diffusion.cpp and vLLM, research on the behaviour of open-weight models. All open source.",
     ogimgalt="The name Adrian Ciprian Iancu set large, the role line and the CUDA Graphs on Pascal schematic from figure 1.",
     skip="Skip to content", navlabel="Sections", toc="Contents", langlabel="Language", themelabel="Theme",
     th=("light", "dark", "auto"), thtitle=("Light theme (paper)", "Dark theme (cyanotype)", "Auto theme (follow the system)"),
     nav=["contributions", "implementations", "research", "tools and agents", "experimental projects", "index"], navnote="a note on the figures",
     folio="updated November 2026",
-    role="<b>AI engineer</b>: LLM inference from a GTX&nbsp;1080 to a VR headset, faster kernels, agents that correct themselves, open&nbsp;source contributions.",
-    abs='<span class="runin">Abstract.</span> I work on <b>LLM inference</b>: <b>CUDA kernels</b> and minimal patches that make models run on consumer GPUs and on a single Blackwell, with every change checked against the reference output. I also do <b>applied research</b> on the behaviour of open-weight models. All open&nbsp;source: two of my PRs are merged, one is open in llama.cpp, and one of my fixes was adopted in vLLM.',
+    role="<b>AI engineer</b>: training and kernels on Blackwell GPUs, fast local inference on a GTX&nbsp;1080 and on a VR headset, agents that correct themselves. All open&nbsp;source.",
+    abs='<span class="runin">Abstract.</span> On <b>Blackwell</b> I train models and write training kernels, for example for LFM3, starting from how the card really works. <b>Locally</b> I make models run fast on a GTX&nbsp;1080 and inside a Meta Quest 3S, with every change checked against the reference output. Next: optimizing other inference engines for these cards. I also do <b>applied research</b> on the behaviour of open-weight models. All open&nbsp;source: two of my PRs are merged, one is open in llama.cpp, and one of my fixes was adopted in vLLM.',
     kw='LLM inference, CUDA and OpenCL kernels, CUDA Graphs; edge AI (Meta Quest 3S, Adreno); Pascal (sm_61) and Blackwell GPUs; speculative decoding, quantization (NVFP4, ternary weights); llama.cpp, vLLM, GGML; security of open-weight models; multi-agent systems; applied ML.',
     
     kc="Upstream contributions", hc="Four patches in four projects",
