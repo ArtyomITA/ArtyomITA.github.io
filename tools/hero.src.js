@@ -1,5 +1,5 @@
 /* Scena della pagina: un mondo di cubi teal che, mentre si scorre, si ricompone in una forma per ogni progetto.
-   Tappe ([data-stage]): 0 parete (hero), 1 globo (Vergilius), 2 torri di agenti (chatroom), 3 onda sonora (Quest 3S), 4 die della GPU.
+   Tappe ([data-stage]): 0 parete (hero), 1 globo (Vergilius), 2 torri di agenti (chatroom), 3 die della GPU (kernel), 4 onda sonora (Quest 3S).
    Sorgente di js/hero.js (three.js incluso): python tools/build-hero.py. Seme fisso 424. Stesso contratto della scena di prima:
    host.gl al primo fotogramma, canvas.dataset.run 1/0, pausa fuori vista e con la scheda nascosta. */
 import {
@@ -57,10 +57,10 @@ function die() {
   }
   return { p, s };
 }
-const L = [wall(), globe(), agents(), wave(), die()];
+const L = [wall(), globe(), agents(), die(), wave()];
 // telecamera per tappa (posizione, punto guardato); su schermi stretti la scena si centra e si allontana
 const CAM = [
-  [[4, 24, 34], [-4, -3, 2]], [[-8, 13, 44], [-10, 5, 0]], [[-16, 26, 34], [-4, 4, 1]], [[-14, 18, 40], [-8, 10, 0]], [[-12, 34, 30], [-6, 0, 0]],
+  [[4, 24, 34], [-4, -3, 2]], [[-8, 13, 44], [-10, 5, 0]], [[-16, 26, 34], [-4, 4, 1]], [[-12, 34, 30], [-6, 0, 0]], [[-14, 18, 40], [-8, 10, 0]],
 ].map(([a, b]) => [new Vector3(...a), new Vector3(...b)]);
 
 export function start(canvas, host) {
@@ -134,10 +134,10 @@ export function start(canvas, host) {
         y += wv * 1.4 * (1 - e); heat = wv;
       } else if (lit === 1) {  // punti del globo che si accendono a turno, come un radar
         heat = i % 41 === 0 ? Math.max(0, Math.sin(time * 1.4 + i * 0.37)) : 0;
-      } else if (lit === 3) {  // colonne che si muovono come un parlato
+      } else if (lit === 4) {  // colonne che si muovono come un parlato
         const c = i % WC, r = Math.floor(i / WC), amp = 0.5 + 0.5 * Math.sin(c * 0.33 + time * 3.1) * Math.sin(c * 0.09 - time * 1.3);
         const on = r < amp * 25; sc *= on ? 1 : 0.0001; heat = on && r > amp * 25 - 2 ? 1 : 0;
-      } else if (lit === 4) {  // blocchi del die che si accendono come multiprocessori
+      } else if (lit === 3) {  // blocchi del die che si accendono come multiprocessori
         const c = i % 40, r = Math.floor(i / 40), b = Math.floor(c / 5) + Math.floor(r / 5) * 8;
         heat = Math.sin(time * 2 + b * 1.7) > 0.92 ? 1 : 0;
       }

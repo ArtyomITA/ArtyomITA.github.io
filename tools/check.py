@@ -218,7 +218,7 @@ def main():
                       stats:[...document.querySelectorAll('#vergilius .nums b')].map(e=>e.textContent.replace(/\s+/g,' ')),
                       h2:document.querySelectorAll('#vergilius h2').length,dup:document.querySelectorAll('#strumenti a[href$="/vergilius"]').length,
                       anims:document.getAnimations().length})""")
-                    ck("storia: hero e 4 tappe in ordine, ognuna con titolo, frase e link %s" % lang, ov["n"] == 5 and ov["ok"] and ov["first"] == ["vergilius", "chatroom", "voce", "guida"], ov)
+                    ck("storia: hero e 4 tappe in ordine, ognuna con titolo, frase e link %s" % lang, ov["n"] == 5 and ov["ok"] and ov["first"] == ["vergilius", "chatroom", "guida", "voce"], ov)
                     ck("Vergilius fissato prima di Contributi, numeri in evidenza, nessun doppione in Strumenti %s" % lang,
                        ov["order"] and ov["stats"] == ["81", "2-4 s", "8GB"] and ov["h2"] == 1 and ov["dup"] == 0, ov)
                     ck("tappa guida: 6 voci con barra piena, nessuna immagine nel sito tranne l'avatar %s" % lang,

@@ -85,13 +85,13 @@ T = {}
 
 T["it"] = dict(
     lang="it", ogloc="it_IT", ogalt="en_GB", canon=SITE + "it/", P="../", og="img/og-it.png",
-    desc="AI engineer: training e kernel su GPU Blackwell, inferenza locale su GTX 1080 e visori VR, kernel CUDA e OpenCL più veloci, contributi upstream a llama.cpp, stable-diffusion.cpp e vLLM, ricerca sul comportamento dei modelli open-weight. Tutto open source.",
+    desc="AI/ML engineer e AI tech lead in KeyTech SRL: training e kernel su GPU Blackwell, inferenza locale su GTX 1080 e visori VR, kernel CUDA e OpenCL più veloci, contributi upstream a llama.cpp, stable-diffusion.cpp e vLLM, ricerca sul comportamento dei modelli open-weight. Tutto open source.",
     ogimgalt="Il nome Adrian Ciprian Iancu in grande, la riga del ruolo e lo schema dei CUDA Graphs su Pascal della figura 1.",
     skip="Vai al contenuto", navlabel="Sezioni", toc="Indice", langlabel="Lingua", themelabel="Tema",
     th=("chiaro", "scuro", "auto"), thtitle=("Tema chiaro (carta)", "Tema scuro (cianotipia)", "Tema auto (come il sistema)"),
     nav=["contributi", "implementazioni", "ricerca", "strumenti e agenti", "progetti sperimentali", "indice"], navnote="nota sulle figure",
     folio="aggiornata novembre 2026",
-    role="<b>AI engineer</b>: training e kernel su GPU Blackwell, inferenza locale veloce su una GTX&nbsp;1080 e su un visore VR, agenti che si correggono da soli. Tutto open&nbsp;source.",
+    role="<b>AI/ML engineer · AI tech lead in KeyTech SRL</b>: training e kernel su GPU Blackwell, inferenza locale veloce su una GTX&nbsp;1080 e su un visore VR, agenti che si correggono da soli. Tutto open&nbsp;source.",
     abs='<span class="runin">Sommario.</span> Su <b>Blackwell</b> addestro modelli e scrivo kernel per il training, per esempio su LFM3, partendo da come lavora davvero la scheda. In <b>locale</b> faccio girare modelli veloci su una GTX&nbsp;1080 e dentro un Meta Quest 3S, con ogni modifica verificata contro l\'output di riferimento. Il prossimo passo è ottimizzare altri motori di inferenza per queste schede. Faccio anche <b>ricerca applicata</b> sul comportamento dei modelli open-weight. Tutto open&nbsp;source: due mie PR sono integrate, una è aperta in llama.cpp e un mio fix è stato adottato in vLLM.',
     kw='Inferenza LLM, kernel CUDA e OpenCL, CUDA Graphs; AI su dispositivi edge (Meta Quest 3S, Adreno); GPU Pascal (sm_61) e Blackwell; decoding speculativo, quantizzazione (NVFP4, pesi ternari); llama.cpp, vLLM, GGML; sicurezza dei modelli open-weight; sistemi multi-agente; ML applicato.',
     
@@ -186,13 +186,13 @@ T["it"] = dict(
 
 T["en"] = dict(
     lang="en", ogloc="en_GB", ogalt="it_IT", canon=SITE, P="", og="img/og-en.png",
-    desc="AI engineer: training and kernels on Blackwell GPUs, local inference on a GTX 1080 and VR headsets, faster CUDA and OpenCL kernels, upstream contributions to llama.cpp, stable-diffusion.cpp and vLLM, research on the behaviour of open-weight models. All open source.",
+    desc="AI/ML engineer and AI tech lead at KeyTech SRL: training and kernels on Blackwell GPUs, local inference on a GTX 1080 and VR headsets, faster CUDA and OpenCL kernels, upstream contributions to llama.cpp, stable-diffusion.cpp and vLLM, research on the behaviour of open-weight models. All open source.",
     ogimgalt="The name Adrian Ciprian Iancu set large, the role line and the CUDA Graphs on Pascal schematic from figure 1.",
     skip="Skip to content", navlabel="Sections", toc="Contents", langlabel="Language", themelabel="Theme",
     th=("light", "dark", "auto"), thtitle=("Light theme (paper)", "Dark theme (cyanotype)", "Auto theme (follow the system)"),
     nav=["contributions", "implementations", "research", "tools and agents", "experimental projects", "index"], navnote="a note on the figures",
     folio="updated November 2026",
-    role="<b>AI engineer</b>: training and kernels on Blackwell GPUs, fast local inference on a GTX&nbsp;1080 and on a VR headset, agents that correct themselves. All open&nbsp;source.",
+    role="<b>AI/ML engineer · AI tech lead at KeyTech SRL</b>: training and kernels on Blackwell GPUs, fast local inference on a GTX&nbsp;1080 and on a VR headset, agents that correct themselves. All open&nbsp;source.",
     abs='<span class="runin">Abstract.</span> On <b>Blackwell</b> I train models and write training kernels, for example for LFM3, starting from how the card really works. <b>Locally</b> I make models run fast on a GTX&nbsp;1080 and inside a Meta Quest 3S, with every change checked against the reference output. Next: optimizing other inference engines for these cards. I also do <b>applied research</b> on the behaviour of open-weight models. All open&nbsp;source: two of my PRs are merged, one is open in llama.cpp, and one of my fixes was adopted in vLLM.',
     kw='LLM inference, CUDA and OpenCL kernels, CUDA Graphs; edge AI (Meta Quest 3S, Adreno); Pascal (sm_61) and Blackwell GPUs; speculative decoding, quantization (NVFP4, ternary weights); llama.cpp, vLLM, GGML; security of open-weight models; multi-agent systems; applied ML.',
     
@@ -420,34 +420,34 @@ STORY = {
          "News, markets, military contracts, insider moves, maps. It now runs on <b>LFM3 1C</b>, a merge I made from LFM3-1.7B and LFM3-VL-2B: one model that writes, uses tools, looks at the screen and clicks.",
          (('<span class="cn">81</span>', "tok/s on a GTX 1080"), ("2-4&nbsp;s", "to find where to click"), ('<span class="cn">8</span><u>GB</u>', "of VRAM is enough")),
          ((GH + "vergilius", "Repository"),)),
-        ("chatroom", "multi-agent orchestrator", "chatroom", "Claude Code and Codex in the same room, arguing until the proof is on the table.",
-         "A plan closes only when every agent has voted and said what it checked. The rules live in code, so no model talks its way past them. <b>Research</b> measures every attempt all night. <b>Auto-harness</b> turns repeated mistakes into lessons on trial. <b>Model council</b> asks 10 free models about your situation. Other harnesses are next.",
+        ("chatroom", "multi-agent orchestrator", "chatroom", "Auto-harness, research and a model council in one multi-agent orchestrator. Built on 37 papers and on ideas from Claude Code, DeepSeek, Hermes and Pi. Token-efficient by design.",
+         "<b>Auto-harness</b>: the room learns from its own mistakes, turning them into lessons on trial that stay only if they hold in a second room. <b>Research</b>: one file, a sealed evaluator, every attempt measured and logged all night. <b>Model council</b>: 10 free models weigh in on your situation. A plan closes only when every agent has said what it checked, and agents stay quiet unless a message concerns them. It also puts Claude Code and Codex agents in the same room; other harnesses are next.",
          (('<span class="cn">28</span><u>h</u>', "one research room on a real kernel"), ("2.1x", "the Quest voice kernel, in one night"), ('<span class="cn">37</span>', "papers behind the code")),
          ((ORG + "claude-plugins", "Repository"),)),
-        ("voce", "edge AI · Meta Quest 3S", "A 300&nbsp;euro headset that talks", "Faster than you can listen. No cloud, no PC, no cable.",
-         "LFM3-Omni-2B runs entirely inside the headset with llama.cpp: backbone on the Adreno GPU through OpenCL, depthformer on the CPU, codec on its own thread. Stock llama.cpp needed 1.8 s to say one second of speech. With my kernels, 0.85 s.",
-         (('<span class="cn">1.17</span><u>x</u>', "real time, was 0.56x"), ('<span class="cn">1.02</span><u>x</u>', "on battery, was 0.33x"), ("−76%", "memory, 4174 to 992 MB")),
-         ((QUEST, "Repository"), (QUEST + "/tree/main/samples", "Listen"))),
         ("guida", "Blackwell · GTX 1080", "Kernels that read the card", "Training on Blackwell. Inference on a GPU from 2016. Every change bit-identical to the reference.",
          "Qwen3.8 Flash-Next for 4 users with 227k context each on one RTX PRO 6000. Training kernels for LFM3, built from how the card really works. On the GTX 1080, everything that runs fast is in one guide. Next: other inference engines.",
          None, ((GUIDE, "The GTX 1080 guide"), (PR, "PR #27721"))),
+        ("voce", "edge AI · Meta Quest 3S", "Optimized kernels for VR on Meta Quest", "A 300&nbsp;euro headset that talks faster than you can listen. No cloud, no PC, no cable.",
+         "LFM3-Omni-2B runs entirely inside the headset with llama.cpp: backbone on the Adreno GPU through OpenCL, depthformer on the CPU, codec on its own thread. Stock llama.cpp needed 1.8 s to say one second of speech. With my kernels, 0.85 s.",
+         (('<span class="cn">1.17</span><u>x</u>', "real time, was 0.56x"), ('<span class="cn">1.02</span><u>x</u>', "on battery, was 0.33x"), ("−76%", "memory, 4174 to 992 MB")),
+         ((QUEST, "Repository"), (QUEST + "/tree/main/samples", "Listen"))),
     ],
     "it": [
         ("vergilius", "assistente OSINT locale", "Vergilius", "Un modello piccolo legge il mondo per te. Sul tuo computer, senza che niente esca.",
          "Notizie, mercati, contratti militari, movimenti degli insider, mappe. Ora gira su <b>LFM3 1C</b>, un fuso che ho fatto da LFM3-1.7B e LFM3-VL-2B: un modello solo che scrive, usa gli strumenti, guarda lo schermo e clicca.",
          (('<span class="cn">81</span>', "tok/s su una GTX 1080"), ("2-4&nbsp;s", "per trovare dove cliccare"), ('<span class="cn">8</span><u>GB</u>', "di VRAM bastano")),
          ((GH + "vergilius", "Repository"),)),
-        ("chatroom", "orchestratore multi-agente", "chatroom", "Claude Code e Codex nella stessa stanza, a discutere finché la prova non è sul tavolo.",
-         "Un piano si chiude solo quando ogni agente ha votato e detto cosa ha controllato. Le regole stanno nel codice, quindi nessun modello le aggira a parole. <b>Research</b> misura ogni tentativo per tutta la notte. <b>Auto-harness</b> trasforma gli errori ripetuti in lezioni in prova. <b>Model council</b> chiede a 10 modelli gratuiti della tua situazione. Il prossimo passo sono altri harness.",
+        ("chatroom", "orchestratore multi-agente", "chatroom", "Auto-harness, research e model council in un solo orchestratore multi-agente. Costruito su 37 paper e su idee prese da Claude Code, DeepSeek, Hermes e Pi. Pensato per non sprecare token.",
+         "<b>Auto-harness</b>: la stanza impara dai propri errori e li trasforma in lezioni in prova, che restano solo se reggono anche in una seconda stanza. <b>Research</b>: un file, un valutatore sigillato, ogni tentativo misurato e registrato per tutta la notte. <b>Model council</b>: 10 modelli gratuiti dicono la loro sulla tua situazione. Un piano si chiude solo quando ogni agente ha detto cosa ha controllato, e gli agenti tacciono se un messaggio non li riguarda. In più fa lavorare agenti di Claude Code e Codex nella stessa stanza; il prossimo passo sono altri harness.",
          (('<span class="cn">28</span><u>h</u>', "una stanza di ricerca su un kernel vero"), ("2,1x", "il kernel voce del Quest, in una notte"), ('<span class="cn">37</span>', "paper dietro il codice")),
          ((ORG + "claude-plugins", "Repository"),)),
-        ("voce", "edge AI · Meta Quest 3S", "Un visore da 300&nbsp;euro che parla", "Più veloce di quanto riesci ad ascoltare. Niente cloud, niente PC, niente cavo.",
-         "LFM3-Omni-2B gira tutto dentro il visore con llama.cpp: la rete principale sulla GPU Adreno con OpenCL, il depthformer sulla CPU, il codec su un thread a parte. llama.cpp originale impiegava 1,8 s per dire un secondo di parlato. Con i miei kernel, 0,85 s.",
-         (('<span class="cn">1,17</span><u>x</u>', "tempo reale, prima 0,56x"), ('<span class="cn">1,02</span><u>x</u>', "a batteria, prima 0,33x"), ("−76%", "memoria, da 4174 a 992 MB")),
-         ((QUEST, "Repository"), (QUEST + "/tree/main/samples", "Ascolta"))),
         ("guida", "Blackwell · GTX 1080", "Kernel che leggono la scheda", "Training su Blackwell. Inferenza su una GPU del 2016. Ogni modifica identica bit per bit al riferimento.",
          "Qwen3.8 Flash-Next per 4 utenti con 227k di contesto ciascuno su una sola RTX PRO 6000. Kernel per il training di LFM3, costruiti su come lavora davvero la scheda. Sulla GTX 1080, tutto quello che gira veloce sta in una guida. Il prossimo passo: altri motori di inferenza.",
          None, ((GUIDE, "La guida GTX 1080"), (PR, "PR #27721"))),
+        ("voce", "edge AI · Meta Quest 3S", "Kernel ottimizzati per la VR su Meta Quest", "Un visore da 300&nbsp;euro che parla più veloce di quanto riesci ad ascoltare. Niente cloud, niente PC, niente cavo.",
+         "LFM3-Omni-2B gira tutto dentro il visore con llama.cpp: la rete principale sulla GPU Adreno con OpenCL, il depthformer sulla CPU, il codec su un thread a parte. llama.cpp originale impiegava 1,8 s per dire un secondo di parlato. Con i miei kernel, 0,85 s.",
+         (('<span class="cn">1,17</span><u>x</u>', "tempo reale, prima 0,56x"), ('<span class="cn">1,02</span><u>x</u>', "a batteria, prima 0,33x"), ("−76%", "memoria, da 4174 a 992 MB")),
+         ((QUEST, "Repository"), (QUEST + "/tree/main/samples", "Ascolta"))),
     ],
 }
 
@@ -678,7 +678,7 @@ def page(t):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{name} · AI Engineer</title>
+<title>{name} · AI/ML Engineer</title>
 <meta name="description" content="{desc}">
 <meta http-equiv="Content-Security-Policy" content="{csp}">
 <meta name="color-scheme" content="dark light">
@@ -688,7 +688,7 @@ def page(t):
 <link rel="alternate" hreflang="en" href="{site}">
 <link rel="alternate" hreflang="x-default" href="{site}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="{name} · AI Engineer">
+<meta property="og:title" content="{name} · AI/ML Engineer">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canon}">
 <meta property="og:image" content="{site}{og}">
@@ -698,7 +698,7 @@ def page(t):
 <meta property="og:locale" content="{ogloc}">
 <meta property="og:locale:alternate" content="{ogalt}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{name} · AI Engineer">
+<meta name="twitter:title" content="{name} · AI/ML Engineer">
 <meta name="twitter:description" content="{desc}">
 <meta name="twitter:image" content="{site}{og}">
 <meta name="twitter:image:alt" content="{ogimgalt}">
@@ -710,7 +710,7 @@ def page(t):
 <link rel="stylesheet" href="{P}css/site.css">
 <script>{boot}</script>
 <script src="{P}js/site.js" defer></script>
-<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Person","name":"{name}","jobTitle":"AI Engineer","url":"{site}","sameAs":["{gh}","{hf}","{li}","{ig}"]}}</script>
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Person","name":"{name}","jobTitle":"AI/ML Engineer, AI tech lead at KeyTech SRL","url":"{site}","sameAs":["{gh}","{hf}","{li}","{ig}"]}}</script>
 </head>
 """.format(L=L, name=NAME, desc=t["desc"], csp=CSP, canon=t["canon"], site=SITE, og=t["og"], ogimgalt=t["ogimgalt"], ogloc=t["ogloc"], ogalt=t["ogalt"], P=P, boot=BOOT,
            gh=GH.rstrip("/"), hf=HF, li=LI, ig=IG)
